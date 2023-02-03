@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  web:
+    container_name: are-you-free
+    build:
+      context: ./src
+      dockerfile: Dockerfile
+    tty: true
+    ports:
+      - 8080:8080
+    volumes:
+      - type: bind
+        source: ./src/
+        target: /go/app
