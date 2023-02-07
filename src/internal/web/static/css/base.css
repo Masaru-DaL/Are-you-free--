@@ -97,7 +97,11 @@ ul {
 /* =================== font ====================== */
 
 .font-18 {
-  font-size: 17px;
+  font-size: 18px;
+}
+
+.font-20 {
+  font-size: 20px;
 }
 
 .font-24 {
