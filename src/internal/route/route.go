@@ -17,8 +17,7 @@ func InitRouting(db *sql.DB) *echo.Echo {
 	initTemplate(e)
 	e.Static("/css", config.Config.FilePath.CSS)
 	e.Static("/img", config.Config.FilePath.Image)
-
-	// e.Static("/js", config.Config.FilePath.JS)
+	e.Static("/js", config.Config.FilePath.JS)
 	// e.Static("/logo", config.Config.FilePath.Logo)
 
 	/* No authentication required */
@@ -26,6 +25,7 @@ func InitRouting(db *sql.DB) *echo.Echo {
 	// noAuthGroup.GET("/signup", templates.SignupPage)
 	e.GET("/signup", templates.SignupPage)
 	e.GET("/login", templates.LoginPage)
+	e.GET("/index", templates.TopPage)
 
 	return e
 }

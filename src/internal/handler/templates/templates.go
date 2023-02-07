@@ -16,6 +16,11 @@ func LoginPage(c echo.Context) error {
 	return c.Render(http.StatusOK, "login", "")
 }
 
+/* トップページ */
+func TopPage(c echo.Context) error {
+	return c.Render(http.StatusOK, "index", "")
+}
+
 /* htmlのformにもPUTやDELETEにも対応させるメソッド */
 func MethodOverride(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
