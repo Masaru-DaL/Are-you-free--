@@ -1,0 +1,57 @@
+{{define "signup"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signup</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/registration.css" />
+</head>
+<body>
+  <main>
+    <div class="registration-wrapper flex-col ">
+
+      <div class="registration-image-wrapper registration-image">
+        <img src="../img/registration.jpg" alt="image on signup page">
+      </div>
+
+      <div class="registration-form-wrapper bg-snow flex">
+          <div class="registration-form-area flex-col justify-center   items-center">
+              <form class="my-30 w-70">
+                <div class="input-area text-wood flex-col">
+                  <label for="name">USERNAME</label>
+                  <input type="text" name="username" placeholder="10文字以内で入力してください" maxlength="10" />
+                </div>
+                <div class="input-area text-wood flex-col">
+                  <label for="password">PASSWORD</label>
+                  <input type="text" name="password" placeholder="10文字以内で入力してください" maxlength="10" />
+                </div>
+                <div class="input-area text-wood flex-col">
+                  <label for="password-confirmation">PASSWORD CONFIRMATION</label>
+                  <input type="password" name="password-confirmation" placeholder="再確認のためもう一度入力してください" maxlength="10" />
+                </div>
+                <div class="input-area text-wood flex-col">
+                  <label for="e-mail">E-MAIL</label>
+                  <input type="text" name="e-mail" placeholder="e-mailアドレスを入力してください" />
+                </div>
+              </div>
+
+              <div class="registration-button-area">
+                <div class="flex-col justify-center items-center">
+                  <!-- <div class="form-title-wrapper"> -->
+                    <h2 class="form-title form-title-wrapper">SIGNUP</h2>
+                  <!-- </div> -->
+                  <button class="form-button text-white bg-burlywood">REGISTER</button>
+                  <a href="/login" class="registration-link text-wood">既にアカウントをお持ちの方はこちら</a>
+                </div>
+              </div>
+            </form>
+
+          </div>
+    </div>
+  </main>
+</body>
+</html>
+{{end}}

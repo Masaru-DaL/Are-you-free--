@@ -1,0 +1,100 @@
+
+
+.registration-wrapper {
+  width: 100%;
+  min-height: 100vh;
+}
+
+.registration-image-wrapper {
+  width: 100%;
+  height: 40vh;
+}
+
+.registration-image {
+  filter: opacity(78%);
+}
+
+.registration-form-wrapper {
+  width: 100%;
+  height: 60vh;
+}
+
+.registration-image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.registration-form-area {
+  width: 50%;
+}
+
+.input-area {
+  width: 90%;
+  margin: 15px 0;
+}
+
+.input-area label {
+  text-align: left;
+  margin: 15px 0 4px 20px;
+  letter-spacing: 0.1em;
+}
+
+.input-area input {
+  width: 100%;
+  margin-bottom: 10px;
+  background: rgba(0,0,0,0.3);
+  border: none;
+  outline: none;
+  padding: 20px 8px;
+  border: 1px solid var(--BEIGE);
+  font-size: 16px;
+  color: #fff;
+  text-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+  border-radius: 20px;
+  box-shadow: inset 0 -5px 45px rgba(100,100,100,0.2), 0 1px 1px rgba(255,255,255,0.2);
+  -webkit-transition: box-shadow .5s ease;
+  -moz-transition: box-shadow .5s ease;
+  -o-transition: box-shadow .5s ease;
+  -ms-transition: box-shadow .5s ease;
+  transition: box-shadow .5s ease;
+}
+
+.registration-button-area {
+  width: 50%;
+}
+
+.input-area ::placeholder {
+  color: snow;
+  font-size: 17px;
+}
+
+.form-title {
+  font-size: 70px;
+  font-weight: bold;
+  letter-spacing: 0.15em;
+
+  color: transparent;
+	background: #000;
+	text-shadow: 1px 1px 2px rgba( 255, 255, 255, 5);
+	background-clip: text;
+	-webkit-background-clip: text;
+}
+
+.form-button {
+  font-size: 24px;
+  letter-spacing: 0.1em;
+  margin-top: 50px;
+  padding: 24px 60px;
+  border: none;
+  border-radius: 15px;
+}
+
+.registration-link {
+  display: block;
+  width: 45%;
+  border-bottom: solid 1px var(--WOOD);
+  padding: 28px 4px 8px 4px;
+  margin: 30px auto;
+  text-align: center;
+}

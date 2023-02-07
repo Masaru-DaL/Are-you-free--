@@ -1,0 +1,10 @@
+db:
+  driver: sqlite3
+  path: ./internal/db/sqlite3/are_you_free.db
+  file: ./internal/db/sqlite3/are_you_free.sql
+
+filepath:
+  CSS: internal/web/static/css
+  JS: internal/web/static/js
+  Image: internal/web/img
+  Logo: internal/web/logo

@@ -1,0 +1,75 @@
+html {
+  overflow: scroll;
+  letter-spacing: 0.15em;
+}
+
+body {
+  margin: 0;
+  font-family: 'Andale Mono','Sitka Heading','Avenir',sans-serif;
+  color: var(--BLACK);
+  min-height: 100vh;
+  width: 100%;
+}
+
+a {
+  text-decoration: none;
+}
+
+/* =================== FlexBox ====================== */
+
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+/* =================== FlexBox ====================== */
+
+.relative {
+  position: relative;
+}
+
+.absolute {
+  position: absolute;
+}
+
+/* =================== 幅、高さ ====================== */
+
+
+.w-70 {
+  width: 70%;
+}
+
+.h-30 {
+  height: 30%;
+}
+
+.h-70 {
+  height: 70%;
+}
+
+/* =================== margin, padding ====================== */
+
+.my-30 {
+  margin: 30px 0;
+}
+
+/* =================== font ====================== */
+.font-24 {
+  font-size: 24px;
+}
