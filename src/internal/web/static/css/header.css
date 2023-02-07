@@ -1,0 +1,45 @@
+.header-wrapper {
+  width: 97%;
+  height: 10vh;
+
+  position: fixed;
+  margin: 10px;
+  border-style: solid;
+  border-top-width: thick;
+  border-right-width: thin;
+  border-bottom-width: medium;
+  border-left-width: 20px;
+}
+
+.today-date {
+  margin: 0 40px 0 auto;
+  padding: 4px 12px;
+  border: 1px solid var(--WOOD);
+  border-radius: 12px;
+}
+
+.header-link {
+  margin-left: 30px;
+  font-size: 24px;
+  padding: 4px 4px;
+  border: 1px solid var(--WOOD);
+}
+
+/* 現在時刻を点滅させる */
+.blinking{
+	-webkit-animation:blink 1.5s ease-in-out infinite alternate;
+    -moz-animation:blink 1.5s ease-in-out infinite alternate;
+    animation:blink 1.5s ease-in-out infinite alternate;
+}
+@-webkit-keyframes blink{
+    0% {opacity:0;}
+    100% {opacity:1;}
+}
+@-moz-keyframes blink{
+    0% {opacity:0;}
+    100% {opacity:1;}
+}
+@keyframes blink{
+    0% {opacity:0;}
+    100% {opacity:1;}
+}
