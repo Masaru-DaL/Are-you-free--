@@ -1,0 +1,47 @@
+{{define "login"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/registration.css" />
+</head>
+<body>
+  <main>
+    <div class="registration-wrapper flex-col ">
+
+      <div class="registration-image-wrapper registration-image">
+        <img src="../img/registration.jpg" alt="image on signup page">
+      </div>
+
+      <div class="registration-form-wrapper bg-beige flex">
+        <div class="registration-form-area flex-col items-center">
+        <form class="my-30 w-70">
+          <div class="input-area text-wood flex-col">
+            <label for="name">USERNAME</label>
+            <input type="text" name="username" maxlength="10" />
+          </div>
+          <div class="input-area text-wood flex-col">
+            <label for="password">PASSWORD</label>
+            <input type="text" name="password" maxlength="10" />
+          </div>
+        </div>
+
+        <div class="registration-button-area">
+          <div class="flex-col justify-center items-center">
+            <!-- <div class="form-title-wrapper"> -->
+              <h2 class="form-title form-title-wrapper">LOGIN</h2>
+            <!-- </div> -->
+            <button type="submit" class="form-button text-white bg-burlywood">LOGIN</button>
+            <a href="/signup" class="registration-link text-wood">アカウントをお持ちでない方はこちら</a>
+          </div>
+        </div>
+      </form>
+    </div>
+  </main>
+</body>
+</html>
+{{end}}

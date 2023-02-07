@@ -3,7 +3,7 @@ RUN apk update upgrade && apk add git && apk add sqlite && apk add --no-cache al
 
 RUN go install github.com/cosmtrek/air@latest
 
-RUN mkdir -p /go/app
+COPY . /go/app
 WORKDIR /go/app
 
 CMD ["air", "-c", ".air.toml"]

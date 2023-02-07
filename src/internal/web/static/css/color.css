@@ -1,0 +1,41 @@
+    :root {
+  --BLACK: #141414;
+  --RED: #ff0000;
+  --WHITE: #ffffff;
+  --WOOD: rgb(195, 128, 41);
+  --BURLYWOOD: rgb(222 184 135);
+  --SNOW: #fffafa;
+  --BEIGE: #f5f5dc;
+}
+
+.bg-white {
+  background-color: var(--WHITE);
+}
+
+.bg-black {
+  background-color: var(--BLACK);
+}
+
+.bg-red {
+  background-color: var(--RED);
+}
+
+.bg-burlywood {
+  background-color: var(--BURLYWOOD);
+}
+
+.bg-snow {
+  background-color: var(--SNOW);
+}
+
+.bg-beige {
+  background-color: var(--BEIGE);
+}
+
+.text-white {
+  color: var(--WHITE);
+}
+
+.text-wood {
+  color: var(--WOOD);
+}
