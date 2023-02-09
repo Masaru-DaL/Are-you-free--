@@ -1,11 +1,11 @@
-{{define "index"}}
+{{define "sharing"}}
 <!DOCTYPE html>
 <html lang="ja">
   <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Top</title>
+    <title>Sharing</title>
     <link rel="stylesheet" href="../css/style.css" />
     <link rel="stylesheet" href="../css/header.css" />
     <link rel="stylesheet" href="../css/main.css" />
@@ -23,9 +23,9 @@
           <input id="acd-check1" class="acd-check" type="checkbox">
           <label class="acd-label" for="acd-check1">SCHEDULE</label>
           <div class="acd-content flex-col text-center">
-            <a href="/schedule/" class="acd-content-link letter-01 text-snow">SELECT</a>
-            <a href="/schedule/create" class="acd-content-link letter-01 text-snow mt-8">CREATE</a>
-            <a href="/schedule/update" class="acd-content-link letter-01 text-snow mt-8">UPDATE</a>
+            <a href="/schedule" class="acd-content-link letter-01 text-snow">SELECT</a>
+            <a href="/schedule" class="acd-content-link letter-01 text-snow mt-8">CREATE</a>
+            <a href="/schedule" class="acd-content-link letter-01 text-snow mt-8">UPDATE</a>
           </div>
         </div> -->
 
@@ -45,9 +45,18 @@
     </header>
 
     <main class="main flex-col">
-      <div class="title-area-wrapper">
+      <div class="title-area-wrapper flex">
         <div class="title-area bg-white">
-          <h1 class="text-center">TOP PAGE</h1>
+          <h1 class="text-center">SHARING PAGE</h1>
+        </div>
+        <div class="sharing-button-wrapper mr flex">
+          <div class="sharing-button bg-oldlace text-center">
+            <a class="letter-01">SHARE SOMEONE</a>
+          </div>
+          <div class="sharing-button bg-oldlace text-center">
+            <a class="letter-01">SHARE SOMEONE'S</a>
+          </div>
+
         </div>
       </div>
 
@@ -63,13 +72,8 @@
         </div>
 
         <div class="index-content-right-area">
-          <div class="calender-wrapper">
-            <h1 id="years"></h1>
-            <div id="next-prev-button">
-              <button id="prev" onclick="prev()">‹</button>
-              <button id="next" onclick="next()">›</button>
-            </div>
-            <div id="calendar"></div>
+          <div >
+
           </div>
         </div>
       </div>

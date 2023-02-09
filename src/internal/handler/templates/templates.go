@@ -26,6 +26,31 @@ func SchedulePage(c echo.Context) error {
 	return c.Render(http.StatusOK, "schedule", "")
 }
 
+/* スケジュールページ */
+func SchedulesPage(c echo.Context) error {
+	return c.Render(http.StatusOK, "schedule", "")
+}
+
+/* スケジュール作成ページ */
+func CreateSchedulePage(c echo.Context) error {
+	return c.Render(http.StatusOK, "create-schedule", "")
+}
+
+/* スケジュール更新ページ */
+func UpdateSchedulePage(c echo.Context) error {
+	return c.Render(http.StatusOK, "update-schedule", "")
+}
+
+/* スケジュール共有ページ */
+func SharingPage(c echo.Context) error {
+	return c.Render(http.StatusOK, "sharing", "")
+}
+
+/* アカウントページ */
+func AccountPage(c echo.Context) error {
+	return c.Render(http.StatusOK, "account", "")
+}
+
 /* htmlのformにもPUTやDELETEにも対応させるメソッド */
 func MethodOverride(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {

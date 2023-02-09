@@ -1,3 +1,12 @@
+function getNowInput () {
+  var today = new Date();
+  today.setDate(today.getDate());
+  var yyyy = today.getFullYear();
+  var mm = ("0"+(today.getMonth()+1)).slice(-2);
+  var dd = ("0"+today.getDate()).slice(-2);
+  document.getElementById("today-input").value=yyyy+'-'+mm+'-'+dd;
+}
+
 function set2fig(num) {
   // 桁数が1桁だったら先頭に0を加えて2桁に調整する
   var ret;
@@ -23,4 +32,6 @@ function getNow() {
 
   document.getElementById("today").innerHTML = nowDate;
 }
-setInterval('getNow()',1000);
+
+getNow();
+getNowInput();

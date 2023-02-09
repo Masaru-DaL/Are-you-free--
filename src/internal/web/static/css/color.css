@@ -5,7 +5,9 @@
   --WOOD: rgb(195, 128, 41);
   --BURLYWOOD: rgb(222 184 135);
   --SNOW: #fffafa;
+  --OLDLACE: #fdf5e6;
   --BEIGE: #f5f5dc;
+  --SKYBLUE: #63A5F2;
 }
 
 .bg-white {
@@ -28,14 +30,34 @@
   background-color: var(--SNOW);
 }
 
+.bg-oldlace {
+  background-color: var(--OLDLACE);
+}
+
 .bg-beige {
   background-color: var(--BEIGE);
+}
+
+.bg-skyblue {
+  background-color: var(--SKYBLUE);
 }
 
 .text-white {
   color: var(--WHITE);
 }
 
+.text-red {
+  color: var(--RED);
+}
+
+.text-snow {
+  color: var(--SNOW);
+}
+
 .text-wood {
   color: var(--WOOD);
+}
+
+.text-skyblue {
+  color: var(--SKYBLUE);
 }

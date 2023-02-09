@@ -1,0 +1,159 @@
+{{define "create-schedule"}}
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Schedule</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/header.css" />
+    <link rel="stylesheet" href="../css/main.css" />
+    <link rel="stylesheet" href="../css/calender.css" />
+  </head>
+  <body>
+    <header class="header-wrapper bg-white">
+      <div class="header m-auto flex items-center bg-snow">
+
+        <div class="header-link bg-white">
+          <a href="/index">TOP</a>
+        </div>
+
+        <!-- <div class="flex-col bg-white">
+          <input id="acd-check1" class="acd-check" type="checkbox">
+          <label class="acd-label" for="acd-check1">SCHEDULE</label>
+          <div class="acd-content flex-col text-center">
+            <a href="/schedule/" class="acd-content-link letter-01 text-snow">SELECT</a>
+            <a href="/schedule/create" class="acd-content-link letter-01 text-snow mt-8">CREATE</a>
+            <a href="/schedule/update" class="acd-content-link letter-01 text-snow mt-8">UPDATE</a>
+          </div>
+        </div> -->
+
+        <div class="header-link bg-white">
+          <a href="/schedules">SCHEDULES</a>
+        </div>
+        <div class="header-link bg-white">
+          <a href="/sharing">SCHEDULE SHARING</a>
+        </div>
+        <div class="header-link bg-white">
+          <a href="/account">ACCOUNT</a>
+        </div>
+        <div class="bg-white today-date font-24">
+          <span id="today" class="blinking"></span>
+        </div>
+      </div>
+    </header>
+
+    <main class="main flex-col">
+      <div class="title-area-wrapper flex">
+        <div class="title-area bg-white">
+          <h1 class="text-center">CREATE SCHEDULE</h1>
+        </div>
+        <div class="subject-to">
+          <h2 class="text-center">2023/01/01（木）</h2>
+        </div>
+      </div>
+
+      <div class="content-wrapper flex">
+        <div class="content-left-area border-none border-right mt-66">
+          <p class="ml-30 font-14 text-wood">日付を選んで<br>free-timeを操作</p>
+          <form class="form-wrapper flex-col items-center">
+            <input class="input-calendar" type="date" name="today" id="today-input"/>
+            <button class="content-left-button">SELECT</button>
+            <button class="content-left-button">CREATE</button>
+            <button class="content-left-button">UPDATE</button>
+          </form>
+        </div>
+
+        <div class="content-right-area">
+          <p class="ml-100 font-18 text-wood">上記の日付でスケジュールを作成します。<br>フリータイムの開始/終了時刻を選択してください。</p>
+          <div class="select-time-wrapper ml-100">
+            <form action="" class="flex items-end">
+              <div class="select-time-hour-area">
+                <select class="select-time-hour font-17">
+                  <option value="">開始時刻</option>
+                  <option>06</option>
+                  <option>07</option>
+                  <option>08</option>
+                  <option>09</option>
+                  <option>10</option>
+                  <option>12</option>
+                  <option>13</option>
+                  <option>14</option>
+                  <option>15</option>
+                  <option>16</option>
+                  <option>17</option>
+                  <option>18</option>
+                  <option>19</option>
+                  <option>20</option>
+                  <option>21</option>
+                  <option>22</option>
+                  <option>23</option>
+                </select>
+              </div>
+              <div class="select-time-minute-area">
+                <select class="select-time-minute font-17">
+                  <option value="">00</option>
+                  <option>15</option>
+                  <option>30</option>
+                  <option>45</option>
+                </select>
+              </div>
+              <div class="select-time-hour-area">
+                <select class="select-time-hour font-17">
+                  <option value="">終了時刻</option>
+                  <option>06</option>
+                  <option>07</option>
+                  <option>08</option>
+                  <option>09</option>
+                  <option>10</option>
+                  <option>12</option>
+                  <option>13</option>
+                  <option>14</option>
+                  <option>15</option>
+                  <option>16</option>
+                  <option>17</option>
+                  <option>18</option>
+                  <option>19</option>
+                  <option>20</option>
+                  <option>21</option>
+                  <option>22</option>
+                  <option>23</option>
+                </select>
+              </div>
+              <div class="select-time-minute-area">
+                <select class="select-time-minute font-17">
+                  <option value="">00</option>
+                  <option>15</option>
+                  <option>30</option>
+                  <option>45</option>
+                </select>
+              </div>
+
+              <div class="select-time-button-area">
+                <button class="select-time-button bg-skyblue text-snow">CREATE</button>
+              </div>
+            </form>
+
+          </div>
+
+          <div class="calender-wrapper">
+            <h1 id="years"></h1>
+            <div id="next-prev-button">
+              <button id="prev" onclick="prev()">‹</button>
+              <button id="next" onclick="next()">›</button>
+            </div>
+            <div id="calendar"></div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+
+  </body>
+  <script type="text/javascript" src="../js/today.js"></script>
+  <script src="../js/calendar.js"></script>
+
+</html>
+{{end}}
