@@ -30,7 +30,8 @@ func InitRouting(db *sql.DB) *echo.Echo {
 	e.GET("/schedules/", templates.SchedulesPage)
 	e.GET("/schedule/create", templates.CreateSchedulePage)
 	e.GET("/schedule/update", templates.UpdateSchedulePage)
-	e.GET("/sharing", templates.SharingPage)
+	e.GET("/sharing/to", templates.SharingToSomeonePage)
+	e.GET("/sharing/from", templates.SharingFromSomeonePage)
 	e.GET("/account", templates.AccountPage)
 
 	return e

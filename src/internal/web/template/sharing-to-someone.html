@@ -1,0 +1,111 @@
+{{define "sharing-to-someone"}}
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sharing</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/registration.css" />
+    <link rel="stylesheet" href="../css/header.css" />
+    <link rel="stylesheet" href="../css/main.css" />
+    <link rel="stylesheet" href="../css/sharing.css" />
+  </head>
+  <body>
+    <header class="header-wrapper bg-white">
+      <div class="header m-auto flex items-center bg-snow">
+        <a href="/index">
+          <div class="header-link bg-white">
+            TOP
+          </div>
+        </a>
+        <div class="header-link bg-white">
+          <a href="/schedules">SCHEDULES</a>
+        </div>
+        <a href="/sharing/to">
+          <div class="header-link bg-white">
+            SCHEDULE SHARING
+          </div>
+        </a>
+        <a href="/account">
+          <div class="header-link bg-white">
+            ACCOUNT
+          </div>
+        </a>
+        <div class="bg-white today-date font-24">
+          <span id="today" class="blinking"></span>
+        </div>
+      </div>
+    </header>
+
+    <main class="main flex-col">
+      <div class="title-area-wrapper flex">
+        <div class="title-area bg-white">
+          <h1 class="text-center">SHARING PAGE</h1>
+        </div>
+        <div class="sharing-button-wrapper mr flex">
+          <a href="/sharing/to"  class="letter-01">
+            <div class="sharing-button bg-oldlace text-center">
+              TO SOMEONE
+            </div>
+          </a>
+          <a href="/sharing/from"  class="letter-01">
+            <div class="sharing-button bg-oldlace text-center">
+              FROM SOMEONE
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="content-wrapper flex">
+        <div class="content-left-area border-none border-right mt-66">
+          <p class="ml-30 font-14 text-wood">日付を選んで<br>free-timeを操作</p>
+          <form class="form-wrapper flex-col items-center">
+            <input class="input-calendar" type="date" name="today" id="today-input"/>
+            <button class="content-left-button">SELECT</button>
+            <button class="content-left-button">CREATE</button>
+            <button class="content-left-button">UPDATE</button>
+          </form>
+        </div>
+
+        <!-- 自身のスケジュールを共有するフォーム -->
+
+        <div class="index-content-right-area">
+          <div class="share-form-wrapper">
+            <h3 class="text-dimgrey">あなたのアカウント情報を入力してください</h3>
+            <p class="text-dimgrey">認可後に番号が発行されます：※有効期限15分</p>
+            <form class="flex-col">
+              <div class="input-area text-wood flex-col">
+                <label for="name">USERNAME</label>
+                <input type="text" name="username" maxlength="10" />
+              </div>
+              <div class="input-area text-wood flex-col">
+                <label for="password">PASSWORD</label>
+                <input type="password" name="password" maxlength="10" />
+              </div>
+              <div class="sharing-button-area">
+                <button class="form-button button-skyblue">ISSUE</button>
+              </div>
+            </form>
+            <div class="sharing-message-box flex text-end">
+              <div class="sharing-message">
+                <p class="font-18">発行番号：</p>
+              </div>
+              <div class="sharing-number">
+                <p class="font-24">1234567891234567</p>
+              </div>
+            </div>
+            <p class="font-18 text-dimgrey">発行された番号を相手と共有してください。</p>
+            <p class="text-darkred">番号を保存してください。※再発行に15分かかります。</p>
+          </div>
+        </div>
+    </main>
+
+
+  </body>
+  <script type="text/javascript" src="../js/today.js"></script>
+  <script src="../js/calendar.js"></script>
+
+</html>
+{{end}}
