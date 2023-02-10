@@ -8,6 +8,8 @@
   --OLDLACE: #fdf5e6;
   --BEIGE: #f5f5dc;
   --SKYBLUE: #63A5F2;
+  --SADDLEBROWN: #8b4513;
+  --DARKGREEN: #006400;
 }
 
 .bg-white {
@@ -40,6 +42,10 @@
 
 .bg-skyblue {
   background-color: var(--SKYBLUE);
+}
+
+.bg-darkgreen {
+  background-color: var(--DARKGREEN);
 }
 
 .text-white {

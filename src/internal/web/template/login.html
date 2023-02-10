@@ -11,35 +11,29 @@
 </head>
 <body>
   <main>
-    <div class="registration-wrapper flex-col ">
-
-      <div class="registration-image-wrapper registration-image">
-        <img src="../img/registration.jpg" alt="image on signup page">
+    <div class="registration-wrapper flex-col">
+      <div class="registration-top-area bg-snow flex">
+        <h2 class="title">LOGIN</h2>
+        <div class="registration-link-wrapper">
+          <a href="/login" class="registration-link">アカウントの登録はこちら</a>
+        </div>
       </div>
+      <div class="image-area flex-col">
 
-      <div class="registration-form-wrapper bg-beige flex">
-        <div class="registration-form-area flex-col items-center">
-        <form class="my-30 w-70">
-          <div class="input-area text-wood flex-col">
+        <form class="login-form-area m-auto">
+          <div class="input-area text-snow flex-col">
             <label for="name">USERNAME</label>
-            <input type="text" name="username" maxlength="10" />
+            <input type="text" name="username" placeholder="10文字以内で入力してください" maxlength="10" />
           </div>
-          <div class="input-area text-wood flex-col">
+          <div class="input-area text-snow flex-col">
             <label for="password">PASSWORD</label>
-            <input type="text" name="password" maxlength="10" />
+            <input type="text" name="password" placeholder="10文字以内で入力してください" maxlength="10" />
           </div>
-        </div>
-
-        <div class="registration-button-area">
-          <div class="flex-col justify-center items-center">
-            <!-- <div class="form-title-wrapper"> -->
-              <h2 class="form-title form-title-wrapper">LOGIN</h2>
-            <!-- </div> -->
-            <button type="submit" class="form-button text-white bg-burlywood">LOGIN</button>
-            <a href="/signup" class="registration-link text-wood">アカウントをお持ちでない方はこちら</a>
+          <div class="login-button-area">
+            <button class="form-button button-darkgreen">REGISTER</button>
           </div>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   </main>
 </body>
