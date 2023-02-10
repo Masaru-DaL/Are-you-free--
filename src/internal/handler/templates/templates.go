@@ -41,9 +41,14 @@ func UpdateSchedulePage(c echo.Context) error {
 	return c.Render(http.StatusOK, "update-schedule", "")
 }
 
-/* スケジュール共有ページ */
-func SharingPage(c echo.Context) error {
-	return c.Render(http.StatusOK, "sharing", "")
+/* 自身のスケジュールを共有するページ */
+func SharingToSomeonePage(c echo.Context) error {
+	return c.Render(http.StatusOK, "sharing-to-someone", "")
+}
+
+/* 相手のスケジュールを共有するページ */
+func SharingFromSomeonePage(c echo.Context) error {
+	return c.Render(http.StatusOK, "sharing-from-someone", "")
 }
 
 /* アカウントページ */

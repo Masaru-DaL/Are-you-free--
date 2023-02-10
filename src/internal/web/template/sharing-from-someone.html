@@ -1,4 +1,4 @@
-{{define "sharing"}}
+{{define "sharing-from-someone"}}
 <!DOCTYPE html>
 <html lang="ja">
   <head>
@@ -7,37 +7,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sharing</title>
     <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/registration.css" />
     <link rel="stylesheet" href="../css/header.css" />
     <link rel="stylesheet" href="../css/main.css" />
-    <link rel="stylesheet" href="../css/calender.css" />
+    <link rel="stylesheet" href="../css/sharing.css" />
   </head>
   <body>
     <header class="header-wrapper bg-white">
       <div class="header m-auto flex items-center bg-snow">
-
-        <div class="header-link bg-white">
-          <a href="/index">TOP</a>
-        </div>
-
-        <!-- <div class="flex-col bg-white">
-          <input id="acd-check1" class="acd-check" type="checkbox">
-          <label class="acd-label" for="acd-check1">SCHEDULE</label>
-          <div class="acd-content flex-col text-center">
-            <a href="/schedule" class="acd-content-link letter-01 text-snow">SELECT</a>
-            <a href="/schedule" class="acd-content-link letter-01 text-snow mt-8">CREATE</a>
-            <a href="/schedule" class="acd-content-link letter-01 text-snow mt-8">UPDATE</a>
+        <a href="/index">
+          <div class="header-link bg-white">
+            TOP
           </div>
-        </div> -->
-
+        </a>
         <div class="header-link bg-white">
           <a href="/schedules">SCHEDULES</a>
         </div>
-        <div class="header-link bg-white">
-          <a href="/sharing">SCHEDULE SHARING</a>
-        </div>
-        <div class="header-link bg-white">
-          <a href="/account">ACCOUNT</a>
-        </div>
+        <a href="/sharing/to">
+          <div class="header-link bg-white">
+            SCHEDULE SHARING
+          </div>
+        </a>
+        <a href="/account">
+          <div class="header-link bg-white">
+            ACCOUNT
+          </div>
+        </a>
         <div class="bg-white today-date font-24">
           <span id="today" class="blinking"></span>
         </div>
@@ -50,12 +45,16 @@
           <h1 class="text-center">SHARING PAGE</h1>
         </div>
         <div class="sharing-button-wrapper mr flex">
-          <div class="sharing-button bg-oldlace text-center">
-            <a class="letter-01">SHARE SOMEONE</a>
-          </div>
-          <div class="sharing-button bg-oldlace text-center">
-            <a class="letter-01">SHARE SOMEONE'S</a>
-          </div>
+          <a href="/sharing/to"  class="letter-01">
+            <div class="sharing-button bg-oldlace text-center">
+              TO SOMEONE
+            </div>
+          </a>
+          <a href="/sharing/from"  class="letter-01">
+            <div class="sharing-button bg-oldlace text-center">
+              FROM SOMEONE
+            </div>
+          </a>
         </div>
       </div>
 
@@ -70,9 +69,24 @@
           </form>
         </div>
 
+        <!-- 相手のスケジュールを共有するフォーム -->
         <div class="index-content-right-area">
-          <div >
+          <div class="share-form-wrapper">
+            <h3 class="text-dimgrey">共有したい相手が発行した番号を入力してください。</h3>
+            <p class="text-dimgrey">※有効期限（15分）以内に入力してください。</p>
+            <form class="flex-col">
+              <div class="input-area text-wood flex-col">
+                <label for="name">ISSUE NUMBER</label>
+                <input type="text" name="issue-number" maxlength="16" />
+              </div>
+              <div class="sharing-button-area">
+                <button class="form-button button-skyblue">REGISTER</button>
+              </div>
+            </form>
 
+            <div class="sharing-message-box">
+              <p class="font-18">相手のスケジュールを共有しました。</p>
+            </div>
           </div>
         </div>
       </div>

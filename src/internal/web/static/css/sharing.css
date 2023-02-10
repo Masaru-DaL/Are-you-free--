@@ -1,0 +1,64 @@
+.share-form-wrapper {
+  width: 50%;
+  height: 100%;
+  margin: 100px auto;
+}
+.share-form-wrapper .input-area input {
+  width: 100%;
+  margin-bottom: 10px;
+  font-size: 18px;
+  background-color: var(--SNOW);
+  opacity: 1;
+  color: var(--BLACK);
+  border: none;
+  outline: none;
+  padding: 20px 8px;
+  border: 1px solid var(--BEIGE);
+  text-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+  border-radius: 8px;
+  box-shadow: inset 0 -5px 45px rgba(100,100,100,0.2), 0 1px 1px rgba(255,255,255,0.2);
+  -webkit-transition: box-shadow .5s ease;
+  -moz-transition: box-shadow .5s ease;
+  -o-transition: box-shadow .5s ease;
+  -ms-transition: box-shadow .5s ease;
+  transition: box-shadow .5s ease;
+}
+.sharing-button-area {
+  width: 95%;
+  margin-top: 50px;
+}
+.button-skyblue {
+  color: var(--SNOW);
+  background-color: var(--SKYBLUE);
+  opacity: 0.9;
+}
+
+.sharing-message-box {
+  margin-top: 50px;
+
+}
+
+.sharing-message {
+  line-height: 200%
+
+}
+.sharing-number {
+  height: 60px;
+  line-height: 100%;
+  padding-left: 30px;
+  letter-spacing: 0.5em;
+}
+.sharing-number::after {
+  content: '';
+  position: absolute;
+  display: inline-block;
+  left: 65%;
+  bottom: 32px;
+
+  width: 31%;
+  height: 2px;
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%);
+  background-color: var(--SKYBLUE);
+
+}
