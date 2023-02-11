@@ -11,6 +11,10 @@ body {
   min-height: 100vh;
   width: 100%;
 }
+input,textarea,select,button {
+  font-family: 'Andale Mono','Sitka Heading','Avenir',sans-serif;
+  color: var(--BLACK);
+}
 
 a {
   text-decoration: none;

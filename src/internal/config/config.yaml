@@ -6,5 +6,5 @@ db:
 filepath:
   CSS: internal/web/static/css
   JS: internal/web/static/js
-  Image: internal/web/img
-  Logo: internal/web/logo
+  image: internal/web/img
+  icon: internal/web/icon

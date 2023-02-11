@@ -18,7 +18,7 @@ func InitRouting(db *sql.DB) *echo.Echo {
 	e.Static("/css", config.Config.FilePath.CSS)
 	e.Static("/img", config.Config.FilePath.Image)
 	e.Static("/js", config.Config.FilePath.JS)
-	// e.Static("/logo", config.Config.FilePath.Logo)
+	e.Static("/icon", config.Config.FilePath.Icon)
 
 	/* No authentication required */
 	// noAuthGroup := e.Group("/auth")

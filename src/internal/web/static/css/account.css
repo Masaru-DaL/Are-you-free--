@@ -1,0 +1,66 @@
+/* icon */
+#icon-list-display-button {
+  border: none;
+}
+#icon-list {
+  width: 70%;
+  height: 60vh;
+  position: absolute;
+  top: 200px;
+  left: 400px;
+  transition: opacity 200ms;
+}
+#icon-list.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.icon-list-wrapper {
+  width: 97%;
+  height: 95%;
+
+  --bg-gradient: linear-gradient(#333 0 100%);
+    margin: 0.5rem;
+    padding: 1.5rem;
+    background-image:
+        var(--bg-gradient),
+        var(--bg-gradient),
+        var(--bg-gradient),
+        var(--bg-gradient);
+    background-repeat: no-repeat;
+    background-size: 100% 2px, 2px 100%, 100% 2px, 2px 100%;
+    background-position: left top 10px, right 10px top, left bottom 10px, left 10px top;
+}
+.icon-row {
+  width: 100%;
+  height: 50%;
+  align-items: center;
+}
+.icon-row button {
+  border: none;
+}
+.icon {
+  width: 128px;
+  height: 128px;
+  border-radius: 50%;
+  margin: 0 10px;
+  position: relative;
+}
+.icon:hover {
+	cursor: pointer;
+	transform: scale(1.1, 1.1);
+}
+.icon-size {
+  width: 131px;
+  height: 131px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+
+
+/* .account-content-right-area {
+
+} */
