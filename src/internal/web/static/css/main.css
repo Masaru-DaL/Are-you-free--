@@ -128,7 +128,6 @@
   width: 220px;
   height: 60px;
   margin: 0 40px;
-  background-color: var(--OLDLACE);
   line-height: 60px;
   text-decoration: none;
   font-size: 18px;
@@ -181,6 +180,7 @@
 
 .content-left-area {
   width: 20%;
+  height: 68vh;
   padding-top: 20px;
 }
 
@@ -192,11 +192,6 @@
 
 .index-content-right-area {
   width: 80%;
-}
-.account-content-right-area {
-  width: 80%;
-  height: 60vh;
-  margin-top: 100px;
 }
 
 .content-right-area {
