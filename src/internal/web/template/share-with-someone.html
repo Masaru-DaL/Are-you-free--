@@ -70,11 +70,14 @@
         </div>
 
         <!-- 自身のスケジュールを共有するフォーム -->
-
         <div class="sharing-content-right-wrapper">
+          <!-- error message -->
+          <p class="error-message-in-share font-20 text-darkred">エラーメッセージ</p>
+
           <div class="share-form-wrapper">
-            <h2 class="text-dimgrey">あなたのfree-timeを共有します。</h2>
-            <p class="font-18 text-dimgrey">必要な情報を入力後、共有するための番号が発行されます。</p>
+            <h2 class="text-center">SHARE WITH SOMEONE</h2>
+            <p class="text-dimgrey">あなたのfree-timeを任意の相手に共有します。</p>
+            <p class="text-dimgrey">パスワード入力後、共有するための番号が発行されます。</p>
             <form class="flex-col">
               <div class="input-area text-wood flex-col">
                 <label for="password">PASSWORD</label>
@@ -84,16 +87,16 @@
                 <button class="form-button button-skyblue">ISSUE</button>
               </div>
             </form>
-            <div class="sharing-message-box flex text-end">
-              <div class="sharing-message">
-                <p class="font-18">発行番号：</p>
+            <div class="issue-number-wrapper">
+              <h2>ISSUE NUMBER</h2>
+              <div class="sharing-number-box bg-snow flex-col">
+                <p class="sharing-number text-center font-24">1234567891234567</p>
               </div>
-              <div class="sharing-number">
-                <p class="font-24">1234567891234567</p>
+              <div class="message-box-for-share">
+                <p class="font-18 text-dimgrey">発行された番号を共有してください</p>
+                <p class="text-darkred">※有効期限：15分 / 再発行：15分</p>
               </div>
             </div>
-            <p class="font-18 text-dimgrey">発行番号を相手が入力することでfree-timeが共有されます。</p>
-            <p class="text-darkred">番号を保存してください。<br>※有効期限15分 / 再発行に15分かかります。</p>
           </div>
         </div>
     </main>
