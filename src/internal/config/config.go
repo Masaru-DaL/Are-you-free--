@@ -12,8 +12,8 @@ var Config = struct {
 	FilePath struct {
 		CSS   string `yaml:"CSS"`
 		JS    string `yaml:"JS"`
-		Image string `yaml:"Image"`
-		Logo  string `yaml:"Logo"`
+		Image string `yaml:"image"`
+		Icon  string `yaml:"icon"`
 	}
 }{}
 

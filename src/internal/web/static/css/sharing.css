@@ -1,7 +1,14 @@
+.sharing-content-right-wrapper {
+  width: 80%;
+  margin-top: 64px;
+  border: none;
+  border-left: 1px solid #000;
+}
+
 .share-form-wrapper {
   width: 50%;
   height: 100%;
-  margin: 100px auto;
+  margin: 0 auto;
 }
 .share-form-wrapper .input-area input {
   width: 100%;
@@ -32,10 +39,8 @@
   background-color: var(--SKYBLUE);
   opacity: 0.9;
 }
-
 .sharing-message-box {
   margin-top: 50px;
-
 }
 
 .sharing-message {

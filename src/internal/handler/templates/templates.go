@@ -56,6 +56,16 @@ func AccountPage(c echo.Context) error {
 	return c.Render(http.StatusOK, "account", "")
 }
 
+/* パスワードリセットページ */
+func PasswordResetPage(c echo.Context) error {
+	return c.Render(http.StatusOK, "password-reset", "")
+}
+
+/* パスワード再登録ページ */
+func PasswordReRegistrationPage(c echo.Context) error {
+	return c.Render(http.StatusOK, "password-re-registration", "")
+}
+
 /* htmlのformにもPUTやDELETEにも対応させるメソッド */
 func MethodOverride(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
