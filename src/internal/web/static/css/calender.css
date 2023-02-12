@@ -95,12 +95,10 @@ label::before {
     width: 40px;
     height: 40px;
     background-color: rgb(195, 225, 255);
-    /* background-color: rgb(120, 188, 255); */
     background-image: url("../../icon/icon-calendar.svg");
-    object-fit: cover;
     background-repeat: no-repeat;
     background-position: center;
-    border-radius: 10px;
+    border-radius: 8px;
 }
 input[type="date"] {
     padding: 0 10px;
@@ -126,8 +124,6 @@ input[type="date"]::-webkit-calendar-picker-indicator{
     padding: 0;
     width: 244.5px;
     height: 100%;
-    /* background-color: #000;
-    opacity: 0.3; */
     transform: scale(-1, 1);
     color: transparent;
     opacity: 0;
