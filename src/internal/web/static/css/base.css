@@ -14,6 +14,7 @@ body {
 input,textarea,select,button {
   font-family: 'Andale Mono','Sitka Heading','Avenir',sans-serif;
   color: var(--BLACK);
+  border: none;
 }
 
 a {
@@ -50,12 +51,20 @@ ul {
   text-align: center;
 }
 
+.text-right {
+  text-align: right;
+}
+
 .text-end {
   text-align: end;
 }
 
 .justify-center {
   justify-content: center;
+}
+
+.justify-end {
+  justify-content: end;
 }
 
 /* =================== FlexBox ====================== */

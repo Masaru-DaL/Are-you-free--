@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="../css/style.css" />
     <link rel="stylesheet" href="../css/header.css" />
     <link rel="stylesheet" href="../css/main.css" />
+    <link rel="stylesheet" href="../css/registration.css" />
     <link rel="stylesheet" href="../css/account.css" />
   </head>
   <body>
@@ -44,21 +45,23 @@
           <h1 class="text-center">ACCOUNT PAGE</h1>
         </div>
         <div class="sharing-button-wrapper mr flex">
-          <button id="icon-list-display-button" class="title-area-button bg-oldlace text-center">
-            <div class="letter-01 font-17 bg-oldlace">
-              CHANGE ICON
+
+
+          <button id="icon-list-display-button" class="title-area-button text-center bg-oldlace">
+            <div class="letter-01 font-17">
+              CHANGES ICON
             </div>
           </button>
-          <a href="/sharing/to"  class="letter-01">
-            <div class="title-area-button bg-oldlace text-center">
-              CHANGE USERNAME
+          <button id="username-change-form-display-button" class="title-area-button text-center bg-oldlace">
+            <div class="letter-01 font-17">
+              CHANGES USERNAME
             </div>
-          </a>
-          <a href="/sharing/from"  class="letter-01">
-            <div class="title-area-button bg-oldlace text-center">
-              CHANGE PASSWORD
+          </button>
+          <button id="password-change-form-display-button" class="title-area-button text-center bg-oldlace">
+            <div class="letter-01 font-17">
+              CHANGES PASSWORD
             </div>
-          </a>
+          </button>
         </div>
       </div>
 
@@ -73,78 +76,143 @@
           </form>
         </div>
 
-        <div class="account-content-right-area bg-snow">
-          <!-- アイコンリスト表示 -->
+        <!-- エラーメッセージ -->
+        <p class="error-message-in-account font-20 text-darkred">エラーメッセージ</p>
+        <div class="account-content-right-area bg-white">
+
+
           <div id="icon-list">
             <form class="icon-list-wrapper flex-col bg-white">
               <div class="icon-row flex">
-                <button class="icon">
+                <button type="button" value="icon01.svg" id="icon" class="icon">
                   <img src="../icon/icon01.svg" alt="" class="icon-size">
                 </button>
-                <button class="icon">
+
+                <button type="button" value="icon02.svg" id="icon" class="icon">
                   <img src="../icon/icon02.svg" alt="" class="icon-size">
                 </button>
-                <button class="icon">
+                <button type="button" value="icon03.svg" id="icon" class="icon">
                   <img src="../icon/icon03.svg" alt="" class="icon-size">
                 </button>
-                <button class="icon">
+                <button type="button" value="icon04.svg" id="icon" class="icon">
                   <img src="../icon/icon04.svg" alt="" class="icon-size">
                 </button>
-                <button class="icon">
+                <button type="button" value="icon05.svg" id="icon" class="icon">
                   <img src="../icon/icon05.svg" alt="" class="icon-size">
                 </button>
-                <button class="icon">
+                <button type="button" value="icon06.svg" id="icon" class="icon">
                   <img src="../icon/icon06.svg" alt="" class="icon-size">
                 </button>
-                <button class="icon">
+                <button type="button" value="icon07.svg" id="icon" class="icon">
                   <img src="../icon/icon07.svg" alt="" class="icon-size">
                 </button>
               </div>
 
               <div class="icon-row flex">
-                <button class="icon">
+                <button type="button" value="icon08.svg" id="icon" class="icon">
                   <img src="../icon/icon08.svg" alt="" class="icon-size">
                 </button>
-                <button class="icon">
+                <button type="button" value="icon09.svg" id="icon" class="icon">
                   <img src="../icon/icon09.svg" alt="" class="icon-size">
                 </button>
-                <button class="icon">
+                <button type="button" value="icon10.svg" id="icon" class="icon">
                   <img src="../icon/icon10.svg" alt="" class="icon-size">
                 </button>
-                <button class="icon">
+                <button type="button" value="icon11.svg" id="icon" class="icon">
                   <img src="../icon/icon11.svg" alt="" class="icon-size">
                 </button>
-                <button class="icon">
+                <button type="button" value="icon12.svg" id="icon" class="icon">
                   <img src="../icon/icon12.svg" alt="" class="icon-size">
                 </button>
-                <button class="icon">
+                <button type="button" value="icon13.svg" id="icon" class="icon">
                   <img src="../icon/icon13.svg" alt="" class="icon-size">
                 </button>
-                <button class="icon">
+                <button type="button" value="icon14.svg" id="icon" class="icon">
                   <img src="../icon/icon14.svg" alt="" class="icon-size">
                 </button>
               </div>
               <div class="icon-row flex">
-                <button class="icon">
+                <button type="button" value="icon15.svg" id="icon" class="icon">
                   <img src="../icon/icon15.svg" alt="" class="icon-size">
                 </button>
-                <button class="icon">
+                <button type="button" value="icon16.svg" id="icon" class="icon">
                   <img src="../icon/icon16.svg" alt="" class="icon-size">
                 </button>
-                <button class="icon">
+                <button type="button" value="icon17.svg" id="icon" class="icon">
                   <img src="../icon/icon17.svg" alt="" class="icon-size">
                 </button>
-                <button class="icon">
+                <button type="button" value="icon18.svg" id="icon" class="icon">
                   <img src="../icon/icon18.svg" alt="" class="icon-size">
                 </button>
-                <button class="icon">
+                <button type="button" value="icon19.svg" id="icon" class="icon">
                   <img src="../icon/icon19.svg" alt="" class="icon-size">
                 </button>
-                <button class="icon">
+                <button type="button" value="icon20.svg" id="icon" class="icon">
                   <img src="../icon/icon20.svg" alt="" class="icon-size">
                 </button>
-                <button class="icon">
+                <button type="button" value="icon21.svg" id="icon" class="icon">
                   <img src="../icon/icon21.svg" alt="" class="icon-size">
+                </button>
+              </div>
+              <div class="justify-end button-row flex">
+                <button id="submit-button" type="submit" class="bg-wood">
+                  <div class="text-snow letter-01 font-17">
+                    SUBMIT CHANGES
+                  </div>
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- ユーザ名変更フォーム表示 -->
+          <div id="username-change-form">
+            <form class="icon-list-wrapper flex-col bg-white">
+              <div class="username-input-wrapper m-auto flex-col">
+                <h2 class="text-center letter-01">CHANGES USERNAME</h2>
+                <p class="font-18">新しいユーザー名を入力してください。</p>
+                <div class="input-area text-wood flex-col">
+                  <label for="name">NEW USERNAME</label>
+                  <input type="text" name="issue-number" maxlength="16" />
+                </div>
+                <div class="input-area text-wood flex-col">
+                  <label for="name">NEW USERNAME CONFIRMATION</label>
+                  <input type="text" name="issue-number" maxlength="16" />
+                </div>
+              </div>
+              <div class="justify-end button-row flex">
+                <button id="submit-button" type="submit" class="bg-wood">
+                  <div class="text-snow letter-01 font-17">
+                    SUBMIT CHANGES
+                  </div>
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- パスワード変更フォーム表示 -->
+          <div id="password-change-form">
+            <form class="icon-list-wrapper flex-col bg-white">
+              <div class="username-input-wrapper m-auto flex-col">
+                <h2 class="text-center letter-01">CHANGES PASSWORD</h2>
+                <p class="font-18">現在のパスワードと新しいパスワードを入力してください。</p>
+                <div class="input-area text-wood flex-col">
+                  <label for="name">PASSWORD</label>
+                  <input type="text" name="issue-number" maxlength="16" />
+                </div>
+                <div class="input-area text-wood flex-col">
+                  <label for="name">NEW PASSWORD</label>
+                  <input type="text" name="issue-number" maxlength="16" />
+                </div>
+                <div class="input-area text-wood flex-col">
+                  <label for="name">NEW PASSWORD CONFIRMATION</label>
+                  <input type="text" name="issue-number" maxlength="16" />
+                </div>
+              </div>
+              <div class="justify-end button-row flex">
+                <button id="submit-button" type="submit" class="bg-wood">
+                  <div class="text-snow letter-01 font-17">
+                    SUBMIT CHANGES
+                  </div>
                 </button>
               </div>
             </form>
@@ -203,7 +271,7 @@
                     <div class="detail-box-password flex-col">
                       <p>パスワードをお忘れの方はこちら</p>
                       <a href="/account/reset">
-                        <div class="title-area-button bg-beige text-center">
+                        <div class="title-area-button bg-snow text-center">
                           PASSWORD RESET
                         </div>
                       </a>
@@ -221,7 +289,7 @@
 
   </body>
   <script type="text/javascript" src="../js/now.js"></script>
-  <script src="../js/icon-list.js"></script>
+  <script src="../js/account-button.js"></script>
 
 </html>
 {{end}}

@@ -30,6 +30,10 @@
   background-color: var(--BURLYWOOD);
 }
 
+.bg-wood {
+  background-color: var(--WOOD);
+}
+
 .bg-snow {
   background-color: var(--SNOW);
 }

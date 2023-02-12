@@ -121,13 +121,15 @@
   margin-top: 20px;
   align-items: center;
   justify-content: center;
-
 }
 
+.title-area-button-wrapper {
+  width: 10%;
+}
 .title-area-button {
   width: 220px;
   height: 60px;
-  margin: 0 40px;
+  margin: 0 20px;
   line-height: 60px;
   text-decoration: none;
   font-size: 18px;
