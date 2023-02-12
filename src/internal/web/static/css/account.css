@@ -10,6 +10,11 @@
   top: 24%;
   left: 50%;
 }
+.error-message-in-password-reset {
+  position: absolute;
+  top: 47%;
+  left: 50%;
+}
 
 #icon-list-display-button {
   border: none;
@@ -324,4 +329,19 @@
 }
 .detail-box-password .title-area-button {
   margin-left: 124px;
+}
+
+.password-reset-input-wrapper {
+  width: 50%;
+  height: 100%;
+  margin-top: 40px;
+}
+.password-re-registration-input-wrapper {
+  width: 50%;
+  height: 100%;
+  margin-top: 10px;
+}
+.password-reset-button-area {
+  width: 93.5%;
+  margin-top: 33px;
 }
