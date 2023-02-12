@@ -79,7 +79,7 @@ td.today {
     float: right;
 }
 
-label {
+.calendar-label {
     position: relative;
     display: inline-block;
     width: 200px;
@@ -87,7 +87,7 @@ label {
     border: 2px solid var(--WOOD);
     border-radius: 15px;
 }
-label::before {
+.calendar-label::before {
     position: absolute;
     content: "";
     top: -2px;
