@@ -5,6 +5,19 @@
   border-left: 1px solid #000;
 }
 
+.sharing-title-area-button {
+  width: 280px;
+  height: 60px;
+  margin: 0 30px;
+  line-height: 60px;
+  text-decoration: none;
+  font-size: 18px;
+  border-radius: 8px;
+  position: relative;
+  transition: 0.3s;
+  overflow: hidden;
+  box-shadow: -5px -5px 10px 0px rgba(255, 255, 255, 0.5), 4px 4px 5px 0px rgba(43, 43, 43, 0.3);
+}
 .share-form-wrapper {
   width: 50%;
   height: 100%;
@@ -57,8 +70,8 @@
   content: '';
   position: absolute;
   display: inline-block;
+  top: 85%;
   left: 65%;
-  bottom: 32px;
 
   width: 31%;
   height: 2px;

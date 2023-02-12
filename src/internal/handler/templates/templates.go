@@ -28,27 +28,27 @@ func SchedulePage(c echo.Context) error {
 
 /* スケジュールページ */
 func SchedulesPage(c echo.Context) error {
-	return c.Render(http.StatusOK, "schedule", "")
+	return c.Render(http.StatusOK, "free-time", "")
 }
 
 /* スケジュール作成ページ */
 func CreateSchedulePage(c echo.Context) error {
-	return c.Render(http.StatusOK, "create-schedule", "")
+	return c.Render(http.StatusOK, "new-free-time", "")
 }
 
 /* スケジュール更新ページ */
 func UpdateSchedulePage(c echo.Context) error {
-	return c.Render(http.StatusOK, "update-schedule", "")
+	return c.Render(http.StatusOK, "update-free-time", "")
 }
 
 /* 自身のスケジュールを共有するページ */
 func SharingToSomeonePage(c echo.Context) error {
-	return c.Render(http.StatusOK, "sharing-to-someone", "")
+	return c.Render(http.StatusOK, "share-with-someone", "")
 }
 
 /* 相手のスケジュールを共有するページ */
 func SharingFromSomeonePage(c echo.Context) error {
-	return c.Render(http.StatusOK, "sharing-from-someone", "")
+	return c.Render(http.StatusOK, "share-with-me", "")
 }
 
 /* アカウントページ */

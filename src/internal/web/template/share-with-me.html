@@ -1,11 +1,11 @@
-{{define "sharing-to-someone"}}
+{{define "share-with-me"}}
 <!DOCTYPE html>
 <html lang="ja">
   <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sharing</title>
+    <title>Are you free? _SHARE SOMEONE'S free-time WITH ME_</title>
     <link rel="stylesheet" href="../css/style.css" />
     <link rel="stylesheet" href="../css/registration.css" />
     <link rel="stylesheet" href="../css/header.css" />
@@ -46,13 +46,13 @@
         </div>
         <div class="sharing-button-wrapper mr flex">
           <a href="/sharing/to"  class="letter-01">
-            <div class="title-area-button bg-oldlace text-center">
-              TO SOMEONE
+            <div class="sharing-title-area-button bg-oldlace text-center">
+              SHARE WITH SOMEONE
             </div>
           </a>
           <a href="/sharing/from"  class="letter-01">
-            <div class="title-area-button bg-oldlace text-center">
-              FROM SOMEONE
+            <div class="sharing-title-area-button bg-oldlace text-center">
+              SHARE WITH ME
             </div>
           </a>
         </div>
@@ -69,37 +69,28 @@
           </form>
         </div>
 
-        <!-- 自身のスケジュールを共有するフォーム -->
-
+        <!-- 相手のスケジュールを共有するフォーム -->
         <div class="sharing-content-right-wrapper">
           <div class="share-form-wrapper">
-            <h3 class="text-dimgrey">あなたのアカウント情報を入力してください</h3>
-            <p class="text-dimgrey">認可後に番号が発行されます：※有効期限15分</p>
+            <h3 class="text-dimgrey">共有したい相手が発行した番号を入力してください。</h3>
+            <p class="text-dimgrey">※有効期限（15分）以内に入力してください。</p>
             <form class="flex-col">
               <div class="input-area text-wood flex-col">
-                <label for="name">USERNAME</label>
-                <input type="text" name="username" maxlength="10" />
-              </div>
-              <div class="input-area text-wood flex-col">
-                <label for="password">PASSWORD</label>
-                <input type="password" name="password" maxlength="10" />
+                <label for="name">ISSUE NUMBER</label>
+                <input type="text" name="issue-number" maxlength="16" />
               </div>
               <div class="sharing-button-area">
-                <button class="form-button button-skyblue">ISSUE</button>
+                <button class="form-button button-skyblue">REGISTER</button>
               </div>
             </form>
-            <div class="sharing-message-box flex text-end">
-              <div class="sharing-message">
-                <p class="font-18">発行番号：</p>
-              </div>
-              <div class="sharing-number">
-                <p class="font-24">1234567891234567</p>
-              </div>
+
+            <div class="sharing-message-box">
+              <p class="font-18">相手のスケジュールを共有しました。</p>
             </div>
-            <p class="font-18 text-dimgrey">発行された番号を相手と共有してください。</p>
-            <p class="text-darkred">番号を保存してください。※再発行に15分かかります。</p>
           </div>
         </div>
+      </div>
+
     </main>
 
 
