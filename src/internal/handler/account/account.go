@@ -2,6 +2,7 @@ package account
 
 import (
 	"database/sql"
+	"fmt"
 	"net/http"
 	"src/internal/config"
 	"src/internal/entity"
@@ -17,7 +18,7 @@ import (
 /* サインアップ機能 */
 func Signup(db *sql.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		// フォームから送られた値
+		// フォームから送信された値
 		signupName := c.FormValue("username")
 		signupPassword := c.FormValue("password")
 		signupPasswordConfirmation := c.FormValue("password-confirmation")
@@ -70,6 +71,7 @@ func Signup(db *sql.DB) echo.HandlerFunc {
 		if err != sql.ErrNoRows {
 			// 入力されたパスワードをユーザ情報のパスワードと比較する
 			err = auth.CompareHashAndPlaintext(user.Password, signupPassword)
+			// err == nil => DBに既に存在している
 			if err == nil {
 				return c.Render(http.StatusOK, "signup", echo.Map{
 					"error_message": entity.ERR_ALREADY_USER_EXISTS,
@@ -102,8 +104,36 @@ func Signup(db *sql.DB) echo.HandlerFunc {
 /* ログイン機能 */
 func Login(db *sql.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
+		// フォームから送信された値
 		loginName := c.FormValue("username")
 		loginPassword := c.FormValue("password")
+
+		/* Checking input data from forms Start here. */
+		// 空入力の場合
+		if loginName == "" || loginPassword == "" {
+			return c.Render(http.StatusOK, "signup", echo.Map{
+				"error_message": entity.ERR_INPUT_EMPTY,
+			})
+		}
+		// ユーザ名をチェックする
+		user, err := users.UserReqUsername(db, loginName)
+		// ユーザ情報が取得できなかった場合
+		if err == sql.ErrNoRows {
+			return c.Render(http.StatusOK, "signup", echo.Map{
+				"error_message": entity.ERR_NO_USER,
+			})
+			// パスワードをチェックする
+		} else {
+			// 入力されたパスワードをユーザ情報のパスワードと比較する
+			err = auth.CompareHashAndPlaintext(user.Password, loginPassword)
+			// err != nil => DBに存在していない
+			if err != nil {
+				return c.Render(http.StatusOK, "signup", echo.Map{
+					"error_message": entity.ERR_ALREADY_USER_EXISTS,
+				})
+			}
+		}
+		/* Checking input data from form Here. */
 
 		/* Setting up a user's session From here. */
 		session, _ := session.Get(config.Config.AUTH.Session, c)
@@ -112,17 +142,13 @@ func Login(db *sql.DB) echo.HandlerFunc {
 			MaxAge:   config.Config.AUTH.SessionExpirationSec * config.Config.AUTH.SessionExpirationDay,
 			HttpOnly: true,
 		}
-		// ユーザの情報を取得する
-		user, err := users.UserReqUsername(db, loginName)
-		if err != nil {
-			return c.Render(http.StatusOK, "signup", echo.Map{
-				"error_message": entity.ERR_INTERNAL_SERVER_ERROR,
-			})
-		}
 		session.Values["UserID"] = user.ID
 		session.Values["UserName"] = user.Name
 		session.Save(c.Request(), c.Response())
 		/* Setting up a user's session here. */
+
+		fmt.Println(session)
+		fmt.Println(session.Values)
 
 		return c.Redirect(http.StatusSeeOther, "/index")
 	}

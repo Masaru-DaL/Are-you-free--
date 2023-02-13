@@ -26,14 +26,15 @@ func InitRouting(db *sql.DB) *echo.Echo {
 	/* Unauthorized routing group. */
 	unauthenticatedAuthGroup := e.Group("/auth")
 	unauthenticatedAuthGroup.GET("/signup", templates.SignupPage)
-	unauthenticatedAuthGroup.GET("/login", templates.LoginPage)
 	unauthenticatedAuthGroup.POST("/signup", account.Signup(db))
+	unauthenticatedAuthGroup.GET("/login", templates.LoginPage)
+	unauthenticatedAuthGroup.POST("/login", account.Login(db))
 
 	/* Authorized routing group. */
 	authenticatedAuthGroup := e.Group("/")
 	cookieStore := auth.InitSession()
 	e.Use(session.Middleware(cookieStore))
-	authenticatedAuthGroup.GET("/index", templates.TopPage)
+	authenticatedAuthGroup.GET("index", templates.TopPage)
 	// e.GET("/index", templates.TopPage)
 	e.GET("/free-time", templates.FreeTimePage)
 	e.GET("/free-times", templates.FreeTimesPage)
