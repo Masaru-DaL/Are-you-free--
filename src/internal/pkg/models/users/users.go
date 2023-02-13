@@ -6,8 +6,8 @@ import (
 )
 
 /* ユーザの新規作成 */
-func CreateUser(db *sql.DB, userName string, hashedPassword string) error {
-	sqlStatement := "INSERT INTO users(name, password) VALUES(?, ?)"
+func CreateUser(db *sql.DB, userName string, encryptedPassword string, email string) error {
+	sqlStatement := "INSERT INTO users(name, password, email) VALUES(?, ?, ?)"
 
 	stmt, err := db.Prepare(sqlStatement)
 	if err != nil {
@@ -16,7 +16,7 @@ func CreateUser(db *sql.DB, userName string, hashedPassword string) error {
 	}
 	defer stmt.Close()
 
-	_, err = stmt.Exec(userName, hashedPassword)
+	_, err = stmt.Exec(userName, encryptedPassword, email)
 	if err != nil {
 		log.Printf("Failed to Exec for create retrieval operation in the users: %v", err)
 		return err
