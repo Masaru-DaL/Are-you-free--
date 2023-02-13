@@ -3,3 +3,5 @@
 
 *.yaml
 .DS_Store
+
+*.txt
