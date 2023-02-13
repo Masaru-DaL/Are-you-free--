@@ -6,6 +6,7 @@ import (
 	"src/internal/entity"
 	"src/internal/pkg/auth"
 	"src/internal/pkg/models/users"
+	"src/internal/pkg/strings"
 
 	"github.com/labstack/echo/v4"
 )
@@ -13,21 +14,39 @@ import (
 /* サインアップ */
 func Signup(db *sql.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
+		// フォームから送られた値
 		signupName := c.FormValue("username")
 		signupPassword := c.FormValue("password")
 		signupPasswordConfirmation := c.FormValue("password-confirmation")
 		signupEmail := c.FormValue("e-mail")
 
-		// フォームの入力チェック
+		/* フォームの入力チェック */
+		// 空入力の場合
 		if signupName == "" || signupPassword == "" || signupPasswordConfirmation == "" || signupEmail == "" {
 			return c.Render(http.StatusAccepted, "signup", echo.Map{
 				"message": entity.Err_Input_Empty,
 			})
+			// パスワードと再確認用パスワードが一致しなかった場合
 		} else if signupPassword != signupPasswordConfirmation {
 			return c.Render(http.StatusAccepted, "signup", echo.Map{
 				"message": entity.Err_Value_Mismatched,
 			})
 		}
+		// 入力された値が文字数制限を超えている場合
+		if len(signupName) > entity.LimitCharCountOfUsername || len(signupPassword) > entity.LimitCharCountOfPassword {
+			return c.Render(http.StatusAccepted, "signup", echo.Map{
+				"message": entity.Err_Limit_Over,
+			})
+		}
+		// 入力されたデータに空白が混入されていないかチェック
+		checkResultSignupName := strings.CheckWhitespaceInString(signupName)
+		checkResultSignupPassword := strings.CheckWhitespaceInString(signupPassword)
+		if checkResultSignupName || checkResultSignupPassword {
+			return c.Render(http.StatusAccepted, "signup", echo.Map{
+				"message": entity.Err_Input_Whitespace,
+			})
+		}
+		//
 
 		// 入力されたパスワードのハッシュ化
 		encryptedSignupPassword, err := auth.PasswordEncrypt(signupPassword)
@@ -44,23 +63,6 @@ func Signup(db *sql.DB) echo.HandlerFunc {
 				"message": entity.Err_Unexpected,
 			})
 		}
-
-		/* */
-		// // 入力された文字数が文字数制限を超えているかどうか
-		// if len(signUpName) > entity.NumberOfCharacterLimitsOnTheForm || len(signUpPassword) > entity.NumberOfCharacterLimitsOnTheForm {
-		// 	return c.Render(http.StatusAccepted, "signup", echo.Map{
-		// 		"message": entity.Err_Character_Limit_Over,
-		// 	})
-		// }
-
-		// // 入力されたデータに空白が混入されていないかチェック
-		// signUpNameCheckResult := strmanip.CheckWhitespaceInString(signUpName)
-		// signUpPasswordCheckResult := strmanip.CheckWhitespaceInString(signUpPassword)
-		// if signUpNameCheckResult || signUpPasswordCheckResult {
-		// 	return c.Render(http.StatusAccepted, "signup", echo.Map{
-		// 		"message": entity.Err_Contains_Whitespace,
-		// 	})
-		// }
 
 		// // 入力された情報がDBに存在するかを確認する
 		// storedUser, err := users.UserWhereName(db, signUpName)
