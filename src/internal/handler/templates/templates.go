@@ -23,12 +23,12 @@ func TopPage(c echo.Context) error {
 
 /* スケジュールページ */
 func SchedulePage(c echo.Context) error {
-	return c.Render(http.StatusOK, "schedule", "")
+	return c.Render(http.StatusOK, "free-time", "")
 }
 
 /* スケジュールページ */
 func SchedulesPage(c echo.Context) error {
-	return c.Render(http.StatusOK, "free-time", "")
+	return c.Render(http.StatusOK, "free-times", "")
 }
 
 /* スケジュール作成ページ */
