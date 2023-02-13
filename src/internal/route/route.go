@@ -24,17 +24,17 @@ func InitRouting(db *sql.DB) *echo.Echo {
 	e.Static("/icon", config.Config.FilePath.Icon)
 
 	/* Unauthorized routing group. */
-	unauthenticatedAuthGroup := e.Group("/auth")
-	unauthenticatedAuthGroup.GET("/signup", templates.SignupPage)
-	unauthenticatedAuthGroup.POST("/signup", account.Signup(db))
-	unauthenticatedAuthGroup.GET("/login", templates.LoginPage)
-	unauthenticatedAuthGroup.POST("/login", account.Login(db))
+	unAuthenticatedGroup := e.Group("/auth")
+	unAuthenticatedGroup.GET("/signup", templates.SignupPage)
+	unAuthenticatedGroup.POST("/signup", account.Signup(db))
+	unAuthenticatedGroup.GET("/login", templates.LoginPage)
+	unAuthenticatedGroup.POST("/login", account.Login(db))
 
 	/* Authorized routing group. */
-	authenticatedAuthGroup := e.Group("/")
+	authenticatedGroup := e.Group("/")
 	cookieStore := auth.InitSession()
 	e.Use(session.Middleware(cookieStore))
-	authenticatedAuthGroup.GET("index", templates.TopPage)
+	authenticatedGroup.GET("index", templates.TopPage)
 	// e.GET("/index", templates.TopPage)
 	e.GET("/free-time", templates.FreeTimePage)
 	e.GET("/free-times", templates.FreeTimesPage)
