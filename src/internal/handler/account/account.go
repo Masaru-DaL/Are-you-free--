@@ -38,7 +38,7 @@ func Signup(db *sql.DB) echo.HandlerFunc {
 				"message": entity.Err_Limit_Over,
 			})
 		}
-		// 入力されたデータに空白が混入されていないかチェック
+		// 入力されたデータに空白が混入されている場合
 		checkResultSignupName := strings.CheckWhitespaceInString(signupName)
 		checkResultSignupPassword := strings.CheckWhitespaceInString(signupPassword)
 		if checkResultSignupName || checkResultSignupPassword {
@@ -46,11 +46,24 @@ func Signup(db *sql.DB) echo.HandlerFunc {
 				"message": entity.Err_Input_Whitespace,
 			})
 		}
-		//
-
+		// 入力されたデータにクオーテーションが混入されている場合
+		checkResultSignupName = strings.CheckQuotationInString(signupName)
+		checkResultSignupPassword = strings.CheckQuotationInString(signupPassword)
+		if checkResultSignupName || checkResultSignupPassword {
+			return c.Render(http.StatusAccepted, "signup", echo.Map{
+				"message": entity.Err_Input_Whitespace,
+			})
+		}
 		// 入力されたパスワードのハッシュ化
 		encryptedSignupPassword, err := auth.PasswordEncrypt(signupPassword)
 		if err != nil {
+			return c.Render(http.StatusAccepted, "signup", echo.Map{
+				"message": entity.Err_Unexpected,
+			})
+		}
+		// 入力された名前・パスワードの両方が一致するユーザが存在する場合
+		_, err = users.UserReqUsernameAndPassword(db, signupName, encryptedSignupPassword)
+		if err != sql.ErrNoRows {
 			return c.Render(http.StatusAccepted, "signup", echo.Map{
 				"message": entity.Err_Unexpected,
 			})
@@ -63,56 +76,6 @@ func Signup(db *sql.DB) echo.HandlerFunc {
 				"message": entity.Err_Unexpected,
 			})
 		}
-
-		// // 入力された情報がDBに存在するかを確認する
-		// storedUser, err := users.UserWhereName(db, signUpName)
-		// if err != sql.ErrNoRows {
-		// 	// 入力された名前がDBに名前が存在した場合、入力されたパスワードをチェックする
-		// 	err := auth.CompareHashAndPlaintext(storedUser.Password, signUpPassword)
-		// 	if err != nil {
-		// 		return c.Render(http.StatusAccepted, "login", echo.Map{
-		// 			"message": entity.Err_Already_Exist,
-		// 		})
-		// 	}
-		// 	return c.Render(http.StatusAccepted, "signup", echo.Map{
-		// 		"message": entity.Err_Already_Exist,
-		// 	})
-		// }
-
-		// // 入力されたパスワードのハッシュ化
-		// encryptSignupPassword, err := auth.PasswordEncrypt(signUpPassword)
-		// if err != nil {
-		// 	return c.Render(http.StatusAccepted, "signup", echo.Map{
-		// 		"message": entity.Err_Unexpected_Error,
-		// 	})
-		// }
-
-		// ユーザの新規登録
-		// err = users.CreateUser(db, signUpName, encryptSignupPassword)
-		// if err != nil {
-		// 	return c.Render(http.StatusAccepted, "signup", echo.Map{
-		// 		"message": entity.Err_Unexpected_Error,
-		// 	})
-		// }
-
-		// signUpUser, err := users.UserWhereName(db, signUpName)
-		// if err != nil {
-		// 	return c.Render(http.StatusAccepted, "signup", echo.Map{
-		// 		"message": entity.Err_Unexpected_Error,
-		// 	})
-		// }
-
-		// // サインアップしたユーザに対して指定回数分のギフトコードを付与する
-		// signUpUserID := signUpUser.ID
-		// for i := 0; i < entity.NumberOfTimesChargeable; i++ {
-		// 	randomNumber := nummanip.CreateRandomNumber()
-		// 	createChargeErr := charges.CreateCharge(db, signUpUserID, randomNumber)
-		// 	if createChargeErr != nil {
-		// 		return c.Render(http.StatusAccepted, "signup", echo.Map{
-		// 			"message": entity.Err_Unexpected_Error,
-		// 		})
-		// 	}
-		// }
 
 		return c.Redirect(http.StatusSeeOther, "/login")
 	}
