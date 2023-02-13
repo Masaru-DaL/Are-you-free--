@@ -1,0 +1,69 @@
+CREATE TABLE users(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name CHAR(10) NOT NULL,
+        password CHAR(20) NOT NULL,
+        email VARCHAR(255) NOT NULL UNIQUE CHECK(email LIKE '%_@__%.__%'),
+        is_admin BOOLEAN DEFAULT 0,
+        created_at TIMESTAMP DEFAULT (DATETIME('now','localtime')),
+				updated_at TIMESTAMP DEFAULT (DATETIME('now','localtime'))
+);
+
+import (
+    "github.com/labstack/echo"
+    "github.com/labstack/echo-contrib/session"
+    "github.com/labstack/echo-contrib/session/cookie"
+)
+
+func main() {
+    e := echo.New()
+
+    // Cookieセッションストアを作成する
+    store := cookie.NewStore([]byte("secret-key"))
+
+    // セッション設定を作成する
+    sessCfg := session.Config{
+        Store: store,
+        Name:  "session-id",
+    }
+
+    // セッションを有効にする
+    e.Use(session.Middleware(sessCfg))
+
+    // セッションに値を設定するハンドラー
+    e.GET("/set-session", func(c echo.Context) error {
+        sess, _ := session.Get("session", c)
+        sess.Values["foo"] = "bar"
+        sess.Save(c.Request(), c.Response())
+        return c.String(http.StatusOK, "Session set")
+    })
+
+    // セッションから値を取得するハンドラー
+    e.GET("/get-session", func(c echo.Context) error {
+        sess, _ := session.Get("session", c)
+        val := sess.Values["foo"]
+        return c.String(http.StatusOK, fmt.Sprintf("Value: %v", val))
+    })
+
+    e.Logger.Fatal(e.Start(":8080"))
+}
+上記のコードでは、Cookieセッションストアを作成し、セッション設定を作成して、それをechoのミドルウェアに登録しています。セッションに値を設定するハンドラーでは、セッションを取得し、セッションに値を設定しています。セッションから値を取得するハンドラーでは、セッションを取得し、セッションから値を取得しています。
+
+なお、この例ではCookieに保存する値としてsession-idを設定していますが、この値は自由に変更することができます。また、Cookieに保存する値には暗号化キーが必要となりますが、この例では"secret-key"を使用しています。実際には、より強固な暗号化キーを使用することが望ましいです。
+
+
+
+c.Session().Delete("session_key")は、セッションストアから特定のキーの値を削除するためのものであり、HTTPリクエストのメソッドには関係ありません。
+
+c.Session().Options = &sessions.Options{MaxAge: -1}とc.Session().Save()は、セッションストアからすべてのセッションを削除するためのものであり、HTTPリクエストのメソッドにも関係ありません。
+
+つまり、これらの操作を行うためには、HTTPリクエストのメソッドを問わず、セッションを操作するハンドラー内で実行することができます。GETメソッドで行う必要はありません。例えば、以下のようにPOSTメソッドを使用して実行できます。
+e.POST("/delete-session", func(c echo.Context) error {
+    // セッションから値を削除する
+    c.Session().Delete("session_key")
+
+    // セッションを完全に破棄する
+    c.Session().Options = &sessions.Options{MaxAge: -1}
+    c.Session().Save()
+
+    return c.String(http.StatusOK, "Session deleted")
+})
