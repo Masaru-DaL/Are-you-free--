@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"log"
 	"net/http"
+	"src/internal/entity"
 
 	"github.com/labstack/echo/v4"
 )
@@ -34,8 +35,8 @@ func Users(db *sql.DB) echo.HandlerFunc {
 				&user.ID,
 				&user.Name,
 				&user.Password,
+				&user.Email,
 				&user.IsAdmin,
-				&user.Deposit,
 				&user.CreatedAt,
 				&user.UpdatedAt)
 
