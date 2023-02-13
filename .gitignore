@@ -1,4 +1,7 @@
 # tmpを除外する（Airを採用しているため）
 */tmp*
 
+*.yaml
 .DS_Store
+
+*.txt

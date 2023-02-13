@@ -15,6 +15,14 @@ var Config = struct {
 		Image string `yaml:"image"`
 		Icon  string `yaml:"icon"`
 	}
+
+	AUTH struct {
+		Session              string `yaml:"session"`
+		SessionKey           string `yaml:"sessionKey"`
+		SessionPath          string `yaml:"sessionPath"`
+		SessionExpirationSec int    `yaml:"sessionExpirationSec"`
+		SessionExpirationDay int    `yaml:"sessionExpirationDay"`
+	}
 }{}
 
 /*

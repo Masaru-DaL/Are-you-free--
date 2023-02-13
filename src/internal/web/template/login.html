@@ -15,12 +15,16 @@
       <div class="registration-top-area bg-snow flex">
         <h2 class="title login-title">LOGIN</h2>
         <div class="registration-link-wrapper">
-          <a href="/signup" class="registration-link">アカウントの登録はこちら</a>
+          <a href="/auth/signup" class="registration-link">アカウントの登録はこちら</a>
         </div>
       </div>
       <div class="login-image-area flex-col">
 
-        <form class="login-form-area m-auto">
+        <form
+          action="/auth/login"
+          method="POST"
+          class="login-form-area m-auto"
+          >
           <div class="input-area text-snow flex-col">
             <label for="name">USERNAME</label>
             <input type="text" name="username" placeholder="Your username." maxlength="10" />
