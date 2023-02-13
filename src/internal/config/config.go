@@ -17,7 +17,11 @@ var Config = struct {
 	}
 
 	AUTH struct {
-		SessionKey string `yaml:"sessionKey"`
+		Session              string `yaml:"session"`
+		SessionKey           string `yaml:"sessionKey"`
+		SessionPath          string `yaml:"sessionPath"`
+		SessionExpirationSec int    `yaml:"sessionExpirationSec"`
+		SessionExpirationDay int    `yaml:"sessionExpirationDay"`
 	}
 }{}
 

@@ -3,15 +3,18 @@ package account
 import (
 	"database/sql"
 	"net/http"
+	"src/internal/config"
 	"src/internal/entity"
 	"src/internal/pkg/auth"
 	"src/internal/pkg/models/users"
 	"src/internal/pkg/strings"
 
+	"github.com/gorilla/sessions"
+	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
 )
 
-/* サインアップ */
+/* サインアップ機能 */
 func Signup(db *sql.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		// フォームから送られた値
@@ -24,18 +27,18 @@ func Signup(db *sql.DB) echo.HandlerFunc {
 		// 空入力の場合
 		if signupName == "" || signupPassword == "" || signupPasswordConfirmation == "" || signupEmail == "" {
 			return c.Render(http.StatusOK, "signup", echo.Map{
-				"error_message": entity.Err_Input_Empty,
+				"error_message": entity.ERR_INPUT_EMPTY,
 			})
 			// パスワードと再確認用パスワードが一致しなかった場合
 		} else if signupPassword != signupPasswordConfirmation {
 			return c.Render(http.StatusOK, "signup", echo.Map{
-				"error_message": entity.Err_Value_Mismatched,
+				"error_message": entity.ERR_INPUT_MISSING,
 			})
 		}
 		// 入力された値が文字数制限を超えている場合
 		if len(signupName) > entity.LimitCharCountOfUsername || len(signupPassword) > entity.LimitCharCountOfPassword {
 			return c.Render(http.StatusOK, "signup", echo.Map{
-				"error_message": entity.Err_Limit_Over,
+				"error_message": entity.ERR_INPUT_LIMIT_OVER,
 			})
 		}
 		// 入力されたデータに空白が混入されている場合
@@ -43,7 +46,7 @@ func Signup(db *sql.DB) echo.HandlerFunc {
 		checkResultSignupPassword := strings.CheckWhitespaceInString(signupPassword)
 		if checkResultSignupName || checkResultSignupPassword {
 			return c.Render(http.StatusOK, "signup", echo.Map{
-				"error_message": entity.Err_Input_Whitespace,
+				"error_message": entity.ERR_NO_WHITESPACE,
 			})
 		}
 		// 入力されたデータにクオーテーションが混入されている場合
@@ -51,14 +54,14 @@ func Signup(db *sql.DB) echo.HandlerFunc {
 		checkResultSignupPassword = strings.CheckQuotationInString(signupPassword)
 		if checkResultSignupName || checkResultSignupPassword {
 			return c.Render(http.StatusOK, "signup", echo.Map{
-				"error_message": entity.Err_Input_Quotation,
+				"error_message": entity.ERR_NO_QUOTATION,
 			})
 		}
 		// メールアドレスの形式が正しくない場合
 		checkResultSignupEmail := strings.CheckEmailFormat(signupEmail)
 		if !checkResultSignupEmail {
 			return c.Render(http.StatusOK, "signup", echo.Map{
-				"error_message": entity.Err_Email_Format,
+				"error_message": entity.ERR_FAILED_EMAIL_FORMAT,
 			})
 		}
 		// 入力された名前でDBから情報を取得する
@@ -69,7 +72,7 @@ func Signup(db *sql.DB) echo.HandlerFunc {
 			err = auth.CompareHashAndPlaintext(user.Password, signupPassword)
 			if err == nil {
 				return c.Render(http.StatusOK, "signup", echo.Map{
-					"error_message": entity.Err_Info_Already,
+					"error_message": entity.ERR_ALREADY_USER_EXISTS,
 				})
 			}
 		}
@@ -79,19 +82,48 @@ func Signup(db *sql.DB) echo.HandlerFunc {
 		encryptedSignupPassword, err := auth.PasswordEncrypt(signupPassword)
 		if err != nil {
 			return c.Render(http.StatusOK, "signup", echo.Map{
-				"error_message": entity.Err_Unexpected,
+				"error_message": entity.ERR_INTERNAL_SERVER_ERROR,
 			})
 		}
 		// サインアップ情報の登録
 		err = users.CreateUser(db, signupName, encryptedSignupPassword, signupEmail)
 		if err != nil {
 			return c.Render(http.StatusOK, "signup", echo.Map{
-				"error_message": entity.Err_Unexpected,
+				"error_message": entity.ERR_INTERNAL_SERVER_ERROR,
 			})
 		}
 
 		return c.Render(http.StatusCreated, "login", echo.Map{
 			"error_message": nil,
 		})
+	}
+}
+
+/* ログイン機能 */
+func Login(db *sql.DB) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		loginName := c.FormValue("username")
+		loginPassword := c.FormValue("password")
+
+		/* Setting up a user's session From here. */
+		session, _ := session.Get(config.Config.AUTH.Session, c)
+		session.Options = &sessions.Options{
+			Path:     config.Config.AUTH.SessionPath,
+			MaxAge:   config.Config.AUTH.SessionExpirationSec * config.Config.AUTH.SessionExpirationDay,
+			HttpOnly: true,
+		}
+		// ユーザの情報を取得する
+		user, err := users.UserReqUsername(db, loginName)
+		if err != nil {
+			return c.Render(http.StatusOK, "signup", echo.Map{
+				"error_message": entity.ERR_INTERNAL_SERVER_ERROR,
+			})
+		}
+		session.Values["UserID"] = user.ID
+		session.Values["UserName"] = user.Name
+		session.Save(c.Request(), c.Response())
+		/* Setting up a user's session here. */
+
+		return c.Redirect(http.StatusSeeOther, "/index")
 	}
 }

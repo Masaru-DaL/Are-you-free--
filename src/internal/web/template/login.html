@@ -20,7 +20,11 @@
       </div>
       <div class="login-image-area flex-col">
 
-        <form class="login-form-area m-auto">
+        <form
+          action="/auth/login"
+          method="POST"
+          class="login-form-area m-auto"
+          >
           <div class="input-area text-snow flex-col">
             <label for="name">USERNAME</label>
             <input type="text" name="username" placeholder="Your username." maxlength="10" />
