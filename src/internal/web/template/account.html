@@ -5,27 +5,35 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Account</title>
+    <title>Are you free? _ACCOUNT_</title>
     <link rel="stylesheet" href="../css/style.css" />
     <link rel="stylesheet" href="../css/header.css" />
     <link rel="stylesheet" href="../css/main.css" />
+    <link rel="stylesheet" href="../css/calender.css" />
     <link rel="stylesheet" href="../css/registration.css" />
     <link rel="stylesheet" href="../css/account.css" />
   </head>
   <body>
     <header class="header-wrapper bg-white">
-      <div class="header m-auto flex items-center bg-snow">
+      <div class="header m-auto flex items-center bg-white">
         <a href="/index">
           <div class="header-link bg-white">
             TOP
           </div>
         </a>
-        <div class="header-link bg-white">
-          <a href="/schedules">SCHEDULES</a>
-        </div>
-        <a href="/sharing/to">
+        <a href="/free-time">
           <div class="header-link bg-white">
-            SCHEDULE SHARING
+            FREE-TIME LATEST
+          </div>
+        </a>
+        <a href="/free-times">
+          <div class="header-link bg-white">
+            FREE-TIMES
+          </div>
+        </a>
+        <a href="/share/with_someone">
+          <div class="header-link bg-white">
+            SHARE
           </div>
         </a>
         <a href="/account/">
@@ -49,17 +57,17 @@
 
           <button id="icon-list-display-button" class="title-area-button text-center bg-oldlace">
             <div class="letter-01 font-17">
-              CHANGES ICON
+              EDIT ICON
             </div>
           </button>
           <button id="username-change-form-display-button" class="title-area-button text-center bg-oldlace">
             <div class="letter-01 font-17">
-              CHANGES USERNAME
+              EDIT USERNAME
             </div>
           </button>
           <button id="password-change-form-display-button" class="title-area-button text-center bg-oldlace">
             <div class="letter-01 font-17">
-              CHANGES PASSWORD
+              EDIT PASSWORD
             </div>
           </button>
         </div>
@@ -67,9 +75,11 @@
 
       <div class="content-wrapper flex">
         <div class="content-left-area border-none border-right mt-66">
-          <p class="ml-30 font-14 text-wood">日付を選んで<br>free-timeを操作</p>
+          <p class="ml-30 font-16 text-wood">日付を選んで<br>free-timeを操作</p>
           <form class="form-wrapper flex-col items-center">
-            <input class="input-calendar" type="date" name="today" id="today-input"/>
+            <label for="today" class="calendar-label">
+              <input class="input-calendar" type="date" name="today" id="today-input"/>
+            </label>
             <button class="content-left-button">SELECT</button>
             <button class="content-left-button">CREATE</button>
             <button class="content-left-button">UPDATE</button>
@@ -78,9 +88,8 @@
 
         <!-- エラーメッセージ -->
         <p class="error-message-in-account font-20 text-darkred">エラーメッセージ</p>
+
         <div class="account-content-right-area bg-white">
-
-
           <div id="icon-list">
             <form class="icon-list-wrapper flex-col bg-white">
               <div class="icon-row flex">
@@ -157,7 +166,7 @@
               <div class="justify-end button-row flex">
                 <button id="submit-button" type="submit" class="bg-wood">
                   <div class="text-snow letter-01 font-17">
-                    SUBMIT CHANGES
+                    SAVE EDITS
                   </div>
                 </button>
               </div>
@@ -168,7 +177,7 @@
           <div id="username-change-form">
             <form class="icon-list-wrapper flex-col bg-white">
               <div class="username-input-wrapper m-auto flex-col">
-                <h2 class="text-center letter-01">CHANGES USERNAME</h2>
+                <h2 class="text-center letter-01">EDIT USERNAME</h2>
                 <p class="font-18">新しいユーザー名を入力してください。</p>
                 <div class="input-area text-wood flex-col">
                   <label for="name">NEW USERNAME</label>
@@ -182,7 +191,7 @@
               <div class="justify-end button-row flex">
                 <button id="submit-button" type="submit" class="bg-wood">
                   <div class="text-snow letter-01 font-17">
-                    SUBMIT CHANGES
+                    SAVE EDITS
                   </div>
                 </button>
               </div>
@@ -193,7 +202,7 @@
           <div id="password-change-form">
             <form class="icon-list-wrapper flex-col bg-white">
               <div class="username-input-wrapper m-auto flex-col">
-                <h2 class="text-center letter-01">CHANGES PASSWORD</h2>
+                <h2 class="text-center letter-01">EDIT PASSWORD</h2>
                 <p class="font-18">現在のパスワードと新しいパスワードを入力してください。</p>
                 <div class="input-area text-wood flex-col">
                   <label for="password">PASSWORD</label>
@@ -211,7 +220,7 @@
               <div class="justify-end button-row flex">
                 <button id="submit-button" type="submit" class="bg-wood">
                   <div class="text-snow letter-01 font-17">
-                    SUBMIT CHANGES
+                    SAVE EDITS
                   </div>
                 </button>
               </div>
@@ -266,13 +275,13 @@
                   </div>
                 </div>
                 <div class="my-info">
-                  <label for="number">PASSWORD RESET</label>
+                  <label for="number">RESET PASSWORD</label>
                   <div class="info-box">
                     <div class="detail-box-password flex-col">
                       <p>パスワードをお忘れの方はこちら</p>
-                      <a href="/account/password_reset">
-                        <div class="title-area-button bg-snow text-center">
-                          PASSWORD RESET
+                      <a href="/account/password_reset" class="password-reset-button">
+                        <div class="bg-snow text-center">
+                          RESET PASSWORD
                         </div>
                       </a>
                     </div>

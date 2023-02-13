@@ -78,3 +78,54 @@ td.today {
 #next {
     float: right;
 }
+
+.calendar-label {
+    position: relative;
+    display: inline-block;
+    width: 200px;
+    height: 36px;
+    border: 2px solid var(--WOOD);
+    border-radius: 15px;
+}
+.calendar-label::before {
+    position: absolute;
+    content: "";
+    top: -2px;
+    right: -46px;
+    width: 40px;
+    height: 40px;
+    background-color: rgb(195, 225, 255);
+    background-image: url("../../icon/icon-calendar.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    border-radius: 8px;
+}
+input[type="date"] {
+    padding: 0 10px;
+    width: 250px;
+    height: 36px;
+    border: 0;
+    background: transparent;
+    box-sizing: border-box;
+    font-size: 14px;
+    color: var(--BLACK);
+    position: relative;
+}
+input[type="date"]::-webkit-inner-spin-button{
+    -webkit-appearance: none;
+}
+input[type="date"]::-webkit-clear-button{
+    -webkit-appearance: none;
+}
+input[type="date"]::-webkit-calendar-picker-indicator{
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    padding: 0;
+    width: 244.5px;
+    height: 100%;
+    transform: scale(-1, 1);
+    color: transparent;
+    opacity: 0;
+    cursor: pointer;
+}

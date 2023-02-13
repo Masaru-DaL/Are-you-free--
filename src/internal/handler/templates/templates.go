@@ -22,33 +22,33 @@ func TopPage(c echo.Context) error {
 }
 
 /* スケジュールページ */
-func SchedulePage(c echo.Context) error {
-	return c.Render(http.StatusOK, "schedule", "")
+func FreeTimePage(c echo.Context) error {
+	return c.Render(http.StatusOK, "free-time", "")
 }
 
 /* スケジュールページ */
-func SchedulesPage(c echo.Context) error {
-	return c.Render(http.StatusOK, "schedule", "")
+func FreeTimesPage(c echo.Context) error {
+	return c.Render(http.StatusOK, "free-times", "")
 }
 
 /* スケジュール作成ページ */
-func CreateSchedulePage(c echo.Context) error {
-	return c.Render(http.StatusOK, "create-schedule", "")
+func CreateFreeTimePage(c echo.Context) error {
+	return c.Render(http.StatusOK, "create-free-time", "")
 }
 
 /* スケジュール更新ページ */
-func UpdateSchedulePage(c echo.Context) error {
-	return c.Render(http.StatusOK, "update-schedule", "")
+func UpdateFreeTimePage(c echo.Context) error {
+	return c.Render(http.StatusOK, "update-free-time", "")
 }
 
 /* 自身のスケジュールを共有するページ */
-func SharingToSomeonePage(c echo.Context) error {
-	return c.Render(http.StatusOK, "sharing-to-someone", "")
+func ShareWithSomeonePage(c echo.Context) error {
+	return c.Render(http.StatusOK, "share-with-someone", "")
 }
 
 /* 相手のスケジュールを共有するページ */
-func SharingFromSomeonePage(c echo.Context) error {
-	return c.Render(http.StatusOK, "sharing-from-someone", "")
+func ShareWithMePage(c echo.Context) error {
+	return c.Render(http.StatusOK, "share-with-me", "")
 }
 
 /* アカウントページ */
