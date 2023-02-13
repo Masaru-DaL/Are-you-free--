@@ -2,7 +2,6 @@ package account
 
 import (
 	"database/sql"
-	"fmt"
 	"net/http"
 	"src/internal/config"
 	"src/internal/entity"
@@ -146,9 +145,6 @@ func Login(db *sql.DB) echo.HandlerFunc {
 		session.Values["UserName"] = user.Name
 		session.Save(c.Request(), c.Response())
 		/* Setting up a user's session here. */
-
-		fmt.Println(session)
-		fmt.Println(session.Values)
 
 		return c.Redirect(http.StatusSeeOther, "/index")
 	}

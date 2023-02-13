@@ -25,6 +25,7 @@ func InitRouting(db *sql.DB) *echo.Echo {
 
 	/* Unauthorized routing group. */
 	unAuthenticatedGroup := e.Group("/auth")
+	unAuthenticatedGroup.Use(auth.UnAuthenticatedMiddleware)
 	unAuthenticatedGroup.GET("/signup", templates.SignupPage)
 	unAuthenticatedGroup.POST("/signup", account.Signup(db))
 	unAuthenticatedGroup.GET("/login", templates.LoginPage)
@@ -35,6 +36,8 @@ func InitRouting(db *sql.DB) *echo.Echo {
 	cookieStore := auth.InitSession()
 	e.Use(session.Middleware(cookieStore))
 	authenticatedGroup.GET("index", templates.TopPage)
+
+	// authenticatedGroup.Use(auth.AuthenticatedMiddleware)
 	// e.GET("/index", templates.TopPage)
 	e.GET("/free-time", templates.FreeTimePage)
 	e.GET("/free-times", templates.FreeTimesPage)
@@ -42,7 +45,8 @@ func InitRouting(db *sql.DB) *echo.Echo {
 	e.GET("/free-time/update", templates.UpdateFreeTimePage)
 	e.GET("/share/with_someone", templates.ShareWithSomeonePage)
 	e.GET("/share/with_me", templates.ShareWithMePage)
-	e.GET("/account/", templates.AccountPage)
+	// e.GET("/account/", templates.AccountPage)
+	authenticatedGroup.GET("account/", templates.AccountPage)
 	e.GET("/account/password_reset", templates.PasswordResetPage)
 	e.GET("/account/password_re_registration", templates.PasswordReRegistrationPage)
 
