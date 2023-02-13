@@ -54,6 +54,13 @@ func Signup(db *sql.DB) echo.HandlerFunc {
 				"message": entity.Err_Input_Whitespace,
 			})
 		}
+		// メールアドレスの形式が正しくない場合
+		checkResultSignupEmail := strings.CheckEmailFormat(signupEmail)
+		if !checkResultSignupEmail {
+			return c.Render(http.StatusAccepted, "signup", echo.Map{
+				"message": entity.Err_Email_Format,
+			})
+		}
 		// 入力されたパスワードのハッシュ化
 		encryptedSignupPassword, err := auth.PasswordEncrypt(signupPassword)
 		if err != nil {
