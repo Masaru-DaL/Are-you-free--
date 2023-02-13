@@ -7,12 +7,11 @@ import (
 )
 
 /*
-	ユーザ情報の1件取得
-
-サインアップ時の存在チェック: 名前とパスワードの両方が同じユーザが存在するかどうか
+ユーザ情報の1件取得
+指定した名前のユーザの情報を取得する
 */
-func UserReqUsernameAndPassword(db *sql.DB, username string, password string) (entity.User, error) {
-	sqlStatement := "SELECT * FROM users WHERE name = ? AND password = ?"
+func UserReqUsername(db *sql.DB, username string) (entity.User, error) {
+	sqlStatement := "SELECT * FROM users WHERE name = ?"
 
 	stmt, err := db.Prepare(sqlStatement)
 	if err != nil {
@@ -22,7 +21,7 @@ func UserReqUsernameAndPassword(db *sql.DB, username string, password string) (e
 	defer stmt.Close()
 
 	user := entity.User{}
-	err = stmt.QueryRow(username, password).Scan(
+	err = stmt.QueryRow(username).Scan(
 		&user.ID,
 		&user.Name,
 		&user.Password,

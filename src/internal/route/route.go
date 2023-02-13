@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"io"
 	"src/internal/config"
+	"src/internal/handler/account"
 	"src/internal/handler/templates"
 
 	"github.com/labstack/echo/v4"
@@ -21,10 +22,11 @@ func InitRouting(db *sql.DB) *echo.Echo {
 	e.Static("/icon", config.Config.FilePath.Icon)
 
 	/* No authentication required */
-	// noAuthGroup := e.Group("/auth")
-	// noAuthGroup.GET("/signup", templates.SignupPage)
-	e.GET("/signup", templates.SignupPage)
-	e.GET("/login", templates.LoginPage)
+	unauthenticatedAuthGroup := e.Group("/auth")
+	unauthenticatedAuthGroup.GET("/signup", templates.SignupPage)
+	unauthenticatedAuthGroup.GET("/login", templates.LoginPage)
+	unauthenticatedAuthGroup.POST("/signup", account.Signup(db))
+
 	e.GET("/index", templates.TopPage)
 	e.GET("/free-time", templates.FreeTimePage)
 	e.GET("/free-times", templates.FreeTimesPage)

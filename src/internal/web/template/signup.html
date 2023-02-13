@@ -15,19 +15,29 @@
       <div class="registration-top-area bg-snow flex">
         <h2 class="title signup-title">SIGNUP</h2>
         <div class="registration-link-wrapper">
-          <a href="/login" class="registration-link">既にアカウントをお持ちの方はこちら</a>
+          <a href="/auth/login" class="registration-link">既にアカウントをお持ちの方はこちら</a>
         </div>
       </div>
       <div class="signup-image-area flex-col">
+        <!-- エラーメッセージ -->
+        {{ if .error_message}}
+        <div class="error-message-in-signup">
+          <p class="text-center letter-005 font-20 text-darkred">{{.error_message}}</p>
+        </div>
+        {{ end }}
 
-        <form class="signup-form-area m-auto">
+        <form
+          action="/auth/signup"
+          method="POST"
+          class="signup-form-area m-auto"
+          >
           <div class="input-area text-snow flex-col">
             <label for="username">USERNAME</label>
             <input type="text" name="username" placeholder="Limit. characters 10." maxlength="10" />
           </div>
           <div class="input-area text-snow flex-col">
             <label for="password">PASSWORD</label>
-            <input type="text" name="password" placeholder="Limit. characters 20." maxlength="20" />
+            <input type="password" name="password" placeholder="Limit. characters 20." maxlength="20" />
           </div>
           <div class="input-area text-snow flex-col">
             <label for="password-confirmation">PASSWORD CONFIRMATION</label>

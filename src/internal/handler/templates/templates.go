@@ -8,7 +8,9 @@ import (
 
 /* サインアップページ */
 func SignupPage(c echo.Context) error {
-	return c.Render(http.StatusOK, "signup", "")
+	return c.Render(http.StatusOK, "signup", echo.Map{
+		"error_message": nil,
+	})
 }
 
 /* ログインページ */

@@ -183,6 +183,10 @@ ul {
   font-weight: bold;
 }
 
+.letter-005 {
+  letter-spacing: 0.05em;
+}
+
 .letter-01 {
   letter-spacing: 0.1em;
 }
