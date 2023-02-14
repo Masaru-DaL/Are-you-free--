@@ -54,18 +54,23 @@
         </div>
         <div class="sharing-button-wrapper mr flex">
           <button id="icon-list-display-button" class="title-area-button text-center bg-oldlace">
-            <div class="letter-01 font-17">
+            <div class="letter-01 font-18">
               EDIT ICON
             </div>
           </button>
           <button id="username-change-form-display-button" class="title-area-button text-center bg-oldlace">
-            <div class="letter-01 font-17">
+            <div class="letter-01 font-18">
               EDIT USERNAME
             </div>
           </button>
           <button id="password-change-form-display-button" class="title-area-button text-center bg-oldlace">
-            <div class="letter-01 font-17">
+            <div class="letter-01 font-18">
               EDIT PASSWORD
+            </div>
+          </button>
+          <button id="email-change-form-display-button" class="title-area-button text-center bg-oldlace">
+            <div class="letter-01 font-18">
+              EDIT E-MAIL
             </div>
           </button>
         </div>
@@ -213,6 +218,31 @@
                 <div class="input-area text-wood flex-col">
                   <label for="password">NEW PASSWORD CONFIRMATION</label>
                   <input type="password" name="new-password-confirmation" maxlength="20" />
+                </div>
+              </div>
+              <div class="justify-end button-row flex">
+                <button id="submit-button" type="submit" class="bg-wood">
+                  <div class="text-snow letter-01 font-17">
+                    SAVE EDITS
+                  </div>
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- メールアドレス変更フォーム表示 -->
+          <div id="email-change-form">
+            <form class="icon-list-wrapper flex-col bg-white">
+              <div class="username-input-wrapper m-auto flex-col">
+                <h2 class="text-center letter-01">EDIT E-MAIL</h2>
+                <p class="font-18">現在のメールアドレスと新しいパスワードを入力してください。</p>
+                <div class="input-area text-wood flex-col">
+                  <label for="current-email">CURRENT E-MAIL</label>
+                  <input type="text" name="current-email" />
+                </div>
+                <div class="input-area text-wood flex-col">
+                  <label for="new-email">NEW E-MAIL</label>
+                  <input type="text" name="new-email" />
                 </div>
               </div>
               <div class="justify-end button-row flex">

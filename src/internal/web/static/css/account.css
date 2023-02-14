@@ -166,6 +166,23 @@
   display: block;
 }
 
+/* email change form */
+#email-change-form-display-button {
+  border: none;
+}
+#email-change-form {
+  width: 70%;
+  height: 68vh;
+  position: absolute;
+  top: 200px;
+  left: 355px;
+  display: none;
+  z-index: 10;
+}
+#email-change-form.email-change-form-is-hidden {
+  display: block;
+}
+
 /* account information */
 .account-info-left-area {
   width: 40%;
