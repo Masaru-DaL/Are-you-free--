@@ -253,13 +253,3 @@
 .form-button:hover::after {
   transform: translateX(100%);
 }
-.button-darkgreen {
-  color: var(--SNOW);
-  background-color: var(--DARKGREEN);
-  opacity: 0.8;
-}
-.button-saddlebrown {
-  color: var(--SNOW);
-  background-color: var(--SADDLEBROWN);
-  opacity: 0.8;
-}

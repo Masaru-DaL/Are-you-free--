@@ -25,7 +25,7 @@ func InitRouting(db *sql.DB) *echo.Echo {
 
 	/* Unauthorized routing group. */
 	unAuthenticatedGroup := e.Group("/auth")
-	unAuthenticatedGroup.Use(auth.UnAuthenticatedMiddleware)
+	// unAuthenticatedGroup.Use(auth.UnAuthenticatedMiddleware)
 	unAuthenticatedGroup.GET("/signup", templates.SignupPage)
 	unAuthenticatedGroup.POST("/signup", account.Signup(db))
 	unAuthenticatedGroup.GET("/login", templates.LoginPage)

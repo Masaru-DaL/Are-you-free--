@@ -67,3 +67,15 @@ e.POST("/delete-session", func(c echo.Context) error {
 
     return c.String(http.StatusOK, "Session deleted")
 })
+
+
+Share Off
+Unshare This
+End Sharing
+Stop Sharing Now
+Disable Share
+Suspend Sharing
+Revoke Share
+Remove Sharing
+Terminate Share
+Discontinue SharingSHARERS
