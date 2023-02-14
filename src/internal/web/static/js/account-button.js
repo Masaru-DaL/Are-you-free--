@@ -10,9 +10,11 @@ const username_change_form_display_button = document.querySelector('#username-ch
 const password_change_form = document.querySelector('#password-change-form');
 const password_change_form_display_button = document.querySelector('#password-change-form-display-button');
 
-icon_list_display_button.addEventListener("click", () => {
-  icon_list.classList.toggle("icon-list-is-hidden");
+/* email変更ボタン */
+const email_change_form = document.querySelector('#email-change-form');
+const email_change_form_display_button = document.querySelector('#email-change-form-display-button');
 
+icon_list_display_button.addEventListener("click", () => {
   if (username_change_form.classList.contains('username-change-form-is-hidden')) {
     username_change_form.classList.remove("username-change-form-is-hidden");
   };
@@ -20,11 +22,15 @@ icon_list_display_button.addEventListener("click", () => {
   if (password_change_form.classList.contains('password-change-form-is-hidden')) {
     password_change_form.classList.remove("password-change-form-is-hidden");
   };
+
+  if (email_change_form.classList.contains('email-change-form-is-hidden')) {
+    email_change_form.classList.remove("email-change-form-is-hidden");
+  };
+
+  icon_list.classList.toggle("icon-list-is-hidden");
 });
 
 username_change_form_display_button.addEventListener("click", () => {
-  username_change_form.classList.toggle("username-change-form-is-hidden");
-
   if (icon_list.classList.contains('icon-list-is-hidden')) {
     icon_list.classList.remove("icon-list-is-hidden");
   };
@@ -32,11 +38,15 @@ username_change_form_display_button.addEventListener("click", () => {
   if (password_change_form.classList.contains('password-change-form-is-hidden')) {
     password_change_form.classList.remove("password-change-form-is-hidden");
   };
+
+  if (email_change_form.classList.contains('email-change-form-is-hidden')) {
+    email_change_form.classList.remove("email-change-form-is-hidden");
+  };
+
+  username_change_form.classList.toggle("username-change-form-is-hidden");
 });
 
 password_change_form_display_button.addEventListener("click", () => {
-  password_change_form.classList.toggle("password-change-form-is-hidden");
-
   if (icon_list.classList.contains('icon-list-is-hidden')) {
     icon_list.classList.classList.remove("icon-list-is-hidden");
   };
@@ -44,6 +54,28 @@ password_change_form_display_button.addEventListener("click", () => {
   if (username_change_form.classList.contains('username-change-form-is-hidden')) {
     username_change_form.classList.remove("username-change-form-is-hidden");
   };
+
+  if (email_change_form.classList.contains('email-change-form-is-hidden')) {
+    email_change_form.classList.remove("email-change-form-is-hidden");
+  };
+
+  password_change_form.classList.toggle("password-change-form-is-hidden");
+});
+
+email_change_form_display_button.addEventListener("click", () => {
+  if (icon_list.classList.contains('icon-list-is-hidden')) {
+    icon_list.classList.classList.remove("icon-list-is-hidden");
+  };
+
+  if (username_change_form.classList.contains('username-change-form-is-hidden')) {
+    username_change_form.classList.remove("username-change-form-is-hidden");
+  };
+
+  if (password_change_form.classList.contains('password-change-form-is-hidden')) {
+    password_change_form.classList.remove("password-change-form-is-hidden");
+  };
+
+  email_change_form.classList.toggle("email-change-form-is-hidden");
 });
 
 // // ボタンのDOM要素を取得

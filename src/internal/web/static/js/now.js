@@ -1,11 +1,11 @@
-function getNowInput () {
-  var today = new Date();
-  today.setDate(today.getDate());
-  var yyyy = today.getFullYear();
-  var mm = ("0"+(today.getMonth()+1)).slice(-2);
-  var dd = ("0"+today.getDate()).slice(-2);
-  document.getElementById("today-input").value=yyyy+'-'+mm+'-'+dd;
-}
+// function getNowInput () {
+//   var today = new Date();
+//   today.setDate(today.getDate());
+//   var yyyy = today.getFullYear();
+//   var mm = ("0"+(today.getMonth()+1)).slice(-2);
+//   var dd = ("0"+today.getDate()).slice(-2);
+//   document.getElementById("today-input").value=yyyy+'-'+mm+'-'+dd;
+// }
 
 function set2fig(num) {
   // 桁数が1桁だったら先頭に0を加えて2桁に調整する
@@ -28,10 +28,21 @@ function getNow() {
   // 曜日
   var dayOfWeek = new Array("日","月","火","水","木","金","土");
 
-  var nowDate = year + "/" + month + "/" + day + "（" + dayOfWeek[nowDayOfWeek] + "）" + hour + "：" + minute + "：" + second
+  var nowDate = year + "/" + month + "/" + day + "（" + dayOfWeek[nowDayOfWeek] + "）" + hour + "：" + minute + "：" + second;
 
   document.getElementById("today").innerHTML = nowDate;
 }
+document.addEventListener('DOMContentLoaded', function() {
+  setInterval(getNow, 1000);
 
-getNow();
-getNowInput();
+  var todayDiv = document.getElementById('today-wrapper');
+  todayDiv.style.margin = '0 auto';
+  todayDiv.style.padding= '0.5% 1%';
+  todayDiv.style.border= 'none';
+  todayDiv.style.borderRight= '1.5px solid var(--WOOD)';
+  todayDiv.style.borderBottom= '1.5px solid var(--WOOD)';
+  todayDiv.style.boxShadow= '7px 7px 7px rgba(54, 54, 54, 0.3)';
+  todayDiv.style.backgroundColor= 'var(--SNOW)';
+});
+// setInterval(getNow, 1000);
+// getNowInput();

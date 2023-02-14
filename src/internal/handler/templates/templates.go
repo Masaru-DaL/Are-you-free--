@@ -60,6 +60,11 @@ func AccountPage(c echo.Context) error {
 	return c.Render(http.StatusOK, "account", "")
 }
 
+/* アカウント編集ページ */
+func AccountEditPage(c echo.Context) error {
+	return c.Render(http.StatusOK, "account-edit", "")
+}
+
 /* パスワードリセットページ */
 func PasswordResetPage(c echo.Context) error {
 	return c.Render(http.StatusOK, "password-reset", "")

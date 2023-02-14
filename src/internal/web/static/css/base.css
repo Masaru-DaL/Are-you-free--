@@ -98,6 +98,10 @@ ul {
   margin: 30px 0;
 }
 
+.ml-1p {
+  margin-left: 1%;
+}
+
 .ml-20 {
   margin-left: 20px;
 }
@@ -211,4 +215,18 @@ ul {
 
 .border-left {
   border-left: 1px solid #000;
+}
+
+/* =================== error message ====================== */
+
+.error-message-in-account {
+  position: absolute;
+  top: 24%;
+  left: 50%;
+}
+
+.error-message-in-password-reset {
+  position: absolute;
+  top: 47%;
+  left: 50%;
 }

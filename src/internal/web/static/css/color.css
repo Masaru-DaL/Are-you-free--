@@ -3,6 +3,7 @@
   --RED: #ff0000;
   --DARKRED: #bb2121;
   --WHITE: #ffffff;
+  --GHOSTWHITE: #f8f8ff;
   --WOOD: rgb(195, 128, 41);
   --BURLYWOOD: rgb(222 184 135);
   --SNOW: #fffafa;
@@ -16,6 +17,10 @@
 
 .bg-white {
   background-color: var(--WHITE);
+}
+
+.bg-ghostwhite {
+  background-color: var(--GHOSTWHITE);
 }
 
 .bg-black {
@@ -80,4 +85,18 @@
 
 .text-dimgrey {
   color: var(--DIMGREY);
+}
+
+.button-darkgreen {
+  color: var(--SNOW);
+  background-color: var(--DARKGREEN);
+  opacity: 0.8;
+}
+.button-saddlebrown {
+  color: var(--SNOW);
+  background-color: var(--SADDLEBROWN);
+  opacity: 0.8;
+}
+.box-ghostwhite {
+  background-color: rgba(248, 248, 255, 0.9);
 }
