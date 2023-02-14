@@ -15,7 +15,9 @@ func SignupPage(c echo.Context) error {
 
 /* ログインページ */
 func LoginPage(c echo.Context) error {
-	return c.Render(http.StatusOK, "login", "")
+	return c.Render(http.StatusOK, "login", echo.Map{
+		"error_message": nil,
+	})
 }
 
 /* トップページ */

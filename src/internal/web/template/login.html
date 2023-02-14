@@ -19,6 +19,12 @@
         </div>
       </div>
       <div class="login-image-area flex-col">
+        <!-- エラーメッセージ -->
+        {{ if .error_message}}
+        <div class="error-message-in-signup">
+          <p class="text-center letter-005 font-20 text-darkred">{{.error_message}}</p>
+        </div>
+        {{ end }}
 
         <form
           action="/auth/login"
