@@ -10,6 +10,7 @@
 
 .heading-wrapper {
   width: 100%;
+  margin-top: 1%;
   position: fixed;
   z-index: 10;
 }
@@ -73,6 +74,7 @@
 .title-area {
   position: relative;
   display: inline-block;
+  margin-top: 1%;
   margin-left: 2.5%;
   width: 30%;
   height: 100%;
@@ -312,6 +314,58 @@
   transform: translateX(-100%);
 }
 .account-logout-button:hover::after {
+  transform: translateX(100%);
+}
+.sharing-button-area {
+  width: 100%;
+  height: 100%;
+}
+.sharing-button-wrapper {
+  width: 25%;
+  height: 100%;
+}
+.sharing-button {
+  width: 100%;
+  height: 80%;
+  margin: 0% 2% 0 0;
+  line-height: 100%;
+  text-decoration: none;
+  border-radius: 8px;
+  position: relative;
+  transition: 0.3s;
+  overflow: hidden;
+  box-shadow: -5px -5px 10px 0px rgba(255, 255, 255, 0.5), 4px 4px 5px 0px rgba(43, 43, 43, 0.3);
+}
+.sharing-button::before {
+  content: "";
+  display: block;
+  height: 1.5px;
+  width: 75%;
+  position: absolute;
+  left: 0;
+  background-color: var(--SNOW);
+  transition: .3s;
+}
+.sharing-button:after {
+  content: "";
+  display: block;
+  height: 1.5px;
+  width: 75%;
+  position: absolute;
+  right: 0;
+  background-color: var(--SNOW);
+  transition: .3s;
+}
+.sharing-button::before {
+  top: 0;
+}
+.sharing-button::after {
+  bottom: 0;
+}
+.sharing-button:hover::before {
+  transform: translateX(-100%);
+}
+.sharing-button:hover::after {
   transform: translateX(100%);
 }
 
