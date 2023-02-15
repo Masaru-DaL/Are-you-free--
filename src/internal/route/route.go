@@ -45,7 +45,7 @@ func InitRouting(db *sql.DB) *echo.Echo {
 	e.GET("/share/with_me", templates.ShareWithMePage)
 	// e.GET("/account/", templates.AccountPage)
 	authenticatedGroup.GET("account/", templates.AccountPage)
-	authenticatedGroup.GET("account/edit", templates.AccountPage)
+	authenticatedGroup.GET("account/edit", templates.AccountEditPage)
 	e.GET("/account/password_reset", templates.PasswordResetPage)
 	e.GET("/account/password_re_registration", templates.PasswordReRegistrationPage)
 

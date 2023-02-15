@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Are you free? _ACCOUNT_</title>
+    <title>Are you free? _ACCOUNT EDIT_</title>
     <link rel="stylesheet" href="../css/style.css" />
     <link rel="stylesheet" href="../css/header.css" />
     <link rel="stylesheet" href="../css/main.css" />
@@ -15,44 +15,46 @@
   </head>
   <body>
     <header class="header-wrapper bg-white">
-      <div class="header m-auto items-center flex bg-white">
-        <div class="header-link-wrapper">
-          <a href="/index">
-            <div class="header-link">
-              <p class="font-24 letter-005">TOP</p>
-            </div>
-          </a>
-        </div>
-        <div class="header-link-wrapper">
-          <a href="/free-time">
-            <div class="header-link">
-              <p class="font-24 letter-005">FREE-TIME LATEST</p>
-            </div>
-          </a>
-        </div>
-        <div class="header-link-wrapper">
-          <a href="/free-times">
-            <div class="header-link">
-              <p class="font-24 letter-005">FREE-TIMES</p>
-            </div>
-          </a>
-        </div>
-        <div class="header-link-wrapper">
-          <a href="/share/with_someone">
-            <div class="header-link">
-              <p class="font-24 letter-005">SHARE</p>
-            </div>
-          </a>
-        </div>
-        <div class="header-link-wrapper">
-          <a href="/account/">
-            <div class="header-link">
-              <p class="font-24 letter-005">ACCOUNT</p>
-            </div>
-          </a>
-        </div>
-        <div id="today-wrapper" class="text-center font-24">
-          <span id="today" class="blinking"></span>
+      <div class="header-wrapper-line bg-white">
+        <div class="header flex m-auto items-center bg-white">
+          <div class="header-link-wrapper">
+            <a href="/index">
+              <div class="header-link">
+                <p class="font-24 letter-005">TOP</p>
+              </div>
+            </a>
+          </div>
+          <div class="header-link-wrapper">
+            <a href="/free-time">
+              <div class="header-link">
+                <p class="font-24 letter-005">FREE-TIME LATEST</p>
+              </div>
+            </a>
+          </div>
+          <div class="header-link-wrapper">
+            <a href="/free-times">
+              <div class="header-link">
+                <p class="font-24 letter-005">FREE-TIMES</p>
+              </div>
+            </a>
+          </div>
+          <div class="header-link-wrapper">
+            <a href="/share/with_someone">
+              <div class="header-link">
+                <p class="font-24 letter-005">SHARE</p>
+              </div>
+            </a>
+          </div>
+          <div class="header-link-wrapper">
+            <a href="/account/">
+              <div class="header-link">
+                <p class="font-24 letter-005">ACCOUNT</p>
+              </div>
+            </a>
+          </div>
+          <div id="today-wrapper" class="text-center font-24">
+            <span id="today" class="blinking"></span>
+          </div>
         </div>
       </div>
     </header>
@@ -60,29 +62,37 @@
     <main class="main flex-col">
       <div class="title-area-wrapper flex">
         <div class="title-area bg-white">
-          <h1 class="text-center">ACCOUNT PAGE</h1>
+          <h1 class="text-center">ACCOUNT EDIT PAGE</h1>
         </div>
-        <div class="sharing-button-wrapper mr flex">
-          <button id="icon-list-display-button" class="title-area-button text-center bg-oldlace">
-            <div class="letter-01 font-18">
-              EDIT ICON
-            </div>
-          </button>
-          <button id="username-change-form-display-button" class="title-area-button text-center bg-oldlace">
-            <div class="letter-01 font-18">
-              EDIT USERNAME
-            </div>
-          </button>
-          <button id="password-change-form-display-button" class="title-area-button text-center bg-oldlace">
-            <div class="letter-01 font-18">
-              EDIT PASSWORD
-            </div>
-          </button>
-          <button id="email-change-form-display-button" class="title-area-button text-center bg-oldlace">
-            <div class="letter-01 font-18">
-              EDIT E-MAIL
-            </div>
-          </button>
+        <div class="title-area-button-wrapper mr flex">
+          <div class="toggle-button-wrapper">
+            <button id="icon-list-display-button" class="toggle-button bg-oldlace">
+              <p class="font-20">
+                EDIT ICON
+              </p>
+            </button>
+          </div>
+          <div class="toggle-button-wrapper">
+            <button id="username-change-form-display-button" class="toggle-button bg-oldlace">
+              <p class="font-20">
+                EDIT USERNAME
+              </p>
+            </button>
+          </div>
+          <div class="toggle-button-wrapper">
+            <button id="password-change-form-display-button" class="toggle-button bg-oldlace">
+              <p class="font-20">
+                EDIT PASSWORD
+              </p>
+            </button>
+          </div>
+          <div class="toggle-button-wrapper">
+            <button id="email-change-form-display-button" class="toggle-button bg-oldlace">
+              <p class="font-20">
+                EDIT E-MAIL
+              </p>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -282,85 +292,56 @@
 
           <div class="account-info-right-area">
             <div class="info-wrapper flex-col">
-              <!-- <div class="info-area flex">
-                <div class="info-description-wrapper flex-col">
-                  <div class="description-label-wrapper">
-                    <label for="number">SHARERS</label>
-                  </div>
-                  <div class="description-wrapper">
-                    <p class="font-18 text-dimgrey">共有している人数</p>
-                  </div>
-                </div>
-                <div class="info-result-wrapper">
-                  <div class="result-wrapper box-ghostwhite">
-                    <p class="text-center font-22">02 人</p>
-                  </div>
-                </div>
-                <div class="info-change-button-wrapper">
-                  <a href="/account/">
-                    <div class="button-wrapper button-saddlebrown">
-                      <p class="text-center letter-005  font-20">SHARE OFF</p>
-                    </div>
-                  </a>
-                </div>
-              </div>
-              <div class="info-area flex">
-                <div class="info-description-wrapper flex-col">
-                  <div class="description-label-wrapper">
-                    <label for="number">SHARERS</label>
-                  </div>
-                  <div class="description-wrapper">
-                    <p class="font-18 letter-005 text-dimgrey">共有されている人数</p>
-                  </div>
-                </div>
-                <div class="info-result-wrapper">
-                  <div class="result-wrapper box-ghostwhite">
-                    <p class="text-center font-22">102 人</p>
-                  </div>
-                </div>
-                <div class="info-change-button-wrapper">
-                  <a href="/account/">
-                    <div class="button-wrapper button-saddlebrown">
-                      <p class="text-center font-20">SHARE OFF</p>
-                    </div>
-                  </a>
-                </div>
-              </div> -->
-              <div class="info-area flex">
+              <div class="edit-info-area flex">
                 <div class="button-info-description-wrapper flex-col">
                   <div class="button-description-label-wrapper">
-                    <label for="number">SHARERS</label>
+                    <label for="number">BACK TO ACCOUNT</label>
                   </div>
                   <div class="button-description-wrapper">
-                    <p class="font-18 letter-005 text-dimgrey">共有している人の整理はこちら</p>
+                    <p class="font-18 letter-005 text-dimgrey">アカウントへ戻る</p>
                   </div>
                 </div>
                 <div class="info-change-button-wrapper">
                   <a href="/account/">
-                    <div class="button-wrapper button-saddlebrown">
-                      <p class="text-center font-20">SHARE</p>
-                    </div>
+                    <p class="back-link text-center font-22">BACK</p>
                   </a>
                 </div>
               </div>
-              <div class="info-area flex">
+              <div class="edit-info-area flex">
                 <div class="button-info-description-wrapper flex-col">
                   <div class="button-description-label-wrapper">
-                    <label for="number">SHARERS</label>
+                    <label for="number">SHARE WITH SOMEONE</label>
                   </div>
                   <div class="button-description-wrapper">
-                    <p class="font-18 letter-005 text-dimgrey">共有されている人の整理はこちら</p>
+                    <p class="font-18 letter-005 text-dimgrey">共有している人の削除はこちら</p>
                   </div>
                 </div>
                 <div class="info-change-button-wrapper">
                   <a href="/account/">
-                    <div class="button-wrapper button-saddlebrown">
-                      <p class="text-center font-20">RESET</p>
+                    <div class="link-button bg-snow">
+                      <p class="text-center font-20">REMOVE</p>
                     </div>
                   </a>
                 </div>
               </div>
-              <div class="info-area flex">
+              <div class="edit-info-area flex">
+                <div class="button-info-description-wrapper flex-col">
+                  <div class="button-description-label-wrapper">
+                    <label for="number">SHARE WITH ME</label>
+                  </div>
+                  <div class="button-description-wrapper">
+                    <p class="font-18 letter-005 text-dimgrey">共有されている人の削除はこちら</p>
+                  </div>
+                </div>
+                <div class="info-change-button-wrapper">
+                  <a href="/account/">
+                    <div class="link-button bg-snow">
+                      <p class="text-center font-20">REMOVE</p>
+                    </div>
+                  </a>
+                </div>
+              </div>
+              <div class="edit-info-area flex">
                 <div class="button-info-description-wrapper flex-col">
                   <div class="button-description-label-wrapper">
                     <label for="number">PASSWORD RESET</label>
@@ -371,25 +352,8 @@
                 </div>
                 <div class="info-change-button-wrapper">
                   <a href="/account/">
-                    <div class="button-wrapper button-saddlebrown">
+                    <div class="link-button bg-snow">
                       <p class="text-center font-20">RESET</p>
-                    </div>
-                  </a>
-                </div>
-              </div>
-              <div class="info-area flex">
-                <div class="button-info-description-wrapper flex-col">
-                  <div class="button-description-label-wrapper">
-                    <label for="number">LOGOUT</label>
-                  </div>
-                  <div class="button-description-wrapper">
-                    <p class="font-18 letter-005 text-dimgrey">ログアウトはこちら</p>
-                  </div>
-                </div>
-                <div class="info-change-button-wrapper">
-                  <a href="/logout">
-                    <div class="button-wrapper button-darkgreen">
-                      <p class="text-center font-20">LOGOUT</p>
                     </div>
                   </a>
                 </div>
