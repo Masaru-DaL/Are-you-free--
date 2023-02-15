@@ -9,7 +9,6 @@ import (
 	"src/internal/handler/templates"
 	"src/internal/pkg/auth"
 
-	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
 )
 
@@ -33,8 +32,7 @@ func InitRouting(db *sql.DB) *echo.Echo {
 
 	/* Authorized routing group. */
 	authenticatedGroup := e.Group("/")
-	cookieStore := auth.InitSession()
-	e.Use(session.Middleware(cookieStore))
+	e.Use(auth.SessionMiddleware(auth.CookieStore))
 	authenticatedGroup.GET("index", templates.TopPage)
 
 	// authenticatedGroup.Use(auth.AuthenticatedMiddleware)

@@ -149,3 +149,10 @@ func Login(db *sql.DB) echo.HandlerFunc {
 		return c.Redirect(http.StatusSeeOther, "/index")
 	}
 }
+
+/* ログアウト機能 */
+// func logout(db *sql.DB) echo.HandlerFunc {
+// 	return func(c echo.Context) error {
+
+// 	}
+// }
