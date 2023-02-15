@@ -1,7 +1,7 @@
 .account-content-right-area {
   width: 70%;
   height: 63vh;
-  margin: 100px auto 0 auto;
+  margin: 6% auto 0 auto;
   box-shadow: 7px 7px 20px rgba(0,0,0,.3);
 }
 
@@ -281,7 +281,7 @@
 .button-description-label-wrapper {
   width: 50%;
   height: 30%;
-  margin-top: 7%;
+  margin-top: 10%;
 }
 .description-wrapper {
   width: 100%;
@@ -291,8 +291,8 @@
 .button-description-wrapper {
   width: 100%;
   height: 70%;
-  margin-left: 8%;
-  margin-bottom: 2%;
+  margin-left: 10%;
+  line-height: 50%;
 }
 .description-label-wrapper {
   width: 100%;
@@ -309,10 +309,10 @@
 .info-area:nth-child(1)::after {
   content: '';
   position: absolute;
-  top: 45%;
-  left: 10%;
+  top: 46%;
+  left: 15%;
   display: inline-block;
-  width: 15%;
+  width: 24%;
   height: 1px;
   -webkit-transform: translateX(-50%);
   transform: translateX(-50%);
@@ -322,10 +322,10 @@
 .info-area:nth-child(2):after {
   content: '';
   position: absolute;
-  top: 45%;
-  left: 10%;
+  top: 46%;
+  left: 9.6%;
   display: inline-block;
-  width: 15%;
+  width: 14%;
   height: 1px;
   -webkit-transform: translateX(-50%);
   transform: translateX(-50%);
@@ -335,10 +335,10 @@
 .info-area:nth-child(3):after {
   content: '';
   position: absolute;
-  top: 40%;
-  left: 17%;
+  top: 46%;
+  left: 9.6%;
   display: inline-block;
-  width: 29%;
+  width: 14%;
   height: 1px;
   -webkit-transform: translateX(-50%);
   transform: translateX(-50%);
@@ -348,10 +348,10 @@
 .info-area:nth-child(4):after {
   content: '';
   position: absolute;
-  top: 40%;
-  left: 9%;
+  top: 46%;
+  left: 11.5%;
   display: inline-block;
-  width: 12%;
+  width: 18%;
   height: 1px;
   -webkit-transform: translateX(-50%);
   transform: translateX(-50%);
@@ -368,12 +368,12 @@
   box-shadow: 4px 4px 7px rgba(0,0,0,.3);
 }
 .button-wrapper {
-  width: 95%;
-  height: 50%;
+  width: 90%;
+  height: 40%;
   margin-top: 23%;
   margin-left: 7%;
   letter-spacing: 0.1em;
-  line-height: 130%;
+  line-height: 100%;
   border-radius: 4px;
   position: relative;
   transition: 0.3s;
@@ -387,7 +387,7 @@
   width: 75%;
   position: absolute;
   left: 0;
-  background-color: var(--SNOW);
+  background-color: var(--WOOD);
   transition: .3s;
 }
 .button-wrapper::after {
@@ -397,7 +397,7 @@
   width: 75%;
   position: absolute;
   right: 0;
-  background-color: var(--SNOW);
+  background-color: var(--WOOD);
   transition: .3s;
 }
 .button-wrapper::before {

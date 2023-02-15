@@ -2,7 +2,7 @@
 
 .main {
   width: 100%;
-  height: 87vh;
+  height: 100%;
   padding-top: 13vh;
 }
 
@@ -169,14 +169,11 @@
 .account-title-area-button-wrapper {
   width: 17%;
   height: 100%;
-  margin-top: 0.5%;
-  margin-left: 5%;
+  margin: 0.5% auto 0 auto;
 }
-
 .account-title-area-button {
   width: 100%;
   height: 90%;
-  margin-left: 100%;
   line-height: 180%;
   text-decoration: none;
   border-radius: 8px;
