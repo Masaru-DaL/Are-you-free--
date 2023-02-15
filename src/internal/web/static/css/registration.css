@@ -32,9 +32,8 @@
 .title {
   width: 40%;
   height: 100%;
+  bottom: 25%;
   position: relative;
-  top: -30px;
-  left: 80px;
   font-size: 70px;
   font-weight: bold;
   letter-spacing: 0.15em;
@@ -56,10 +55,9 @@
   content: '';
   position: absolute;
   display: inline-block;
-  left: 45%;
-  bottom: 40px;
-
-  width: 57%;
+  left: 60%;
+  top: 65%;
+  width: 50%;
   height: 2px;
   -webkit-transform: translateX(-50%);
   transform: translateX(-50%);
@@ -69,10 +67,9 @@
   content: '';
   position: absolute;
   display: inline-block;
-  left: 18%;
-  top: 0px;
-
-  width: 57%;
+  left: 38.5%;
+  top: -5%;
+  width: 50%;
   height: 2px;
   -webkit-transform: translateX(-50%);
   transform: translateX(-50%);
@@ -85,7 +82,7 @@
   letter-spacing: 0.1em;
   border: none;
 }
-.registration-link {
+.signup-link {
   position: relative;
   top: 50px;
   left: 200px;
@@ -94,7 +91,33 @@
   -webkit-transition: all 0.3s;
   transition: all 0.3s;
 }
-.registration-link::after {
+.signup-link::after {
+  content: "";
+  display: block;
+  height: 1.5px;
+  width: 75%;
+  position: absolute;
+  border-radius: 12px;
+  right: 40px;
+  background-color: var(--SADDLEBROWN);
+  transition: .3s;
+}
+.signup-link::after{
+  top: 30px;
+}
+.signup-link:hover::after {
+  transform: translateX(50%);
+}
+.login-link {
+  position: relative;
+  top: 50px;
+  left: 200px;
+  transition: 0.3s;
+  overflow: hidden;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+}
+.login-link::after {
   content: "";
   display: block;
   height: 1.5px;
@@ -105,10 +128,10 @@
   background-color: var(--DARKGREEN);
   transition: .3s;
 }
-.registration-link::after{
+.login-link::after{
   top: 30px;
 }
-.registration-link:hover::after {
+.login-link:hover::after {
   transform: translateX(50%);
 }
 .signup-image-area {
@@ -196,11 +219,11 @@
 }
 .signup-button-area {
   width: 95%;
-  margin-top: 50px;
+  margin-top: 21%;
 }
 .login-button-area {
   width: 95%;
-  margin-top: 230px;
+  margin-top: 60.5%;
 }
 .form-button {
   width: 100%;
