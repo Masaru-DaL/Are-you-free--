@@ -110,7 +110,7 @@ func Login(db *sql.DB) echo.HandlerFunc {
 		/* Checking input data from forms Start here. */
 		// 空入力の場合
 		if loginName == "" || loginPassword == "" {
-			return c.Render(http.StatusOK, "signup", echo.Map{
+			return c.Render(http.StatusOK, "login", echo.Map{
 				"error_message": entity.ERR_INPUT_EMPTY,
 			})
 		}
@@ -118,7 +118,7 @@ func Login(db *sql.DB) echo.HandlerFunc {
 		user, err := users.UserReqUsername(db, loginName)
 		// ユーザ情報が取得できなかった場合
 		if err == sql.ErrNoRows {
-			return c.Render(http.StatusOK, "signup", echo.Map{
+			return c.Render(http.StatusOK, "login", echo.Map{
 				"error_message": entity.ERR_NO_USER,
 			})
 			// パスワードをチェックする
@@ -127,7 +127,7 @@ func Login(db *sql.DB) echo.HandlerFunc {
 			err = auth.CompareHashAndPlaintext(user.Password, loginPassword)
 			// err != nil => DBに存在していない
 			if err != nil {
-				return c.Render(http.StatusOK, "signup", echo.Map{
+				return c.Render(http.StatusOK, "login", echo.Map{
 					"error_message": entity.ERR_ALREADY_USER_EXISTS,
 				})
 			}
