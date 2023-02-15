@@ -1,7 +1,7 @@
 .account-content-right-area {
   width: 73%;
   height: 63vh;
-  margin: 6% auto 0 auto;
+  margin: 3% auto 0 auto;
   box-shadow: 7px 7px 20px rgba(0,0,0,.3);
 }
 
@@ -12,7 +12,7 @@
   width: 72%;
   height: 70vh;
   position: absolute;
-  top: 25%;
+  top: 26.8%;
   left: 23%;
   display: none;
   z-index: 10;
@@ -22,7 +22,7 @@
 }
 .icon-list-wrapper {
   width: 97%;
-  height: 95%;
+  height: 91%;
 
   --bg-gradient: linear-gradient(#333 0 100%);
     margin: 0.5rem;
@@ -137,7 +137,7 @@
   width: 72%;
   height: 70vh;
   position: absolute;
-  top: 25%;
+  top: 26.8%;
   left: 23%;
   display: none;
   z-index: 10;
@@ -158,7 +158,7 @@
   width: 72%;
   height: 70vh;
   position: absolute;
-  top: 25%;
+  top: 26.8%;
   left: 23%;
   display: none;
   z-index: 10;
@@ -175,7 +175,7 @@
   width: 72%;
   height: 70vh;
   position: absolute;
-  top: 25%;
+  top: 26.8%;
   left: 23%;
   display: none;
   z-index: 10;
@@ -313,7 +313,7 @@
 .info-area:nth-child(1)::after {
   content: '';
   position: absolute;
-  top: 46%;
+  top: 50%;
   left: 15%;
   display: inline-block;
   width: 24%;
@@ -326,7 +326,7 @@
 .info-area:nth-child(2):after {
   content: '';
   position: absolute;
-  top: 46%;
+  top: 50%;
   left: 9.6%;
   display: inline-block;
   width: 14%;
@@ -339,7 +339,7 @@
 .info-area:nth-child(3):after {
   content: '';
   position: absolute;
-  top: 46%;
+  top: 50%;
   left: 9.6%;
   display: inline-block;
   width: 14%;
@@ -352,7 +352,7 @@
 .info-area:nth-child(4):after {
   content: '';
   position: absolute;
-  top: 46%;
+  top: 50%;
   left: 11.5%;
   display: inline-block;
   width: 18%;
@@ -370,7 +370,7 @@
 .edit-info-area:nth-child(1)::after {
   content: '';
   position: absolute;
-  top: 46%;
+  top: 50%;
   left: 16.5%;
   display: inline-block;
   width: 28%;
@@ -383,7 +383,7 @@
 .edit-info-area:nth-child(2):after {
   content: '';
   position: absolute;
-  top: 46%;
+  top: 50%;
   left: 19.5%;
   display: inline-block;
   width: 33.5%;
@@ -396,7 +396,7 @@
 .edit-info-area:nth-child(3):after {
   content: '';
   position: absolute;
-  top: 46%;
+  top: 50%;
   left: 14.5%;
   display: inline-block;
   width: 24%;
@@ -409,7 +409,7 @@
 .edit-info-area:nth-child(4):after {
   content: '';
   position: absolute;
-  top: 46%;
+  top: 50%;
   left: 15.5%;
   display: inline-block;
   width: 26%;
