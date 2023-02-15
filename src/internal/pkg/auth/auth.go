@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"src/internal/config"
 
-	"github.com/gorilla/sessions"
 	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
 	"golang.org/x/crypto/bcrypt"
@@ -42,13 +41,6 @@ func AuthenticatedMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 
 		return next(c)
 	}
-}
-
-/* セッションの設定 */
-func InitSession() *sessions.CookieStore {
-	cookieStore := sessions.NewCookieStore([]byte(config.Config.AUTH.SessionKey))
-
-	return cookieStore
 }
 
 /* 認証エラー処理 */

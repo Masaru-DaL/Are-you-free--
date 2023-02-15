@@ -8,3 +8,10 @@ filepath:
   JS: internal/web/static/js
   image: internal/web/img
   icon: internal/web/icon
+
+auth:
+  session: someSessionName
+  sessionKey: someSessionKey
+  sessionPayh: /
+  sessionExpirationSec: 86400
+  sessionExpirationDay: 7
