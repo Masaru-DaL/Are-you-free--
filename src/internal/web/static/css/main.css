@@ -66,7 +66,7 @@
 
 .title-area-wrapper {
   width: 100%;
-  height: 10%;
+  height: 10vh;
   margin-top: 1%;
 }
 
@@ -118,12 +118,68 @@
 }
 
 .title-area-button-wrapper {
-  width: 10%;
+  width: 70%;
+  height: 100%;
 }
+.toggle-button-wrapper {
+  width: 18%;
+  height: 80%;
+  margin: auto 3.5% 0 1%;
+}
+.toggle-button-wrapper:nth-child(1) {
+  width: 18%;
+  height: 80%;
+  margin: auto 3.5% 0 9%;
+}
+.toggle-button {
+  width: 100%;
+  height: 100%;
+  margin: auto 2%;
+  text-decoration: none;
+  font-size: 18px;
+  border-radius: 8px;
+  position: relative;
+  transition: 0.3s;
+  overflow: hidden;
+  box-shadow: -5px -5px 10px 0px rgba(255, 255, 255, 0.5), 4px 4px 5px 0px rgba(43, 43, 43, 0.3);
+}
+.toggle-button::before {
+  content: "";
+  display: block;
+  height: 1.5px;
+  width: 75%;
+  position: absolute;
+  left: 0;
+  background-color: var(--WOOD);
+  transition: .3s;
+}
+.toggle-button::after {
+  content: "";
+  display: block;
+  height: 1.5px;
+  width: 75%;
+  position: absolute;
+  right: 0;
+  background-color: var(--WOOD);
+  transition: .3s;
+}
+.toggle-button::before {
+  top: 0;
+}
+.toggle-button::after {
+  bottom: 0;
+}
+.toggle-button:hover::before {
+  transform: translateX(-100%);
+}
+.toggle-button:hover::after {
+  transform: translateX(100%);
+}
+
 .title-area-button {
-  width: 220px;
-  height: 60px;
-  margin: 0 20px;
+  width: 40%;
+  height: 50%;
+  margin: auto 2%;
   line-height: 60px;
   text-decoration: none;
   font-size: 18px;
@@ -215,9 +271,9 @@
   transform: translateX(100%);
 }
 .account-logout-button {
-  width: 100%;
-  height: 90%;
-  margin-left: 100%;
+  width: 20%;
+  height: 80%;
+  margin: 1.5% 2% 0 75%;
   line-height: 180%;
   text-decoration: none;
   border-radius: 8px;

@@ -1,5 +1,5 @@
 .account-content-right-area {
-  width: 70%;
+  width: 73%;
   height: 63vh;
   margin: 6% auto 0 auto;
   box-shadow: 7px 7px 20px rgba(0,0,0,.3);
@@ -9,11 +9,11 @@
   border: none;
 }
 #icon-list {
-  width: 70%;
+  width: 72%;
   height: 70vh;
   position: absolute;
-  top: 200px;
-  left: 355px;
+  top: 25%;
+  left: 23%;
   display: none;
   z-index: 10;
 }
@@ -39,6 +39,7 @@
 .icon-row {
   width: 100%;
   height: 30%;
+  margin-left: 1%;
   align-items: center;
 }
 .icon-row button {
@@ -133,11 +134,11 @@
   border: none;
 }
 #username-change-form {
-  width: 70%;
-  height: 68vh;
+  width: 72%;
+  height: 70vh;
   position: absolute;
-  top: 200px;
-  left: 355px;
+  top: 25%;
+  left: 23%;
   display: none;
   z-index: 10;
 }
@@ -154,11 +155,11 @@
   border: none;
 }
 #password-change-form {
-  width: 70%;
-  height: 75vh;
+  width: 72%;
+  height: 70vh;
   position: absolute;
-  top: 200px;
-  left: 355px;
+  top: 25%;
+  left: 23%;
   display: none;
   z-index: 10;
 }
@@ -171,11 +172,11 @@
   border: none;
 }
 #email-change-form {
-  width: 70%;
-  height: 68vh;
+  width: 72%;
+  height: 70vh;
   position: absolute;
-  top: 200px;
-  left: 355px;
+  top: 25%;
+  left: 23%;
   display: none;
   z-index: 10;
 }
@@ -218,7 +219,7 @@
   width: 260px;
   height: 260px;
   border-radius: 50%;
-  filter: drop-shadow(15px 15px 12px rgba(0,0,0,.3)) ;
+  filter: drop-shadow(15px 15px 12px rgba(0,0,0,.3));
 }
 .my-name-wrapper {
   position: relative;
@@ -279,9 +280,12 @@
   margin-top: 15%;
 }
 .button-description-label-wrapper {
-  width: 50%;
+  width: 60%;
   height: 30%;
   margin-top: 10%;
+}
+.button-description-label-wrapper label {
+  letter-spacing: 0.1em;
 }
 .description-wrapper {
   width: 100%;
@@ -358,6 +362,63 @@
   background-color: black;
   border-radius: 1px;
 }
+.edit-info-area {
+  width: 100%;
+  height: 25%;
+  position: relative;
+}
+.edit-info-area:nth-child(1)::after {
+  content: '';
+  position: absolute;
+  top: 46%;
+  left: 16.5%;
+  display: inline-block;
+  width: 28%;
+  height: 1px;
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%);
+  background-color: black;
+  border-radius: 1px;
+}
+.edit-info-area:nth-child(2):after {
+  content: '';
+  position: absolute;
+  top: 46%;
+  left: 19.5%;
+  display: inline-block;
+  width: 33.5%;
+  height: 1px;
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%);
+  background-color: black;
+  border-radius: 1px;
+}
+.edit-info-area:nth-child(3):after {
+  content: '';
+  position: absolute;
+  top: 46%;
+  left: 14.5%;
+  display: inline-block;
+  width: 24%;
+  height: 1px;
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%);
+  background-color: black;
+  border-radius: 1px;
+}
+.edit-info-area:nth-child(4):after {
+  content: '';
+  position: absolute;
+  top: 46%;
+  left: 15.5%;
+  display: inline-block;
+  width: 26%;
+  height: 1px;
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%);
+  background-color: black;
+  border-radius: 1px;
+}
 .result-wrapper {
   width: 90%;
   height: 40%;
@@ -367,7 +428,7 @@
   border-radius: 4px;
   box-shadow: 4px 4px 7px rgba(0,0,0,.3);
 }
-.button-wrapper {
+.link-button {
   width: 90%;
   height: 40%;
   margin-top: 23%;
@@ -380,7 +441,7 @@
   overflow: hidden;
   box-shadow: -5px -5px 10px 0px rgba(255, 255, 255, 0.5), 4px 4px 5px 0px rgba(43, 43, 43, 0.3);
 }
-.button-wrapper::before {
+.link-button::before {
   content: "";
   display: block;
   height: 1.5px;
@@ -390,7 +451,7 @@
   background-color: var(--WOOD);
   transition: .3s;
 }
-.button-wrapper::after {
+.link-button::after {
   content: "";
   display: block;
   height: 1.5px;
@@ -400,15 +461,58 @@
   background-color: var(--WOOD);
   transition: .3s;
 }
-.button-wrapper::before {
+.link-button::before {
   top: 0;
 }
-.button-wrapper::after {
+.link-button::after {
   bottom: 0;
 }
-.button-wrapper:hover::before {
+.link-button:hover::before {
   transform: translateX(-100%);
 }
-.button-wrapper:hover::after {
+.link-button:hover::after {
   transform: translateX(100%);
+}
+
+.back-button {
+  width: 90%;
+  height: 40%;
+  margin-top: 23%;
+  margin-left: 7%;
+  letter-spacing: 0.1em;
+  line-height: 100%;
+  border-radius: 4px;
+  position: relative;
+  transition: 0.3s;
+  overflow: hidden;
+  box-shadow: -5px -5px 10px 0px rgba(255, 255, 255, 0.5), 4px 4px 5px 0px rgba(43, 43, 43, 0.3);
+}
+.back-link {
+  position: relative;
+  margin-top: 40%;
+}
+.back-link.current,
+.back-link:hover{
+  color: var(--WOOD);
+}
+.back-link::after {
+  content: '';
+  /*絶対配置で線の位置を決める*/
+  position: absolute;
+  bottom: -30%;
+  left: 10%;
+  /*線の形状*/
+  width: 80%;
+  height: 2px;
+  background: var(--WOOD);
+  /*アニメーションの指定*/
+  transition: all .3s;
+  transform: scale(0, 1);/*X方向0、Y方向1*/
+  transform-origin: center top;/*上部中央基点*/
+}
+
+/*現在地とhoverの設定*/
+.back-link.current::after,
+.back-link:hover::after {
+  transform: scale(1, 1);/*X方向にスケール拡大*/
 }
