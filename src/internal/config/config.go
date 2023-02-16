@@ -1,6 +1,8 @@
 package config
 
-import "github.com/jinzhu/configor"
+import (
+	"github.com/jinzhu/configor"
+)
 
 var Config = struct {
 	DB struct {
@@ -16,12 +18,15 @@ var Config = struct {
 		Icon  string `yaml:"icon"`
 	}
 
-	AUTH struct {
-		Session              string `yaml:"session"`
-		SessionKey           string `yaml:"sessionKey"`
-		SessionPath          string `yaml:"sessionPath"`
-		SessionExpirationSec int    `yaml:"sessionExpirationSec"`
-		SessionExpirationDay int    `yaml:"sessionExpirationDay"`
+	Session struct {
+		Name      string `yaml:"name"`
+		SecretKey string `yaml:"secretKey"`
+		Path      string `yaml:"Path"`
+		Domain    string `yaml:"Domain"`
+		MaxAgeSec int    `yaml:"MaxAgeSec"`
+		MaxAgeDay int    `yaml:"MaxAgeDay"`
+		Secure    bool   `yaml:"Secure"`
+		HttpOnly  bool   `yaml:"httpOnly"`
 	}
 }{}
 

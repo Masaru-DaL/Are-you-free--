@@ -9,6 +9,7 @@ import (
 	"src/internal/pkg/models/users"
 	"src/internal/pkg/strings"
 
+	"github.com/gorilla/securecookie"
 	"github.com/gorilla/sessions"
 	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
@@ -132,27 +133,50 @@ func Login(db *sql.DB) echo.HandlerFunc {
 				})
 			}
 		}
+
 		/* Checking input data from form Here. */
 
 		/* Setting up a user's session From here. */
-		session, _ := session.Get(config.Config.AUTH.Session, c)
-		session.Options = &sessions.Options{
-			Path:     config.Config.AUTH.SessionPath,
-			MaxAge:   config.Config.AUTH.SessionExpirationSec * config.Config.AUTH.SessionExpirationDay,
-			HttpOnly: true,
+		sess, _ := session.Get(config.Config.Session.Name, c)
+		sess.Options = &sessions.Options{
+			Path:     config.Config.Session.Path,
+			Domain:   config.Config.Session.Domain,
+			MaxAge:   config.Config.Session.MaxAgeSec * config.Config.Session.MaxAgeDay,
+			Secure:   config.Config.Session.Secure,
+			HttpOnly: config.Config.Session.HttpOnly,
 		}
-		session.Values["UserID"] = user.ID
-		session.Values["UserName"] = user.Name
-		session.Save(c.Request(), c.Response())
-		/* Setting up a user's session here. */
+		sess.Values["UserID"] = user.ID
+		sess.Save(c.Request(), c.Response())
+		/* Setting up a user's session From here. */
 
 		return c.Redirect(http.StatusSeeOther, "/index")
 	}
 }
 
 /* ログアウト機能 */
-// func logout(db *sql.DB) echo.HandlerFunc {
-// 	return func(c echo.Context) error {
+func Logout(db *sql.DB) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		/* Setting up a user's session From here. */
+		// セッション情報の取得
+		sess, _ := session.Get(config.Config.Session.Name, c)
+		if sess == nil {
+			return auth.HandleAuthError(c)
+		}
+		// セッション情報から値の削除
+		sess.Values["UserID"] = ""
+		sess.Options.MaxAge = -1
+		// 新たに別のセッションIDに変更する
+		newSessID := securecookie.GenerateRandomKey(32)
+		sess.Options = &sessions.Options{
+			Path:     config.Config.Session.Path,
+			MaxAge:   0,
+			HttpOnly: config.Config.Session.HttpOnly,
+			SameSite: http.SameSiteLaxMode,
+		}
+		sess.ID = string(newSessID)
+		sess.Save(c.Request(), c.Response())
+		/* Setting up a user's session From here. */
 
-// 	}
-// }
+		return c.Redirect(http.StatusSeeOther, "/auth/login")
+	}
+}

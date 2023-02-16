@@ -23,8 +23,10 @@ func InitRouting(db *sql.DB) *echo.Echo {
 	e.Static("/icon", config.Config.FilePath.Icon)
 
 	/* Unauthorized routing group. */
+	e.Use(auth.SessionMiddleware(auth.CookieStore))
+
 	unAuthenticatedGroup := e.Group("/auth")
-	// unAuthenticatedGroup.Use(auth.UnAuthenticatedMiddleware)
+	unAuthenticatedGroup.Use(auth.UnAuthenticatedMiddleware)
 	unAuthenticatedGroup.GET("/signup", templates.SignupPage)
 	unAuthenticatedGroup.POST("/signup", account.Signup(db))
 	unAuthenticatedGroup.GET("/login", templates.LoginPage)
@@ -32,10 +34,9 @@ func InitRouting(db *sql.DB) *echo.Echo {
 
 	/* Authorized routing group. */
 	authenticatedGroup := e.Group("/")
-	e.Use(auth.SessionMiddleware(auth.CookieStore))
+	authenticatedGroup.Use(auth.AuthenticatedMiddleware)
 	authenticatedGroup.GET("index", templates.TopPage)
 
-	// authenticatedGroup.Use(auth.AuthenticatedMiddleware)
 	// e.GET("/index", templates.TopPage)
 	e.GET("/free-time", templates.FreeTimePage)
 	e.GET("/free-times", templates.FreeTimesPage)
@@ -46,6 +47,8 @@ func InitRouting(db *sql.DB) *echo.Echo {
 	// e.GET("/account/", templates.AccountPage)
 	authenticatedGroup.GET("account/", templates.AccountPage)
 	authenticatedGroup.GET("account/edit", templates.AccountEditPage)
+	authenticatedGroup.GET("logout", account.Logout(db))
+
 	e.GET("/account/password_reset", templates.PasswordResetPage)
 	e.GET("/account/password_re_registration", templates.PasswordReRegistrationPage)
 
