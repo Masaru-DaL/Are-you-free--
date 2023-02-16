@@ -1,8 +1,11 @@
 package templates
 
 import (
+	"fmt"
 	"net/http"
+	"src/internal/config"
 
+	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
 )
 
@@ -15,6 +18,10 @@ func SignupPage(c echo.Context) error {
 
 /* ログインページ */
 func LoginPage(c echo.Context) error {
+	sess, _ := session.Get(config.Config.Session.Name, c)
+	fmt.Println(sess)
+	fmt.Println(sess.Values)
+
 	return c.Render(http.StatusOK, "login", echo.Map{
 		"error_message": nil,
 	})
@@ -22,6 +29,10 @@ func LoginPage(c echo.Context) error {
 
 /* トップページ */
 func TopPage(c echo.Context) error {
+	sess, _ := session.Get(config.Config.Session.Name, c)
+	fmt.Println(sess)
+	fmt.Println(sess.ID)
+	fmt.Println(sess.Values)
 	return c.Render(http.StatusOK, "index", "")
 }
 

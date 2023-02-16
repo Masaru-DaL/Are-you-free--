@@ -9,9 +9,12 @@ filepath:
   image: internal/web/img
   icon: internal/web/icon
 
-auth:
-  session: someSessionName
-  sessionKey: someSessionKey
-  sessionPayh: /
-  sessionExpirationSec: 86400
-  sessionExpirationDay: 7
+session:
+  name: someSessionName
+  secretKey: someSessionKey
+  Path: /
+  Domain: ""
+  MaxAgeSec: 86400
+  MaxAgeDay: 7
+  Secure: false
+  httpOnly: true
