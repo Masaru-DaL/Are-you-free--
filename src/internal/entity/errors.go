@@ -5,6 +5,9 @@ import "errors"
 /* Errors for admin */
 var (
 	ErrInternalServerError = errors.New("internal Server Error")
+
+	ErrNoUserFound  = errors.New("no user found")
+	ErrSQLGetFailed = errors.New("failed to get data from table")
 )
 
 /* Errors for user */
