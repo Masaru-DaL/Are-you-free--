@@ -1,7 +1,9 @@
 package account
 
 import (
+	"context"
 	"database/sql"
+	"errors"
 	"net/http"
 	"src/internal/config"
 	"src/internal/entity"
@@ -11,12 +13,13 @@ import (
 
 	"github.com/gorilla/securecookie"
 	"github.com/gorilla/sessions"
+	"github.com/jmoiron/sqlx"
 	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
 )
 
 /* サインアップ機能 */
-func Signup(db *sql.DB) echo.HandlerFunc {
+func Signup(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		// フォームから送信された値
 		signupName := c.FormValue("username")
@@ -66,9 +69,9 @@ func Signup(db *sql.DB) echo.HandlerFunc {
 			})
 		}
 		// 入力された名前でDBから情報を取得する
-		user, err := users.UserReqUsername(db, signupName)
+		user, err := users.GetUserByUsername(ctx, db, signupName)
 		// ユーザ情報が既に存在している場合
-		if err != sql.ErrNoRows {
+		if !errors.Is(err, entity.ErrNoUserFound) {
 			// 入力されたパスワードをユーザ情報のパスワードと比較する
 			err = auth.CompareHashAndPlaintext(user.Password, signupPassword)
 			// err == nil => DBに既に存在している
@@ -79,7 +82,6 @@ func Signup(db *sql.DB) echo.HandlerFunc {
 			}
 		}
 		/* Checking input data from form Here. */
-
 		// 入力されたパスワードのハッシュ化
 		encryptedSignupPassword, err := auth.PasswordEncrypt(signupPassword)
 		if err != nil {
@@ -87,8 +89,14 @@ func Signup(db *sql.DB) echo.HandlerFunc {
 				"error_message": entity.ERR_INTERNAL_SERVER_ERROR,
 			})
 		}
+
 		// サインアップ情報の登録
-		err = users.CreateUser(db, signupName, encryptedSignupPassword, signupEmail)
+		user = &entity.User{
+			Name:     signupName,
+			Password: encryptedSignupPassword,
+			Email:    signupEmail,
+		}
+		_, err = users.CreateUser(ctx, db, user)
 		if err != nil {
 			return c.Render(http.StatusOK, "signup", echo.Map{
 				"error_message": entity.ERR_INTERNAL_SERVER_ERROR,
@@ -102,7 +110,7 @@ func Signup(db *sql.DB) echo.HandlerFunc {
 }
 
 /* ログイン機能 */
-func Login(db *sql.DB) echo.HandlerFunc {
+func Login(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		// フォームから送信された値
 		loginName := c.FormValue("username")
@@ -116,7 +124,7 @@ func Login(db *sql.DB) echo.HandlerFunc {
 			})
 		}
 		// ユーザ名をチェックする
-		user, err := users.UserReqUsername(db, loginName)
+		user, err := users.GetUserByUsername(ctx, db, loginName)
 		// ユーザ情報が取得できなかった場合
 		if err == sql.ErrNoRows {
 			return c.Render(http.StatusOK, "login", echo.Map{
@@ -154,7 +162,7 @@ func Login(db *sql.DB) echo.HandlerFunc {
 }
 
 /* ログアウト機能 */
-func Logout(db *sql.DB) echo.HandlerFunc {
+func Logout(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		/* Setting up a user's session From here. */
 		// セッション情報の取得

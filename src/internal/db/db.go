@@ -1,17 +1,17 @@
 package db
 
 import (
-	"database/sql"
 	"log"
 	"src/internal/config"
 
+	"github.com/jmoiron/sqlx"
 	_ "github.com/mattn/go-sqlite3"
 )
 
-func ConnectDatabase() *sql.DB {
+func ConnectDatabase() *sqlx.DB {
 	config.LoadConfigForYaml()
 
-	db, err := sql.Open(config.Config.DB.SQLDriver, config.Config.DB.DBPath)
+	db, err := sqlx.Connect(config.Config.DB.SQLDriver, config.Config.DB.DBPath)
 	if err != nil {
 		log.Fatal(err)
 	}

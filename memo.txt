@@ -79,3 +79,145 @@ Revoke Share
 Remove Sharing
 Terminate Share
 Discontinue SharingSHARERS
+
+
+上記の構成の場合、以下の手順に従ってGraphQLサーバを構築することができます。
+
+gqlgen.ymlファイルを作成する
+
+プロジェクトのルートディレクトリにgqlgen.ymlファイルを作成し、スキーマファイルとリゾルバーのパッケージ名を指定する
+schemaディレクトリにあるschema.graphqlsファイルをスキーマファイルとして指定する
+yaml
+Copy code
+# gqlgen.yml
+
+schema:
+  - schema/schema.graphqls
+resolver:
+  layout: follow-schema
+  dir: graph
+  package: graph
+モデルとリゾルバーを定義する
+
+graphディレクトリにあるschema.graphqlsファイルからモデルを生成するために、go run github.com/99designs/gqlgen generateコマンドを実行する
+graphディレクトリにリゾルバーファイルresolver.goを作成する
+bash
+Copy code
+go run github.com/99designs/gqlgen generate
+リゾルバーを実装する
+
+graphディレクトリにあるresolver.goファイルに、リゾルバーを実装する
+モデルからデータを取得するための関数を実装する
+go
+Copy code
+// graph/resolver.go
+
+package graph
+
+import (
+    "context"
+    "github.com/your-username/your-app/entity"
+)
+
+// THIS CODE IS A STARTING POINT ONLY. IT WILL NOT BE UPDATED WITH SCHEMA CHANGES.
+
+type Resolver struct{
+    DB *sqlx.DB
+}
+
+func (r *Resolver) Query() QueryResolver {
+    return &queryResolver{r}
+}
+
+type queryResolver struct{ *Resolver }
+
+func (r *queryResolver) Company(ctx context.Context, id string) (*entity.Company, error) {
+    company := &entity.Company{}
+    sqlStatement := "SELECT * FROM company WHERE id = ?"
+
+    err := r.DB.GetContext(ctx, company, sqlStatement, id)
+    if err != nil {
+        return nil, err
+    }
+
+    return company, nil
+}
+エントリーポイントを実装する
+
+サーバーのエントリーポイントであるserver.goを作成する
+graph.NewExecutableSchema()とgraph.Config{Resolvers: &Resolver{DB: db}}を使用して、スキーマとリゾルバーを組み合わせたExecutable Schemaを生成する
+go
+Copy code
+// server.go
+
+package main
+
+import (
+    "database/sql"
+    "fmt"
+    "log"
+    "net/http"
+
+    "github.com/your-username/your-app/graph"
+    "github.com/your-username/your-app/mysql"
+    "github.com/99designs/gqlgen/graphql/handler"
+
+
+
+
+
+ChatGPT Feb 13 Version. Free Research Preview. Our goal is to make AI systems more natural and safe to interact with. Your feedback will help us improve.
+
+
+type Company struct {
+	ID                    string `db:"id" gqlgen:"id"`
+	Name                  string `db:"name" gqlgen:"name"`
+	ImageURL              string `db:"image_url" gqlgen:"image_url"`
+	Abstract              string `db:"abstract" gqlgen:"abstract"`
+	BusinessSummary       string `db:"business_summary" gqlgen:"business_summary"`
+	WorkLocation          string `db:"work_location" gqlgen:"work_location"`
+	HPURL                 string `db:"hp_url" gqlgen:"hp_url"`
+	EmployeeNum           int    `db:"employee_num" gqlgen:"employee_num"`
+	Establishment         string `db:"establishment" gqlgen:"establishment"`
+	BusinessDetail        string `db:"business_detail" gqlgen:"business_detail"`
+	Occupation            string `db:"occupation" gqlgen:"occupation"`
+	OccupationDetail      string `db:"occupation_detail" gqlgen:"occupation_detail"`
+	SelectionFlow         string `db:"selection_flow" gqlgen:"selection_flow"`
+	Comment               string `db:"comment" gqlgen:"comment"`
+	EstimatedAnnualIncome int    `db:"estimated_annual_income" gqlgen:"estimated_annual_income"`
+	WantedEngineer        string `db:"wanted_engineer" gqlgen:"wanted_engineer"`
+	Age                   int    `db:"age" gqlgen:"age"`
+	Appeal                string `db:"appeal" gqlgen:"appeal"`
+	RequiredSkills        string `db:"required_skills" gqlgen:"required_skills"`
+	CareerPlan            string `db:"career_plan" gqlgen:"career_plan"`
+}
+
+
+`id` int unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT '1',
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+
+
+CREATE TABLE `users` (
+  `id` int unsigned NOT NULL AUTOINCREMENT,
+  `name` char(10) NOT NULL,
+  `password` char(20) NOT NULL,
+  `email` varchar(191) NOT NULL,
+  `is_admin` tinyint(1) NOT NULL DEFAULT '0',
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+);
+
+CREATE TABLE users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name char(10) NOT NULL,
+  password char(20) NOT NULL,
+  email varchar(191) NOT NULL,
+  is_admin BOOLEAN NOT NULL DEFAULT 0,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
