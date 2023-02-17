@@ -6,8 +6,12 @@ import "errors"
 var (
 	ErrInternalServerError = errors.New("internal Server Error")
 
-	ErrNoUserFound  = errors.New("no user found")
-	ErrSQLGetFailed = errors.New("failed to get data from table")
+	ErrNoUserFound           = errors.New("no user found")
+	ErrSQLGetFailed          = errors.New("failed to get data from table")
+	ErrSQLCreateStmt         = errors.New("failed to create prepared statement")
+	ErrSQLExecFailed         = errors.New("failed to exec sql")
+	ErrSQLResultNotDesired   = errors.New("sql result is not desired")
+	ErrSQLLastInsertIdFailed = errors.New("failed to get last inserted id")
 )
 
 /* Errors for user */

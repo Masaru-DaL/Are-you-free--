@@ -38,49 +38,50 @@ func GetUserByUsername(ctx context.Context, db *sqlx.DB, username string) (*enti
 
 }
 
-// func UserReqUsername(db *sql.DB, username string) (entity.User, error) {
-// 	sqlStatement := "SELECT * FROM users WHERE name = ?"
-
-// 	stmt, err := db.Prepare(sqlStatement)
-// 	if err != nil {
-// 		log.Printf("Failed to Prepare for a single retrieval operation in the users: %v", err)
-// 		return entity.User{}, err
-// 	}
-// 	defer stmt.Close()
-
-// 	user := entity.User{}
-// 	err = stmt.QueryRow(username).Scan(
-// 		&user.ID,
-// 		&user.Name,
-// 		&user.Password,
-// 		&user.Email,
-// 		&user.IsAdmin,
-// 		&user.CreatedAt,
-// 		&user.UpdatedAt)
-// 	if err != nil {
-// 		log.Printf("Failed to QueryRow for a single retrieval operation in the users: %v", err)
-// 		return entity.User{}, err
-// 	}
-
-// 	return user, err
-// }
-
 /* ユーザの新規作成 */
-func CreateUser(db *sql.DB, userName string, encryptedPassword string, email string) error {
-	sqlStatement := "INSERT INTO users(name, password, email) VALUES(?, ?, ?)"
-
-	stmt, err := db.Prepare(sqlStatement)
+func CreateUser(ctx context.Context, db *sqlx.DB, user *entity.User) (*entity.User, error) {
+	stmt, err := db.PrepareNamedContext(ctx, `
+		INSERT INTO users
+		(
+			name,
+			password,
+			email
+		)
+		VALUES
+		(
+			:name,
+			:password,
+			:email
+		)
+	`)
 	if err != nil {
-		log.Printf("Failed to Prepare for create retrieval operation in the users: %v", err)
-		return err
+		log.Println(err)
+		return nil, entity.ErrSQLCreateStmt
 	}
-	defer stmt.Close()
 
-	_, err = stmt.Exec(userName, encryptedPassword, email)
+	defer func() {
+		if closeErr := stmt.Close(); closeErr != nil {
+			err = closeErr
+		}
+	}()
+
+	result, err := stmt.Exec(user)
 	if err != nil {
-		log.Printf("Failed to Exec for create retrieval operation in the users: %v", err)
-		return err
+		log.Println(err)
+		return nil, entity.ErrSQLExecFailed
 	}
 
-	return err
+	cnt, err := result.RowsAffected()
+	if err != nil || cnt != 1 {
+		return nil, entity.ErrSQLResultNotDesired
+	}
+
+	id, err := result.LastInsertId()
+	if err != nil {
+		return nil, entity.ErrSQLLastInsertIdFailed
+	}
+
+	user.ID = int(id)
+
+	return user, err
 }

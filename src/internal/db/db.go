@@ -11,7 +11,7 @@ import (
 func ConnectDatabase() *sqlx.DB {
 	config.LoadConfigForYaml()
 
-	db, err := sqlx.Open(config.Config.DB.SQLDriver, config.Config.DB.DBPath)
+	db, err := sqlx.Connect(config.Config.DB.SQLDriver, config.Config.DB.DBPath)
 	if err != nil {
 		log.Fatal(err)
 	}

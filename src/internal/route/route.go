@@ -1,18 +1,20 @@
 package route
 
 import (
-	"database/sql"
+	"context"
 	"html/template"
 	"io"
 	"src/internal/config"
 	"src/internal/handler/account"
+	"src/internal/handler/admin"
 	"src/internal/handler/templates"
 	"src/internal/pkg/auth"
 
+	"github.com/jmoiron/sqlx"
 	"github.com/labstack/echo/v4"
 )
 
-func InitRouting(db *sql.DB) *echo.Echo {
+func InitRouting(db *sqlx.DB) *echo.Echo {
 	e := echo.New()
 
 	/* html/template対応 */
@@ -22,15 +24,18 @@ func InitRouting(db *sql.DB) *echo.Echo {
 	e.Static("/js", config.Config.FilePath.JS)
 	e.Static("/icon", config.Config.FilePath.Icon)
 
+	ctx := context.Background()
+	e.GET("/admin/users", admin.GetUsers(ctx, db))
+
 	/* Unauthorized routing group. */
 	e.Use(auth.SessionMiddleware(auth.CookieStore))
 
 	unAuthenticatedGroup := e.Group("/auth")
 	unAuthenticatedGroup.Use(auth.UnAuthenticatedMiddleware)
 	unAuthenticatedGroup.GET("/signup", templates.SignupPage)
-	unAuthenticatedGroup.POST("/signup", account.Signup(db))
+	unAuthenticatedGroup.POST("/signup", account.Signup(ctx, db))
 	unAuthenticatedGroup.GET("/login", templates.LoginPage)
-	unAuthenticatedGroup.POST("/login", account.Login(db))
+	unAuthenticatedGroup.POST("/login", account.Login(ctx, db))
 
 	/* Authorized routing group. */
 	authenticatedGroup := e.Group("/")
@@ -47,7 +52,7 @@ func InitRouting(db *sql.DB) *echo.Echo {
 	// e.GET("/account/", templates.AccountPage)
 	authenticatedGroup.GET("account/", templates.AccountPage)
 	authenticatedGroup.GET("account/edit", templates.AccountEditPage)
-	authenticatedGroup.GET("logout", account.Logout(db))
+	authenticatedGroup.GET("logout", account.Logout(ctx, db))
 
 	e.GET("/account/password_reset", templates.PasswordResetPage)
 	e.GET("/account/password_re_registration", templates.PasswordReRegistrationPage)
