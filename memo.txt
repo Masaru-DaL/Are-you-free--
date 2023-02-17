@@ -1,3 +1,6 @@
+/* ------------------------------- */
+    create table
+/* ------------------------------- */
 CREATE TABLE users(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name CHAR(10) NOT NULL,
@@ -5,8 +8,37 @@ CREATE TABLE users(
         email VARCHAR(255) NOT NULL UNIQUE CHECK(email LIKE '%_@__%.__%'),
         is_admin BOOLEAN DEFAULT 0,
         created_at TIMESTAMP DEFAULT (DATETIME('now','localtime')),
-				updated_at TIMESTAMP DEFAULT (DATETIME('now','localtime'))
+        updated_at TIMESTAMP DEFAULT (DATETIME('now','localtime'))
 );
+
+CREATE TABLE free_time_dates (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL REFERENCES users(id),
+  start_time_id INTEGER NOT NULL REFERENCES free_time_start_time(id),
+  end_time_id INTEGER NOT NULL REFERENCES free_time_end_time(id),
+  year INTEGER NOT NULL,
+  month INTEGER NOT NULL,
+  day INTEGER INTEGER NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE free_time_start_times (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  hour INTEGER NOT NULL,
+  minute INTEGER NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE free_time_end_times (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  hour INTEGER NOT NULL,
+  minute INTEGER NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
 
 import (
     "github.com/labstack/echo"
