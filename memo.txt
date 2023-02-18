@@ -11,7 +11,7 @@ CREATE TABLE users(
         updated_at TIMESTAMP DEFAULT (DATETIME('now','localtime'))
 );
 
-CREATE TABLE free_times (
+CREATE TABLE date_free_times (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   user_id INTEGER NOT NULL REFERENCES users(id),
   year INTEGER NOT NULL,

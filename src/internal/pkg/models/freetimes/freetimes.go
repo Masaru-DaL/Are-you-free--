@@ -47,16 +47,18 @@ func GetFreeTimeByDate(ctx context.Context, db *sqlx.DB, year int, month int, da
 	return &freeTime, nil
 }
 
-func CreateDateFreeTime(ctx context.Context, db *sqlx.DB, freeTime *entity.DateFreeTime) (*entity.DateFreeTime, error) {
+func CreateDateFreeTime(ctx context.Context, db *sqlx.DB, dateFreeTime *entity.DateFreeTime) (*entity.DateFreeTime, error) {
 	stmt, err := db.PrepareNamedContext(ctx, `
-		INSERT INTO free_times
+		INSERT INTO date_free_times
 		(
+			user_id,
 			year,
 			month,
 			day
 		)
 		VALUES
 		(
+			:user_id,
 			:year,
 			:month,
 			:day
@@ -74,7 +76,7 @@ func CreateDateFreeTime(ctx context.Context, db *sqlx.DB, freeTime *entity.DateF
 		}
 	}()
 
-	result, err := stmt.Exec(freeTime)
+	result, err := stmt.Exec(dateFreeTime)
 	if err != nil {
 		log.Println(err)
 		return nil, entity.ErrSQLExecFailed
@@ -90,14 +92,14 @@ func CreateDateFreeTime(ctx context.Context, db *sqlx.DB, freeTime *entity.DateF
 		return nil, entity.ErrSQLLastInsertIdFailed
 	}
 
-	freeTime.ID = int(id)
+	dateFreeTime.ID = int(id)
 
-	return freeTime, err
+	return dateFreeTime, err
 }
 
 func CreateStartFreeTime(ctx context.Context, db *sqlx.DB, startFreeTime *entity.StartFreeTime) (*entity.StartFreeTime, error) {
 	stmt, err := db.PrepareNamedContext(ctx, `
-		INSERT INTO free_times
+		INSERT INTO start_free_times
 		(
 			hour,
 			minute
@@ -143,7 +145,7 @@ func CreateStartFreeTime(ctx context.Context, db *sqlx.DB, startFreeTime *entity
 
 func CreateEndFreeTime(ctx context.Context, db *sqlx.DB, endFreeTime *entity.EndFreeTime) (*entity.EndFreeTime, error) {
 	stmt, err := db.PrepareNamedContext(ctx, `
-		INSERT INTO free_times
+		INSERT INTO end_free_times
 		(
 			hour,
 			minute

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"src/internal/config"
+	"src/internal/pkg/strings"
 
 	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
@@ -48,7 +49,26 @@ func FreeTimesPage(c echo.Context) error {
 
 /* スケジュール作成ページ */
 func CreateFreeTimePage(c echo.Context) error {
-	return c.Render(http.StatusOK, "create-free-time", "")
+	dateString := c.QueryParam("today")
+	if dateString == "" {
+		return c.Render(http.StatusOK, "create-free-time", echo.Map{
+			"year":  nil,
+			"month": nil,
+			"day":   nil,
+		})
+	}
+
+	year, month, day := strings.SplitDateByHyphen(dateString)
+
+	fmt.Println(year)
+	fmt.Println(month)
+	fmt.Println(day)
+
+	return c.Render(http.StatusOK, "create-free-time", echo.Map{
+		"year":  year,
+		"month": month,
+		"day":   day,
+	})
 }
 
 /* スケジュール更新ページ */

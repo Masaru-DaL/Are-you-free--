@@ -11,6 +11,7 @@ filepath:
 
 session:
   name: someSessionName
+  keyName: UserID
   secretKey: someSessionKey
   Path: /
   Domain: ""

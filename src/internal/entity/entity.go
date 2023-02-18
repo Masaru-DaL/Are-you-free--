@@ -12,7 +12,7 @@ type User struct {
 
 type DateFreeTime struct {
 	ID        int    `db:"id"`
-	User      User   `db:"user"`
+	UserID    int    `db:"user_id"`
 	Year      int    `db:"year"`
 	Month     int    `db:"month"`
 	Day       int    `db:"day"`
@@ -21,21 +21,21 @@ type DateFreeTime struct {
 }
 
 type StartFreeTime struct {
-	ID           int          `db:"id"`
-	DateFreeTime DateFreeTime `db:"date_free_time"`
-	Hour         int          `db:"start_time_hour"`
-	Minute       int          `db:"start_time_minute"`
-	CreatedAt    string       `db:"created_at"`
-	UpdatedAt    string       `db:"updated_at"`
+	ID             int    `db:"id"`
+	DateFreeTimeID int    `db:"date_free_time_id"`
+	Hour           int    `db:"start_time_hour"`
+	Minute         int    `db:"start_time_minute"`
+	CreatedAt      string `db:"created_at"`
+	UpdatedAt      string `db:"updated_at"`
 }
 
 type EndFreeTime struct {
-	ID           int          `db:"id"`
-	DateFreeTime DateFreeTime `db:"date_free_time"`
-	Hour         int          `db:"end_time_hour"`
-	Minute       int          `db:"start_time_minute"`
-	CreatedAt    string       `db:"created_at"`
-	UpdatedAt    string       `db:"updated_at"`
+	ID             int    `db:"id"`
+	DateFreeTimeID int    `db:"date_free_time_id"`
+	Hour           int    `db:"end_time_hour"`
+	Minute         int    `db:"start_time_minute"`
+	CreatedAt      string `db:"created_at"`
+	UpdatedAt      string `db:"updated_at"`
 }
 
 // type FreeTime struct {

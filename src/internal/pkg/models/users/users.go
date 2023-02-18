@@ -12,6 +12,33 @@ import (
 
 /*
 ユーザ情報の1件取得
+指定したユーザIDのユーザの情報を取得する
+*/
+func GetUserByUserID(ctx context.Context, db *sqlx.DB, userID int) (*entity.User, error) {
+	var user entity.User
+
+	err := db.GetContext(ctx, &user, `
+		SELECT
+			*
+		FROM
+			users
+		WHERE
+			id = ?
+	`, userID)
+
+	if errors.Is(err, sql.ErrNoRows) {
+		return nil, entity.ErrNoUserFound
+	}
+
+	if err != nil {
+		return nil, entity.ErrSQLGetFailed
+	}
+
+	return &user, err
+}
+
+/*
+ユーザ情報の1件取得
 指定した名前のユーザの情報を取得する
 */
 func GetUserByUsername(ctx context.Context, db *sqlx.DB, username string) (*entity.User, error) {
@@ -35,7 +62,6 @@ func GetUserByUsername(ctx context.Context, db *sqlx.DB, username string) (*enti
 	}
 
 	return &user, err
-
 }
 
 /* ユーザの新規作成 */

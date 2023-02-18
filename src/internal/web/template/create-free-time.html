@@ -83,7 +83,14 @@
         <div class="content-right-area">
           <p class="ml-100 font-18 text-wood">上記の日付でスケジュールを作成します。<br>フリータイムの開始/終了時刻を選択してください。</p>
           <div class="select-time-wrapper ml-100">
-            <form action="" class="flex items-end">
+            <form
+              action="/free-time/create"
+              method="POST"
+              class="flex items-end"
+              >
+              <input type="hidden" value="{{.year}}" name="year" />
+              <input type="hidden" value="{{.month}}" name="month" />
+              <input type="hidden" value="{{.day}}" name="day" />
               <div class="select-time-hour-area">
                 <select class="select-time-hour font-17">
                   <option value="">開始時刻</option>
@@ -146,7 +153,7 @@
               </div>
 
               <div class="select-time-button-area">
-                <button class="select-time-button bg-skyblue text-snow">CREATE</button>
+                <input type="submit" class="select-time-button bg-skyblue text-snow" />
               </div>
             </form>
 
