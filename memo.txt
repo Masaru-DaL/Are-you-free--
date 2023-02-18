@@ -11,11 +11,9 @@ CREATE TABLE users(
         updated_at TIMESTAMP DEFAULT (DATETIME('now','localtime'))
 );
 
-CREATE TABLE free_time_dates (
+CREATE TABLE free_times (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   user_id INTEGER NOT NULL REFERENCES users(id),
-  start_time_id INTEGER NOT NULL REFERENCES free_time_start_time(id),
-  end_time_id INTEGER NOT NULL REFERENCES free_time_end_time(id),
   year INTEGER NOT NULL,
   month INTEGER NOT NULL,
   day INTEGER INTEGER NOT NULL,
@@ -23,16 +21,18 @@ CREATE TABLE free_time_dates (
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE free_time_start_times (
+CREATE TABLE start_free_times (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
+  free_time_id INTEGER NOT NULL REFERENCES free_times(id),
   hour INTEGER NOT NULL,
   minute INTEGER NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE free_time_end_times (
+CREATE TABLE end_free_times (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
+  free_time_id INTEGER NOT NULL REFERENCES free_times(id),
   hour INTEGER NOT NULL,
   minute INTEGER NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
