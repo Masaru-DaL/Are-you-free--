@@ -54,6 +54,7 @@ func CreateUser(ctx context.Context, db *sqlx.DB, user *entity.User) (*entity.Us
 			:email
 		)
 	`)
+
 	if err != nil {
 		log.Println(err)
 		return nil, entity.ErrSQLCreateStmt

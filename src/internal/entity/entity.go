@@ -10,7 +10,7 @@ type User struct {
 	UpdatedAt string `db:"updated_at"`
 }
 
-type FreeTime struct {
+type DateFreeTime struct {
 	ID        int    `db:"id"`
 	User      User   `db:"user"`
 	Year      int    `db:"year"`
@@ -20,22 +20,22 @@ type FreeTime struct {
 	UpdatedAt string `db:"updated_at"`
 }
 
-type StartFreeTimes struct {
-	ID        int      `db:"id"`
-	FreeTime  FreeTime `db:"free_time"`
-	Hour      int      `db:"start_time_hour"`
-	Minute    int      `db:"start_time_minute"`
-	CreatedAt string   `db:"created_at"`
-	UpdatedAt string   `db:"updated_at"`
+type StartFreeTime struct {
+	ID           int          `db:"id"`
+	DateFreeTime DateFreeTime `db:"date_free_time"`
+	Hour         int          `db:"start_time_hour"`
+	Minute       int          `db:"start_time_minute"`
+	CreatedAt    string       `db:"created_at"`
+	UpdatedAt    string       `db:"updated_at"`
 }
 
-type EndFreeTimes struct {
-	ID        int      `db:"id"`
-	FreeTime  FreeTime `db:"free_time"`
-	Hour      int      `db:"end_time_hour"`
-	Minute    int      `db:"start_time_minute"`
-	CreatedAt string   `db:"created_at"`
-	UpdatedAt string   `db:"updated_at"`
+type EndFreeTime struct {
+	ID           int          `db:"id"`
+	DateFreeTime DateFreeTime `db:"date_free_time"`
+	Hour         int          `db:"end_time_hour"`
+	Minute       int          `db:"start_time_minute"`
+	CreatedAt    string       `db:"created_at"`
+	UpdatedAt    string       `db:"updated_at"`
 }
 
 // type FreeTime struct {
