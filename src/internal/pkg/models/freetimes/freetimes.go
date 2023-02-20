@@ -10,31 +10,16 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-/*
-free-timeの1件取得
-指定した日付のfree-time（start&end timeは複数の場合もある）を取得
-*/
-func GetFreeTimeByDate(ctx context.Context, db *sqlx.DB, year int, month int, day int) (*entity.DateFreeTime, error) {
-	var freeTime entity.DateFreeTime
-
-	err := db.GetContext(ctx, &freeTime, `
+func GetDateFreeTime(ctx context.Context, db *sqlx.DB, userID int, year int, month int, day int) (*entity.DateFreeTime, error) {
+	var dateFreeTime entity.DateFreeTime
+	err := db.GetContext(ctx, &dateFreeTime, `
 		SELECT
-			ft.id, ft.user_id, ft.year, ft.month, ft.day, ft.created_at, ft.updated_at,
-			sft.hour, sft.minute,
-			eft.hour, eft.minute
+			id, user_id, year, month, day, created_at, updated_at
 		FROM
-			free_times AS ft
-		LEFT JOIN
-			start_free_times AS sft
-		ON
-			ft.start_time_id = sft.id
-		LEFT JOIN
-			end_free_times AS eft
-		ON
-			ft.end_time_id = eft.id
+			date_free_times
 		WHERE
-			ft.year = ? AND ft.month = ? AND ft.day = ?
-	`, year, month, day)
+			user_id = ? AND year = ? AND month = ? AND day = ?
+	`, userID, year, month, day)
 
 	if errors.Is(err, sql.ErrNoRows) {
 		return nil, entity.ErrNoFreeTimeFound
@@ -44,8 +29,105 @@ func GetFreeTimeByDate(ctx context.Context, db *sqlx.DB, year int, month int, da
 		return nil, entity.ErrSQLGetFailed
 	}
 
-	return &freeTime, nil
+	return &dateFreeTime, nil
 }
+
+/*
+free-timeの1件取得
+指定した日付のfree-time（start&end timeは複数の場合もある）を取得
+*/
+func GetFreeTimeByDate(ctx context.Context, db *sqlx.DB) ([]*entity.DateFreeTime, error) {
+	var freeTime []*entity.DateFreeTime
+
+	err := db.SelectContext(ctx, &freeTime, `
+		SELECT
+			dft.id, dft.user_id, dft.year, dft.month, dft.day, dft.created_at, dft.updated_at,
+			ft.id AS "free_time.id",
+
+			ft.start_hour AS "free_time.start_hour",
+			ft.start_minute AS "free_time.start_minute",
+			ft.end_hour AS "free_time.end_hour",
+			ft.end_minute AS "free_time.end_minute",
+			ft.created_at AS "free_time.created_at",
+			ft.updated_at AS "free_time.updated_at"
+		FROM
+			date_free_times AS dft
+		LEFT JOIN
+			free_times AS ft
+		ON
+			dft.id = ft.date_free_time_id
+	`)
+
+	if err != nil {
+		return nil, entity.ErrSQLGetFailed
+	}
+
+	return freeTime, nil
+}
+
+/*
+free-timeの1件取得
+指定した日付のfree-time（start&end timeは複数の場合もある）を取得
+*/
+// func GetFreeTimeByDate(ctx context.Context, db *sqlx.DB, dateFreeTime *entity.DateFreeTime) ([]*entity.FreeTime, error) {
+// 	var freeTimes []*entity.FreeTime
+
+// 	err := db.SelectContext(ctx, &freeTimes, `
+// 		SELECT
+// 			dft.id, dft.user_id, dft.year, dft.month, dft.day,
+// 			ft.start_hour AS "start_hour", ft.start_hour AS "start_minute", ft.end_hour AS "end_hour", ft.end_minute AS "end_minute"
+// 		FROM
+// 			date_free_times AS dft
+// 		LEFT JOIN
+// 			free_times AS ft
+// 		ON
+// 			dft.id = ft.date_free_time_id
+// 		WHERE
+// 			dft.user_id = ? AND dft.year = ? AND dft.month = ? AND dft.day = ?
+// 	`, dateFreeTime.UserID, dateFreeTime.Year, dateFreeTime.Month, dateFreeTime.Day)
+
+// 	if err != nil {
+// 		return nil, entity.ErrSQLGetFailed
+// 	}
+
+// 	return freeTimes, nil
+// }
+
+// func GetDateFree(ctx context.Context, db *sqlx.DB, userID int) ([]*entity.DateFreeTime, error) {
+// 	var dateFreeTimeArray []*entity.DateFreeTime
+// 	err := db.SelectContext(ctx, &dateFreeTimeArray, `
+// 		SELECT
+// 			dft.id, dft.user_id, dft.year, dft.month, dft.day
+// 		FROM
+// 			date_free_times AS dft
+// 		WHERE
+// 			dft.user_id = ?
+// 	`, userID)
+
+// 	if err != nil {
+// 		return nil, entity.ErrSQLGetFailed
+// 	}
+
+// 	return dateFreeTimeArray, nil
+// }
+// func GetFree(ctx context.Context, db *sqlx.DB, dateFreeTime *entity.DateFreeTime) ([]*entity.FreeTime, error) {
+// 	var freeTimes []*entity.FreeTime
+
+// 	err := db.SelectContext(ctx, &freeTimes, `
+// 		SELECT
+// 			ft.start_hour, ft.start_hour, ft.end_hour, ft.end_minute
+// 		FROM
+// 			free_times AS ft
+// 		WHERE
+// 			dft.date_free_time_id = ?
+// 	`, dateFreeTime.ID)
+
+// 	if err != nil {
+// 		return nil, entity.ErrSQLGetFailed
+// 	}
+
+// 	return freeTimes, nil
+// }
 
 func CreateDateFreeTime(ctx context.Context, db *sqlx.DB, dateFreeTime *entity.DateFreeTime) (*entity.DateFreeTime, error) {
 	stmt, err := db.PrepareNamedContext(ctx, `
@@ -97,17 +179,23 @@ func CreateDateFreeTime(ctx context.Context, db *sqlx.DB, dateFreeTime *entity.D
 	return dateFreeTime, err
 }
 
-func CreateStartFreeTime(ctx context.Context, db *sqlx.DB, startFreeTime *entity.StartFreeTime) (*entity.StartFreeTime, error) {
+func CreateFreeTime(ctx context.Context, db *sqlx.DB, dateFreeTimeID int, freeTime *entity.FreeTime) (*entity.FreeTime, error) {
 	stmt, err := db.PrepareNamedContext(ctx, `
-		INSERT INTO start_free_times
+		INSERT INTO free_times
 		(
-			hour,
-			minute
+			date_free_time_id,
+			start_hour,
+			start_minute,
+			end_hour,
+			end_minute
 		)
 		VALUES
 		(
-			:hour,
-			:minute
+			:date_free_time_id,
+			:start_hour,
+			:start_minute,
+			:end_hour,
+			:end_minute
 		)
 	`)
 
@@ -122,7 +210,7 @@ func CreateStartFreeTime(ctx context.Context, db *sqlx.DB, startFreeTime *entity
 		}
 	}()
 
-	result, err := stmt.Exec(startFreeTime)
+	result, err := stmt.Exec(freeTime)
 	if err != nil {
 		log.Println(err)
 		return nil, entity.ErrSQLExecFailed
@@ -138,53 +226,7 @@ func CreateStartFreeTime(ctx context.Context, db *sqlx.DB, startFreeTime *entity
 		return nil, entity.ErrSQLLastInsertIdFailed
 	}
 
-	startFreeTime.ID = int(id)
+	freeTime.ID = int(id)
 
-	return startFreeTime, err
-}
-
-func CreateEndFreeTime(ctx context.Context, db *sqlx.DB, endFreeTime *entity.EndFreeTime) (*entity.EndFreeTime, error) {
-	stmt, err := db.PrepareNamedContext(ctx, `
-		INSERT INTO end_free_times
-		(
-			hour,
-			minute
-		)
-		VALUES
-		(
-			:hour,
-			:minute
-		)
-	`)
-
-	if err != nil {
-		log.Println(err)
-		return nil, entity.ErrSQLCreateStmt
-	}
-
-	defer func() {
-		if closeErr := stmt.Close(); closeErr != nil {
-			err = closeErr
-		}
-	}()
-
-	result, err := stmt.Exec(endFreeTime)
-	if err != nil {
-		log.Println(err)
-		return nil, entity.ErrSQLExecFailed
-	}
-
-	cnt, err := result.RowsAffected()
-	if err != nil || cnt != 1 {
-		return nil, entity.ErrSQLResultNotDesired
-	}
-
-	id, err := result.LastInsertId()
-	if err != nil {
-		return nil, entity.ErrSQLLastInsertIdFailed
-	}
-
-	endFreeTime.ID = int(id)
-
-	return endFreeTime, err
+	return freeTime, err
 }
