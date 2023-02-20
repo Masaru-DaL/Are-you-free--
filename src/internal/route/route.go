@@ -41,8 +41,8 @@ func InitRouting(db *sqlx.DB) *echo.Echo {
 	/* Authorized routing group. */
 	authenticatedGroup := e.Group("/")
 	authenticatedGroup.Use(auth.AuthenticatedMiddleware)
-	// e.GET("index", templates.TopPage(ctx, db))
-	e.GET("index", templates.TopPage)
+	e.GET("index", templates.TopPage(ctx, db))
+	// e.GET("index", templates.TopPage)
 
 	// e.GET("/index", templates.TopPage)
 	e.GET("/free-time", templates.FreeTimePage)

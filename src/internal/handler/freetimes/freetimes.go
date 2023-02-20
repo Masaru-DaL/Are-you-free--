@@ -2,6 +2,7 @@ package freetime
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"src/internal/config"
 	"src/internal/entity"
@@ -31,6 +32,11 @@ func CreateFreeTime(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 		endFreeTimeHour, _ := strconv.Atoi(endFreeTimeHourStr)
 		endFreeTimeMinute, _ := strconv.Atoi(endFreeTimeMinuteStr)
 
+		fmt.Println(startFreeTimeHour)
+		fmt.Println(startFreeTimeMinute)
+		fmt.Println(endFreeTimeHour)
+		fmt.Println(endFreeTimeMinute)
+
 		var dateFreeTime *entity.DateFreeTime
 		var freeTime *entity.FreeTime
 
@@ -55,13 +61,14 @@ func CreateFreeTime(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 
 			// FreeTime構造体へ値を設定する
 			freeTime = &entity.FreeTime{
-				StartHour:   startFreeTimeHour,
-				StartMinute: startFreeTimeMinute,
-				EndHour:     endFreeTimeHour,
-				EndMinute:   endFreeTimeMinute,
+				DateFreeTimeID: dateFreeTime.ID,
+				StartHour:      startFreeTimeHour,
+				StartMinute:    startFreeTimeMinute,
+				EndHour:        endFreeTimeHour,
+				EndMinute:      endFreeTimeMinute,
 			}
 			// FreeTimeの作成
-			freeTime, err = freetimes.CreateFreeTime(ctx, db, dateFreeTime.ID, freeTime)
+			freeTime, err = freetimes.CreateFreeTime(ctx, db, freeTime)
 			if err != nil {
 				return c.Render(http.StatusOK, "create-free-time", echo.Map{
 					"error_message": entity.ERR_INTERNAL_SERVER_ERROR,
@@ -72,13 +79,14 @@ func CreateFreeTime(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 		} else {
 			// FreeTime構造体へ値を設定する
 			freeTime = &entity.FreeTime{
-				StartHour:   startFreeTimeHour,
-				StartMinute: startFreeTimeMinute,
-				EndHour:     endFreeTimeHour,
-				EndMinute:   endFreeTimeMinute,
+				DateFreeTimeID: dateFreeTime.ID,
+				StartHour:      startFreeTimeHour,
+				StartMinute:    startFreeTimeMinute,
+				EndHour:        endFreeTimeHour,
+				EndMinute:      endFreeTimeMinute,
 			}
 			// FreeTimeの作成
-			freeTime, err = freetimes.CreateFreeTime(ctx, db, dateFreeTime.ID, freeTime)
+			freeTime, err = freetimes.CreateFreeTime(ctx, db, freeTime)
 			if err != nil {
 				return c.Render(http.StatusOK, "create-free-time", echo.Map{
 					"error_message": entity.ERR_INTERNAL_SERVER_ERROR,

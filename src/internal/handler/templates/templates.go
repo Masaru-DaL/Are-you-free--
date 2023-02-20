@@ -1,11 +1,14 @@
 package templates
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"src/internal/config"
+	"src/internal/pkg/models/freetimes"
 	"src/internal/pkg/strings"
 
+	"github.com/jmoiron/sqlx"
 	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
 )
@@ -29,30 +32,41 @@ func LoginPage(c echo.Context) error {
 }
 
 /* トップページ */
-// func TopPage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
-// 	return func(c echo.Context) error {
-// 		dateFreeTime, _ := freetimes.GetDateFreeTime(ctx, db, 3, 2023, 02, 20)
-// 		fmt.Println(dateFreeTime)
-// 		fmt.Println(dateFreeTime.ID)
+func TopPage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		dateFreeTime, _ := freetimes.GetDateFreeTime(ctx, db, 3, 2023, 02, 20)
 
-// 		freeTime, err := freetimes.GetFreeTimeByDate(ctx, db)
-// 		if err != nil {
-// 			fmt.Println(err)
-// 			fmt.Println("----------1111111111----------")
-// 			fmt.Println(freeTime)
-// 		} else {
-// 			fmt.Println("----------2222222222----------")
-// 			fmt.Println(freeTime)
-// 			fmt.Println(freeTime[0])
-// 		}
+		free, _ := freetimes.GetFreeTimesByDate(ctx, db, 1)
 
-// 		return c.Render(http.StatusOK, "index", "")
-// 	}
-// }
+		for _, f := range free {
+			dateFreeTime.FreeTimes = append(dateFreeTime.FreeTimes, f)
+		}
 
-func TopPage(c echo.Context) error {
-	return c.Render(http.StatusOK, "index", "")
+		fmt.Println("----------1111111111----------")
+		fmt.Println(dateFreeTime)
+
+		// freeTime, err := freetimes.GetFreeTimeByDate(ctx, db, 1)
+		// if err != nil {
+		// 	fmt.Println(err)
+		// 	fmt.Println(freeTime)
+		// } else {
+		// 	fmt.Println("----------1111111111----------")
+		// 	fmt.Println(freeTime)
+		// 	fmt.Println(freeTime[0])
+		// 	fmt.Println(freeTime[1])
+
+		// 	list, _ := freetimes.ListFreeTimeByDate(ctx, db)
+		// 	fmt.Println("----------2222222222----------")
+		// 	fmt.Println(list)
+		// }
+
+		return c.Render(http.StatusOK, "index", "")
+	}
 }
+
+// func TopPage(c echo.Context) error {
+// 	return c.Render(http.StatusOK, "index", "")
+// }
 
 /* スケジュールページ */
 func FreeTimePage(c echo.Context) error {
