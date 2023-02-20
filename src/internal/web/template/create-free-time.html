@@ -63,14 +63,10 @@
           <h1 class="text-center">CREATE SCHEDULE</h1>
         </div>
         <div class="subject-to">
-          {{ if not .year }}
-          <p class="text-center">日付が選択されていません。</p>
-          {{ else if not .month }}
-          <p class="text-center">日付が選択されていません。</p>
-          {{ else if not .day }}
-          <p class="text-center">日付が選択されていません。</p>
+          {{ if and .year .month .day .weekday }}
+          <h1 class="text-center">{{.year}}/{{.month}}/{{.day}}（{{.weekday}}）</h1>
           {{ else }}
-          <h1 class="text-center">{{.year}}/{{.month}}/{{.day}}（木）</h1>
+          <p class="text-center">日付が選択されていません。</p>
           {{ end }}
         </div>
       </div>
@@ -91,14 +87,10 @@
         <div class="content-right-area">
           <p class="error-message-in-create-free-time font-20 text-darkred">エラーメッセージ</p>
 
-          {{ if not .year }}
-          <p class="ml-100 font-18 text-dimgrey">日付が選択されていないため日付の指定が必要です。<br>日付/フリータイムの開始/終了時刻を選択してください。</p>
-          {{ else if not .month }}
-          <p class="ml-100 font-18 text-dimgrey">日付が選択されていないため日付の指定が必要です。<br>日付/フリータイムの開始/終了時刻を選択してください。</p>
-          {{ else if not .day }}
-          <p class="ml-100 font-18 text-dimgrey">日付が選択されていないため日付の指定が必要です。<br>日付/フリータイムの開始/終了時刻を選択してください。</p>
+          {{ if and .year .month .day .weekday }}
+          <p class="ml-100 font-18 text-dimgrey">上記の日付でスケジュールを作成します。（日付の選択は不要です）<br>フリータイムの開始/終了時刻を選択してください。</p>
           {{ else }}
-          <p class="ml-100 font-18 text-dimgrey">上記の日付でスケジュールを作成します。<br>フリータイムの開始/終了時刻を選択してください。</p>
+          <p class="ml-100 font-18 text-dimgrey">日付が選択されていないため日付の指定が必要です。<br>日付/フリータイムの開始/終了時刻を選択してください。</p>
           {{ end }}
 
           <div class="select-time-wrapper ml-100">
