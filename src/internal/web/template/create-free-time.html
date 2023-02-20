@@ -63,7 +63,15 @@
           <h1 class="text-center">CREATE SCHEDULE</h1>
         </div>
         <div class="subject-to">
-          <h2 class="text-center">2023/01/01（木）</h2>
+          {{ if not .year }}
+          <p class="text-center">日付が選択されていません。</p>
+          {{ else if not .month }}
+          <p class="text-center">日付が選択されていません。</p>
+          {{ else if not .day }}
+          <p class="text-center">日付が選択されていません。</p>
+          {{ else }}
+          <h1 class="text-center">{{.year}}/{{.month}}/{{.day}}（木）</h1>
+          {{ end }}
         </div>
       </div>
 
@@ -71,8 +79,8 @@
         <div class="content-left-area border-none border-right mt-66">
           <p class="ml-80 font-16 text-wood">日付を選んで<br>free-timeを操作</p>
           <form class="form-wrapper flex-col items-center">
-            <label for="today" class="calendar-label">
-              <input class="input-calendar" type="date" name="today" id="today-input"/>
+            <label for="date" class="calendar-label">
+              <input class="input-calendar" type="date" name="date" id="today-input" style="font-size:1.1em" />
             </label>
             <button class="content-left-button">SELECT</button>
             <button class="content-left-button">CREATE</button>
@@ -81,18 +89,32 @@
         </div>
 
         <div class="content-right-area">
-          <p class="ml-100 font-18 text-wood">上記の日付でスケジュールを作成します。<br>フリータイムの開始/終了時刻を選択してください。</p>
+          <p class="error-message-in-create-free-time font-20 text-darkred">エラーメッセージ</p>
+
+          {{ if not .year }}
+          <p class="ml-100 font-18 text-dimgrey">日付が選択されていないため日付の指定が必要です。<br>日付/フリータイムの開始/終了時刻を選択してください。</p>
+          {{ else if not .month }}
+          <p class="ml-100 font-18 text-dimgrey">日付が選択されていないため日付の指定が必要です。<br>日付/フリータイムの開始/終了時刻を選択してください。</p>
+          {{ else if not .day }}
+          <p class="ml-100 font-18 text-dimgrey">日付が選択されていないため日付の指定が必要です。<br>日付/フリータイムの開始/終了時刻を選択してください。</p>
+          {{ else }}
+          <p class="ml-100 font-18 text-dimgrey">上記の日付でスケジュールを作成します。<br>フリータイムの開始/終了時刻を選択してください。</p>
+          {{ end }}
+
           <div class="select-time-wrapper ml-100">
             <form
               action="/free-time/create"
               method="POST"
               class="flex items-end"
               >
+              <label for="date" class="calendar-label">
+                <input class="input-calendar" type="date" name="date" id="today-input" style="font-size:1.2em" />
+              </label>
               <input type="hidden" value="{{.year}}" name="year" />
               <input type="hidden" value="{{.month}}" name="month" />
               <input type="hidden" value="{{.day}}" name="day" />
-              <div class="select-time-hour-area">
-                <select class="select-time-hour font-17" name="start-free-time-hour">
+              <div class="select-time-start-hour-area flex">
+                <select class="select-time-start-hour font-17" name="start-free-time-hour">
                   <option value="">開始時刻</option>
                   <option value="6">06</option>
                   <option value="7">07</option>
@@ -114,16 +136,16 @@
                   <option value="23">23</option>
                 </select>
               </div>
-              <div class="select-time-minute-area">
-                <select class="select-time-minute font-17" name="start-free-time-minute">
+              <div class="select-time-start-minute-area">
+                <select class="select-time-start-minute font-17" name="start-free-time-minute">
                   <option value="00">00</option>
                   <option value="15">15</option>
                   <option value="30">30</option>
                   <option value="45">45</option>
                 </select>
               </div>
-              <div class="select-time-hour-area">
-                <select class="select-time-hour font-17" name="end-free-time-hour">
+              <div class="select-time-end-hour-area">
+                <select class="select-time-end-hour font-17" name="end-free-time-hour">
                   <option value="">終了時刻</option>
                   <option value="6">06</option>
                   <option value="7">07</option>
@@ -145,8 +167,8 @@
                   <option value="23">23</option>
                 </select>
               </div>
-              <div class="select-time-minute-area">
-                <select class="select-time-minute font-17" name="end-free-time-minute">
+              <div class="select-time-end-minute-area">
+                <select class="select-time-end-minute font-17" name="end-free-time-minute">
                   <option value="00">00</option>
                   <option value="15">15</option>
                   <option value="30">30</option>
@@ -155,7 +177,9 @@
               </div>
 
               <div class="select-time-button-area">
-                <input type="submit" class="select-time-button bg-skyblue text-snow" />
+                <button class="select-time-button bg-skyblue ">
+                  <p class="text-center font-20 text-snow">作成</p>
+                </button>
               </div>
             </form>
 

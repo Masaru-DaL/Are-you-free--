@@ -3,6 +3,11 @@
     height: 50vh;
     margin: 100px auto;
     color: #666;
+
+}
+
+.input-calendar {
+    width: 70%;
 }
 
 #years {
@@ -86,6 +91,8 @@ td.today {
     height: 36px;
     border: 2px solid var(--WOOD);
     border-radius: 15px;
+    box-shadow: 4px 4px 5px rgba(0,0,0,.3);
+
 }
 .calendar-label::before {
     position: absolute;
@@ -99,6 +106,8 @@ td.today {
     background-repeat: no-repeat;
     background-position: center;
     border-radius: 8px;
+    box-shadow: 3px 3px 5px rgba(0,0,0,.3);
+
 }
 input[type="date"] {
     padding: 0 10px;

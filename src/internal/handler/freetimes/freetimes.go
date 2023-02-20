@@ -2,7 +2,6 @@ package freetime
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"src/internal/config"
 	"src/internal/entity"
@@ -18,13 +17,12 @@ func CreateFreeTime(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		sess, _ := session.Get(config.Config.Session.Name, c)
 		userID := sess.Values[config.Config.Session.KeyName].(int)
-		// user, _ := users.GetUserByUserID(ctx, db, userID)
 
+		/* 入力されたデータの処理 */
 		yearStr, monthStr, dayStr := c.FormValue("year"), c.FormValue("month"), c.FormValue("day")
 		year, _ := strconv.Atoi(yearStr)
 		month, _ := strconv.Atoi(monthStr)
 		day, _ := strconv.Atoi(dayStr)
-
 		startFreeTimeHourStr, startFreeTimeMinuteStr := c.FormValue("start-free-time-hour"), c.FormValue("start-free-time-minute")
 		endFreeTimeHourStr, endFreeTimeMinuteStr := c.FormValue("end-free-time-hour"), c.FormValue("end-free-time-minute")
 		startFreeTimeHour, _ := strconv.Atoi(startFreeTimeHourStr)
@@ -32,15 +30,10 @@ func CreateFreeTime(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 		endFreeTimeHour, _ := strconv.Atoi(endFreeTimeHourStr)
 		endFreeTimeMinute, _ := strconv.Atoi(endFreeTimeMinuteStr)
 
-		fmt.Println(startFreeTimeHour)
-		fmt.Println(startFreeTimeMinute)
-		fmt.Println(endFreeTimeHour)
-		fmt.Println(endFreeTimeMinute)
-
 		var dateFreeTime *entity.DateFreeTime
 		var freeTime *entity.FreeTime
 
-		dateFreeTime, err := freetimes.GetDateFreeTime(ctx, db, userID, year, month, day)
+		dateFreeTime, err := freetimes.GetDateFreeTimeByUserIDAndDate(ctx, db, userID, year, month, day)
 
 		// 存在しなかった場合はDateFreeTimeを作成する
 		if err != nil {
@@ -68,7 +61,7 @@ func CreateFreeTime(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 				EndMinute:      endFreeTimeMinute,
 			}
 			// FreeTimeの作成
-			freeTime, err = freetimes.CreateFreeTime(ctx, db, freeTime)
+			_, err = freetimes.CreateFreeTime(ctx, db, freeTime)
 			if err != nil {
 				return c.Render(http.StatusOK, "create-free-time", echo.Map{
 					"error_message": entity.ERR_INTERNAL_SERVER_ERROR,
@@ -86,7 +79,7 @@ func CreateFreeTime(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 				EndMinute:      endFreeTimeMinute,
 			}
 			// FreeTimeの作成
-			freeTime, err = freetimes.CreateFreeTime(ctx, db, freeTime)
+			_, err = freetimes.CreateFreeTime(ctx, db, freeTime)
 			if err != nil {
 				return c.Render(http.StatusOK, "create-free-time", echo.Map{
 					"error_message": entity.ERR_INTERNAL_SERVER_ERROR,

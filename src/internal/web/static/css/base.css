@@ -187,6 +187,10 @@ ul {
   font-size: 24px;
 }
 
+.font-28 {
+  font-size: 28px;
+}
+
 .bold {
   font-weight: bold;
 }
@@ -233,4 +237,10 @@ ul {
   position: absolute;
   top: 47%;
   left: 50%;
+}
+
+.error-message-in-create-free-time {
+  position: absolute;
+  top: 29%;
+  left: 27%;
 }

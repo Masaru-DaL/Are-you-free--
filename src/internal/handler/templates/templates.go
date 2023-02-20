@@ -54,7 +54,7 @@ func FreeTimesPage(c echo.Context) error {
 
 /* スケジュール作成ページ */
 func CreateFreeTimePage(c echo.Context) error {
-	dateString := c.QueryParam("today")
+	dateString := c.QueryParam("date")
 	if dateString == "" {
 		return c.Render(http.StatusOK, "create-free-time", echo.Map{
 			"year":  nil,
