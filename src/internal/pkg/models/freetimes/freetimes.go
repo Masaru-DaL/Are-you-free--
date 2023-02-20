@@ -10,26 +10,10 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-func GetFreeTimesByDate(ctx context.Context, db *sqlx.DB, dateFreeTimeID int) ([]*entity.FreeTime, error) {
-	var freeTimes []*entity.FreeTime
-	err := db.SelectContext(ctx, &freeTimes, `
-		SELECT
-			id, date_free_time_id, start_hour, start_minute, end_hour, end_minute, created_at, updated_at
-		FROM
-			free_times
-		WHERE
-			date_free_time_id = ?
-	`, dateFreeTimeID)
-
-	if err != nil {
-		return nil, entity.ErrSQLGetFailed
-	}
-
-	return freeTimes, nil
-}
-
-func GetDateFreeTime(ctx context.Context, db *sqlx.DB, userID int, year int, month int, day int) (*entity.DateFreeTime, error) {
+/* user_idとdateの条件に合う情報を、date_free_timesから1件取得する */
+func GetDateFreeTimeByUserIDAndDate(ctx context.Context, db *sqlx.DB, userID int, year int, month int, day int) (*entity.DateFreeTime, error) {
 	var dateFreeTime entity.DateFreeTime
+
 	err := db.GetContext(ctx, &dateFreeTime, `
 		SELECT
 			id, user_id, year, month, day, created_at, updated_at
@@ -50,150 +34,27 @@ func GetDateFreeTime(ctx context.Context, db *sqlx.DB, userID int, year int, mon
 	return &dateFreeTime, nil
 }
 
-/*
-free-timeの1件取得
-指定した日付のfree-time（start&end timeは複数の場合もある）を取得
-*/
-func GetFreeTimeByDate(ctx context.Context, db *sqlx.DB, dateFreeTimeID int) (*entity.DateFreeTime, error) {
-	var dateFreeTime *entity.DateFreeTime
+/* date_free_time_idの条件に合う情報を、free-timesから全て取得する */
+func GetFreeTimesByDateFreeTimeID(ctx context.Context, db *sqlx.DB, dateFreeTimeID int) ([]*entity.FreeTime, error) {
+	var freeTimes []*entity.FreeTime
 
-	err := db.SelectContext(ctx, &dateFreeTime, `
+	err := db.SelectContext(ctx, &freeTimes, `
 		SELECT
-			dft.id, dft.user_id, dft.year, dft.month, dft.day, dft.created_at, dft.updated_at,
-
-			ft.id AS "free_times.id",
-			ft.date_free_time_id AS "free_times.date_free_time_id",
-			ft.start_hour AS "free_times.start_hour",
-			ft.start_minute AS "free_times.start_minute",
-			ft.end_hour AS "free_times.end_hour",
-			ft.end_minute AS "free_times.end_minute",
-			ft.created_at AS "free_times.created_at",
-			ft.updated_at AS "free_times.updated_at"
+			id, date_free_time_id, start_hour, start_minute, end_hour, end_minute, created_at, updated_at
 		FROM
-			date_free_times AS dft
-		LEFT JOIN
-			(
-				SELECT
-					id, date_free_time_id, start_hour, start_minute, end_hour, end_minute, created_at, updated_at
-				FROM
-					free_times
-				WHERE
-					date_free_time_id = ?
-			) AS ft
-		ON
-			dft.id = ft.date_free_time_id
+			free_times
 		WHERE
-			dft.id = ?
+			date_free_time_id = ?
 	`, dateFreeTimeID)
 
-	if errors.Is(err, sql.ErrNoRows) {
-		return nil, entity.ErrNoFreeTimeFound
-	}
-
 	if err != nil {
 		return nil, entity.ErrSQLGetFailed
 	}
 
-	return dateFreeTime, nil
-}
-func ListFreeTimeByDate(ctx context.Context, db *sqlx.DB) ([]*entity.DateFreeTime, error) {
-	var dateFreeTime []*entity.DateFreeTime
-
-	err := db.SelectContext(ctx, &dateFreeTime, `
-		SELECT
-			dft.id, dft.user_id, dft.year, dft.month, dft.day, dft.created_at, dft.updated_at,
-
-			ft.id AS "free_times.id",
-			ft.date_free_time_id AS "free_times.date_free_time_id",
-			ft.start_hour AS "free_times.start_hour",
-			ft.start_minute AS "free_times.start_minute",
-			ft.end_hour AS "free_times.end_hour",
-			ft.end_minute AS "free_times.end_minute",
-			ft.created_at AS "free_times.created_at",
-			ft.updated_at AS "free_times.updated_at"
-		FROM
-			date_free_times AS dft
-		LEFT JOIN
-			free_times AS ft
-		ON
-			dft.id = ft.date_free_time_id
-	`)
-
-	if errors.Is(err, sql.ErrNoRows) {
-		return nil, entity.ErrNoFreeTimeFound
-	}
-
-	if err != nil {
-		return nil, entity.ErrSQLGetFailed
-	}
-
-	return dateFreeTime, nil
+	return freeTimes, nil
 }
 
-/*
-free-timeの1件取得
-指定した日付のfree-time（start&end timeは複数の場合もある）を取得
-*/
-// func GetFreeTimeByDate(ctx context.Context, db *sqlx.DB, dateFreeTime *entity.DateFreeTime) ([]*entity.FreeTime, error) {
-// 	var freeTimes []*entity.FreeTime
-
-// 	err := db.SelectContext(ctx, &freeTimes, `
-// 		SELECT
-// 			dft.id, dft.user_id, dft.year, dft.month, dft.day,
-// 			ft.start_hour AS "start_hour", ft.start_hour AS "start_minute", ft.end_hour AS "end_hour", ft.end_minute AS "end_minute"
-// 		FROM
-// 			date_free_times AS dft
-// 		LEFT JOIN
-// 			free_times AS ft
-// 		ON
-// 			dft.id = ft.date_free_time_id
-// 		WHERE
-// 			dft.user_id = ? AND dft.year = ? AND dft.month = ? AND dft.day = ?
-// 	`, dateFreeTime.UserID, dateFreeTime.Year, dateFreeTime.Month, dateFreeTime.Day)
-
-// 	if err != nil {
-// 		return nil, entity.ErrSQLGetFailed
-// 	}
-
-// 	return freeTimes, nil
-// }
-
-// func GetDateFree(ctx context.Context, db *sqlx.DB, userID int) ([]*entity.DateFreeTime, error) {
-// 	var dateFreeTimeArray []*entity.DateFreeTime
-// 	err := db.SelectContext(ctx, &dateFreeTimeArray, `
-// 		SELECT
-// 			dft.id, dft.user_id, dft.year, dft.month, dft.day
-// 		FROM
-// 			date_free_times AS dft
-// 		WHERE
-// 			dft.user_id = ?
-// 	`, userID)
-
-// 	if err != nil {
-// 		return nil, entity.ErrSQLGetFailed
-// 	}
-
-// 	return dateFreeTimeArray, nil
-// }
-// func GetFree(ctx context.Context, db *sqlx.DB, dateFreeTime *entity.DateFreeTime) ([]*entity.FreeTime, error) {
-// 	var freeTimes []*entity.FreeTime
-
-// 	err := db.SelectContext(ctx, &freeTimes, `
-// 		SELECT
-// 			ft.start_hour, ft.start_hour, ft.end_hour, ft.end_minute
-// 		FROM
-// 			free_times AS ft
-// 		WHERE
-// 			dft.date_free_time_id = ?
-// 	`, dateFreeTime.ID)
-
-// 	if err != nil {
-// 		return nil, entity.ErrSQLGetFailed
-// 	}
-
-// 	return freeTimes, nil
-// }
-
+/* date_free_timeを作成する */
 func CreateDateFreeTime(ctx context.Context, db *sqlx.DB, dateFreeTime *entity.DateFreeTime) (*entity.DateFreeTime, error) {
 	stmt, err := db.PrepareNamedContext(ctx, `
 		INSERT INTO date_free_times
@@ -244,6 +105,7 @@ func CreateDateFreeTime(ctx context.Context, db *sqlx.DB, dateFreeTime *entity.D
 	return dateFreeTime, err
 }
 
+/* free_timeを作成する */
 func CreateFreeTime(ctx context.Context, db *sqlx.DB, freeTime *entity.FreeTime) (*entity.FreeTime, error) {
 	stmt, err := db.PrepareNamedContext(ctx, `
 		INSERT INTO free_times
