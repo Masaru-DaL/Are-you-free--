@@ -28,4 +28,5 @@ const (
 	ERR_NO_USER               = "入力された情報が存在しません。"
 	ERR_INPUT_LIMIT_OVER      = "制限文字数以内で入力してください。"
 	ERR_CHOICE_TIME           = "終了時刻は開始時刻より後に設定してください。"
+	ERR_CHOICE_SAME_TIME      = "開始時刻と終了時刻を同時刻は設定することはできません。"
 )

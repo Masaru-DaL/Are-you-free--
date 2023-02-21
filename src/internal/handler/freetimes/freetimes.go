@@ -56,6 +56,19 @@ func CreateFreeTime(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 		startFreeTimeMinute, _ := strconv.Atoi(startFreeTimeMinuteStr)
 		endFreeTimeHour, _ := strconv.Atoi(endFreeTimeHourStr)
 		endFreeTimeMinute, _ := strconv.Atoi(endFreeTimeMinuteStr)
+		if startFreeTimeHour > endFreeTimeHour {
+			return c.Render(http.StatusOK, "create-free-time", echo.Map{
+				"error_message": entity.ERR_CHOICE_TIME,
+			})
+		} else if startFreeTimeHour == endFreeTimeHour && startFreeTimeMinute > endFreeTimeMinute {
+			return c.Render(http.StatusOK, "create-free-time", echo.Map{
+				"error_message": entity.ERR_CHOICE_TIME,
+			})
+		} else if startFreeTimeHour == endFreeTimeHour && startFreeTimeMinute == endFreeTimeMinute {
+			return c.Render(http.StatusOK, "create-free-time", echo.Map{
+				"error_message": entity.ERR_CHOICE_SAME_TIME,
+			})
+		}
 
 		dateFreeTime, err := freetimes.GetDateFreeTimeByUserIDAndDate(ctx, db, userID, year, month, day)
 		// 存在しなかった場合はDateFreeTimeを作成する
