@@ -2,10 +2,14 @@ package freetime
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"src/internal/config"
 	"src/internal/entity"
 	"src/internal/pkg/models/freetimes"
+	"src/internal/pkg/num"
+	"src/internal/pkg/strings"
+	"src/internal/pkg/time"
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
@@ -18,27 +22,46 @@ func CreateFreeTime(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 		sess, _ := session.Get(config.Config.Session.Name, c)
 		userID := sess.Values[config.Config.Session.KeyName].(int)
 
+		var year int
+		var month int
+		var day int
+
 		/* 入力されたデータの処理 */
 		yearStr, monthStr, dayStr := c.FormValue("year"), c.FormValue("month"), c.FormValue("day")
-		year, _ := strconv.Atoi(yearStr)
-		month, _ := strconv.Atoi(monthStr)
-		day, _ := strconv.Atoi(dayStr)
+		// 日付が事前に入力されていた場合
+		if yearStr != "" || monthStr != "" || dayStr != "" {
+			year, _ = strconv.Atoi(yearStr)
+			month, _ = strconv.Atoi(monthStr)
+			day, _ = strconv.Atoi(dayStr)
+
+			// 日付が事前に入力されていなかった場合
+		} else {
+			dateString := c.FormValue("date")
+			if dateString == "" {
+				return c.Render(http.StatusOK, "create-free-time", echo.Map{
+					"error_message": entity.ERR_NO_CHOICE,
+				})
+			}
+			year, month, day = strings.SplitDateByHyphen(dateString)
+		}
+
 		startFreeTimeHourStr, startFreeTimeMinuteStr := c.FormValue("start-free-time-hour"), c.FormValue("start-free-time-minute")
 		endFreeTimeHourStr, endFreeTimeMinuteStr := c.FormValue("end-free-time-hour"), c.FormValue("end-free-time-minute")
+		if startFreeTimeHourStr == "" || startFreeTimeMinuteStr == "" || endFreeTimeHourStr == "" || endFreeTimeMinuteStr == "" {
+			return c.Render(http.StatusOK, "create-free-time", echo.Map{
+				"error_message": entity.ERR_NO_CHOICE,
+			})
+		}
 		startFreeTimeHour, _ := strconv.Atoi(startFreeTimeHourStr)
 		startFreeTimeMinute, _ := strconv.Atoi(startFreeTimeMinuteStr)
 		endFreeTimeHour, _ := strconv.Atoi(endFreeTimeHourStr)
 		endFreeTimeMinute, _ := strconv.Atoi(endFreeTimeMinuteStr)
 
-		var dateFreeTime *entity.DateFreeTime
-		var freeTime *entity.FreeTime
-
 		dateFreeTime, err := freetimes.GetDateFreeTimeByUserIDAndDate(ctx, db, userID, year, month, day)
-
 		// 存在しなかった場合はDateFreeTimeを作成する
 		if err != nil {
 			// DateFreeTime構造体で値を設定する
-			dateFreeTime := &entity.DateFreeTime{
+			dateFreeTime = &entity.DateFreeTime{
 				UserID: userID,
 				Year:   year,
 				Month:  month,
@@ -53,7 +76,7 @@ func CreateFreeTime(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 			}
 
 			// FreeTime構造体へ値を設定する
-			freeTime = &entity.FreeTime{
+			freeTime := &entity.FreeTime{
 				DateFreeTimeID: dateFreeTime.ID,
 				StartHour:      startFreeTimeHour,
 				StartMinute:    startFreeTimeMinute,
@@ -71,7 +94,7 @@ func CreateFreeTime(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 			// 既に存在していた場合はCreateDateFreeTimeは作成しない
 		} else {
 			// FreeTime構造体へ値を設定する
-			freeTime = &entity.FreeTime{
+			freeTime := &entity.FreeTime{
 				DateFreeTimeID: dateFreeTime.ID,
 				StartHour:      startFreeTimeHour,
 				StartMinute:    startFreeTimeMinute,
@@ -87,6 +110,23 @@ func CreateFreeTime(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 			}
 		}
 
-		return c.JSON(http.StatusOK, "success")
+		jpWeekday := time.GetWeekdayByDate(year, month, day)
+		monthStr = num.NumToFormattedString(month)
+		dayStr = num.NumToFormattedString(day)
+		startFreeTimeHourStr = num.NumToFormattedString(startFreeTimeHour)
+		endFreeTimeHourStr = num.NumToFormattedString(endFreeTimeHour)
+
+		successMessage := fmt.Sprintf("%d/%s/%s（%s）%s:%s〜%s:%sでfree-timeを作成しました。", year, monthStr, dayStr, jpWeekday, startFreeTimeHourStr, startFreeTimeMinuteStr, endFreeTimeHourStr, endFreeTimeMinuteStr)
+
+		fmt.Println(successMessage)
+
+		return c.Render(http.StatusOK, "create-free-time", echo.Map{
+			"year":            nil,
+			"month":           nil,
+			"day":             nil,
+			"weekday":         nil,
+			"error_message":   nil,
+			"success_message": successMessage,
+		})
 	}
 }

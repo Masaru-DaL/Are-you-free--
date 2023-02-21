@@ -60,10 +60,11 @@ func CreateFreeTimePage(c echo.Context) error {
 	dateString := c.QueryParam("date")
 	if dateString == "" {
 		return c.Render(http.StatusOK, "create-free-time", echo.Map{
-			"year":    nil,
-			"month":   nil,
-			"day":     nil,
-			"weekday": nil,
+			"year":          nil,
+			"month":         nil,
+			"day":           nil,
+			"weekday":       nil,
+			"error_message": nil,
 		})
 	}
 
@@ -71,10 +72,11 @@ func CreateFreeTimePage(c echo.Context) error {
 	jpWeekday := time.GetWeekdayByDate(2023, 2, 20)
 
 	return c.Render(http.StatusOK, "create-free-time", echo.Map{
-		"year":    year,
-		"month":   month,
-		"day":     day,
-		"weekday": jpWeekday,
+		"year":          year,
+		"month":         month,
+		"day":           day,
+		"weekday":       jpWeekday,
+		"error_message": nil,
 	})
 }
 

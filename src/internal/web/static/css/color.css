@@ -83,6 +83,10 @@
   color: var(--SKYBLUE);
 }
 
+.text-darkgreen {
+  color: var(--DARKGREEN);
+}
+
 .text-dimgrey {
   color: var(--DIMGREY);
 }

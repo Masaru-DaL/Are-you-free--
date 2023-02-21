@@ -64,7 +64,7 @@
         </div>
         <div class="subject-to">
           {{ if and .year .month .day .weekday }}
-          <h1 class="text-center">{{.year}}/{{.month}}/{{.day}}（{{.weekday}}）</h1>
+          <h1 class="text-center">{{ .year }}/{{ .month }}/{{ .day }}（{{ .weekday }}）</h1>
           {{ else }}
           <p class="text-center">日付が選択されていません。</p>
           {{ end }}
@@ -85,7 +85,8 @@
         </div>
 
         <div class="content-right-area">
-          <p class="error-message-in-create-free-time font-20 text-darkred">エラーメッセージ</p>
+          <p class="error-message-in-create-free-time font-21 text-darkred">{{ .error_message }}</p>
+          <p class="error-message-in-create-free-time font-21 text-skyblue">{{ .success_message }}</p>
 
           {{ if and .year .month .day .weekday }}
           <p class="ml-100 font-18 text-dimgrey">上記の日付でスケジュールを作成します。（日付の選択は不要です）<br>フリータイムの開始/終了時刻を選択してください。</p>
