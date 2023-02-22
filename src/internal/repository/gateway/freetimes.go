@@ -11,7 +11,7 @@ import (
 )
 
 /* user_idとdateの条件に合う情報を、date_free_timesから1件取得する */
-func GetDateFreeTimeByUserIDAndDate(ctx context.Context, db *sqlx.DB, userID int, year int, month int, day int) (*entity.DateFreeTime, error) {
+func GetDateFreeTime(ctx context.Context, db *sqlx.DB, userID int, year int, month int, day int) (*entity.DateFreeTime, error) {
 	var dateFreeTime entity.DateFreeTime
 
 	err := db.GetContext(ctx, &dateFreeTime, `
@@ -35,7 +35,7 @@ func GetDateFreeTimeByUserIDAndDate(ctx context.Context, db *sqlx.DB, userID int
 }
 
 /* date_free_time_idの条件に合う情報を、free-timesから全て取得する */
-func GetFreeTimesByDateFreeTimeID(ctx context.Context, db *sqlx.DB, dateFreeTimeID int) ([]*entity.FreeTime, error) {
+func GetFreeTimes(ctx context.Context, db *sqlx.DB, dateFreeTimeID int) ([]*entity.FreeTime, error) {
 	var freeTimes []*entity.FreeTime
 
 	err := db.SelectContext(ctx, &freeTimes, `
