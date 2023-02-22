@@ -1,6 +1,10 @@
 package strings
 
-import "regexp"
+import (
+	"regexp"
+	"strconv"
+	"strings"
+)
 
 /* 文字列に空白が混入されているかのチェックを行う */
 func CheckWhitespaceInString(stringData string) bool {
@@ -35,4 +39,25 @@ func CheckEmailFormat(emailAddress string) bool {
 	// emailのチェック
 	checkResult := initializedEmailFormat.MatchString(emailAddress)
 	return checkResult
+}
+
+/* 日付文字列を年/月/日で分割する */
+func SplitDateByHyphen(dateString string) (int, int, int) {
+	var year int
+	var month int
+	var day int
+
+	dateArray := strings.Split(dateString, "-")
+
+	for i, s := range dateArray {
+		if i == 0 {
+			year, _ = strconv.Atoi(s)
+		} else if i == 1 {
+			month, _ = strconv.Atoi(s)
+		} else {
+			day, _ = strconv.Atoi(s)
+		}
+	}
+
+	return year, month, day
 }

@@ -63,7 +63,11 @@
           <h1 class="text-center">CREATE SCHEDULE</h1>
         </div>
         <div class="subject-to">
-          <h2 class="text-center">2023/01/01（木）</h2>
+          {{ if and .year .month .day .weekday }}
+          <h1 class="text-center">{{ .year }}/{{ .month }}/{{ .day }}（{{ .weekday }}）</h1>
+          {{ else }}
+          <p class="text-center">日付が選択されていません。</p>
+          {{ end }}
         </div>
       </div>
 
@@ -71,8 +75,8 @@
         <div class="content-left-area border-none border-right mt-66">
           <p class="ml-80 font-16 text-wood">日付を選んで<br>free-timeを操作</p>
           <form class="form-wrapper flex-col items-center">
-            <label for="today" class="calendar-label">
-              <input class="input-calendar" type="date" name="today" id="today-input"/>
+            <label for="date" class="calendar-label">
+              <input class="input-calendar" type="date" name="date" id="today-input" style="font-size:1.1em" />
             </label>
             <button class="content-left-button">SELECT</button>
             <button class="content-left-button">CREATE</button>
@@ -81,72 +85,94 @@
         </div>
 
         <div class="content-right-area">
-          <p class="ml-100 font-18 text-wood">上記の日付でスケジュールを作成します。<br>フリータイムの開始/終了時刻を選択してください。</p>
+          <p class="error-message-in-create-free-time font-21 text-darkred">{{ .error_message }}</p>
+          <p class="error-message-in-create-free-time font-21 text-skyblue">{{ .success_message }}</p>
+
+          {{ if and .year .month .day .weekday }}
+          <p class="ml-100 font-18 text-dimgrey">上記の日付でスケジュールを作成します。（日付の選択は不要です）<br>フリータイムの開始/終了時刻を選択してください。</p>
+          {{ else }}
+          <p class="ml-100 font-18 text-dimgrey">日付が選択されていないため日付の指定が必要です。<br>日付/フリータイムの開始/終了時刻を選択してください。</p>
+          {{ end }}
+
           <div class="select-time-wrapper ml-100">
-            <form action="" class="flex items-end">
-              <div class="select-time-hour-area">
-                <select class="select-time-hour font-17">
+            <form
+              action="/free-time/create"
+              method="POST"
+              class="flex items-end"
+              >
+              <label for="date" class="calendar-label-create-page">
+                <input class="input-calendar" type="date" name="date" id="today-input" style="font-size:1.2em" />
+              </label>
+              <input type="hidden" value="{{.year}}" name="year" />
+              <input type="hidden" value="{{.month}}" name="month" />
+              <input type="hidden" value="{{.day}}" name="day" />
+              <div class="select-time-start-hour-area flex">
+                <select class="select-time-start-hour font-17" name="start-free-time-hour">
                   <option value="">開始時刻</option>
-                  <option>06</option>
-                  <option>07</option>
-                  <option>08</option>
-                  <option>09</option>
-                  <option>10</option>
-                  <option>12</option>
-                  <option>13</option>
-                  <option>14</option>
-                  <option>15</option>
-                  <option>16</option>
-                  <option>17</option>
-                  <option>18</option>
-                  <option>19</option>
-                  <option>20</option>
-                  <option>21</option>
-                  <option>22</option>
-                  <option>23</option>
+                  <option value="6">06</option>
+                  <option value="7">07</option>
+                  <option value="8">08</option>
+                  <option value="9">09</option>
+                  <option value="10">10</option>
+                  <option value="11">11</option>
+                  <option value="12">12</option>
+                  <option value="13">13</option>
+                  <option value="14">14</option>
+                  <option value="15">15</option>
+                  <option value="16">16</option>
+                  <option value="17">17</option>
+                  <option value="18">18</option>
+                  <option value="19">19</option>
+                  <option value="20">20</option>
+                  <option value="21">21</option>
+                  <option value="22">22</option>
+                  <option value="23">23</option>
                 </select>
               </div>
-              <div class="select-time-minute-area">
-                <select class="select-time-minute font-17">
-                  <option value="">00</option>
-                  <option>15</option>
-                  <option>30</option>
-                  <option>45</option>
+              <div class="select-time-start-minute-area">
+                <select class="select-time-start-minute font-17" name="start-free-time-minute">
+                  <option value="00">00</option>
+                  <option value="15">15</option>
+                  <option value="30">30</option>
+                  <option value="45">45</option>
                 </select>
               </div>
-              <div class="select-time-hour-area">
-                <select class="select-time-hour font-17">
+              <div class="select-time-end-hour-area">
+                <select class="select-time-end-hour font-17" name="end-free-time-hour">
                   <option value="">終了時刻</option>
-                  <option>06</option>
-                  <option>07</option>
-                  <option>08</option>
-                  <option>09</option>
-                  <option>10</option>
-                  <option>12</option>
-                  <option>13</option>
-                  <option>14</option>
-                  <option>15</option>
-                  <option>16</option>
-                  <option>17</option>
-                  <option>18</option>
-                  <option>19</option>
-                  <option>20</option>
-                  <option>21</option>
-                  <option>22</option>
-                  <option>23</option>
+                  <option value="6">06</option>
+                  <option value="7">07</option>
+                  <option value="8">08</option>
+                  <option value="9">09</option>
+                  <option value="10">10</option>
+                  <option value="11">11</option>
+                  <option value="12">12</option>
+                  <option value="13">13</option>
+                  <option value="14">14</option>
+                  <option value="15">15</option>
+                  <option value="16">16</option>
+                  <option value="17">17</option>
+                  <option value="18">18</option>
+                  <option value="19">19</option>
+                  <option value="20">20</option>
+                  <option value="21">21</option>
+                  <option value="22">22</option>
+                  <option value="23">23</option>
                 </select>
               </div>
-              <div class="select-time-minute-area">
-                <select class="select-time-minute font-17">
-                  <option value="">00</option>
-                  <option>15</option>
-                  <option>30</option>
-                  <option>45</option>
+              <div class="select-time-end-minute-area">
+                <select class="select-time-end-minute font-17" name="end-free-time-minute">
+                  <option value="00">00</option>
+                  <option value="15">15</option>
+                  <option value="30">30</option>
+                  <option value="45">45</option>
                 </select>
               </div>
 
               <div class="select-time-button-area">
-                <button class="select-time-button bg-skyblue text-snow">CREATE</button>
+                <button class="select-time-button bg-skyblue ">
+                  <p class="text-center font-20 text-snow">作成</p>
+                </button>
               </div>
             </form>
 

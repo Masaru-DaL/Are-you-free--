@@ -1,8 +1,13 @@
 .calender-wrapper {
     width: 80%;
     height: 50vh;
-    margin: 100px auto;
+    margin: 10% auto;
     color: #666;
+
+}
+
+.input-calendar {
+    width: 70%;
 }
 
 #years {
@@ -84,8 +89,10 @@ td.today {
     display: inline-block;
     width: 200px;
     height: 36px;
+    margin-right: 10%;
     border: 2px solid var(--WOOD);
     border-radius: 15px;
+    box-shadow: 4px 4px 5px rgba(0,0,0,.3);
 }
 .calendar-label::before {
     position: absolute;
@@ -99,6 +106,30 @@ td.today {
     background-repeat: no-repeat;
     background-position: center;
     border-radius: 8px;
+    box-shadow: 3px 3px 5px rgba(0,0,0,.3);
+}
+.calendar-label-create-page {
+    position: relative;
+    display: inline-block;
+    width: 200px;
+    height: 36px;
+    border: 2px solid var(--WOOD);
+    border-radius: 15px;
+    box-shadow: 4px 4px 5px rgba(0,0,0,.3);
+}
+.calendar-label-create-page::before {
+    position: absolute;
+    content: "";
+    top: -2px;
+    right: -46px;
+    width: 40px;
+    height: 40px;
+    background-color: rgb(195, 225, 255);
+    background-image: url("../../icon/icon-calendar.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    border-radius: 8px;
+    box-shadow: 3px 3px 5px rgba(0,0,0,.3);
 }
 input[type="date"] {
     padding: 0 10px;

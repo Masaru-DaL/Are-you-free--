@@ -7,6 +7,7 @@ import (
 	"src/internal/config"
 	"src/internal/handler/account"
 	"src/internal/handler/admin"
+	freetime "src/internal/handler/freetimes"
 	"src/internal/handler/templates"
 	"src/internal/pkg/auth"
 
@@ -40,12 +41,14 @@ func InitRouting(db *sqlx.DB) *echo.Echo {
 	/* Authorized routing group. */
 	authenticatedGroup := e.Group("/")
 	authenticatedGroup.Use(auth.AuthenticatedMiddleware)
-	authenticatedGroup.GET("index", templates.TopPage)
+	e.GET("index", templates.TopPage(ctx, db))
+	// e.GET("index", templates.TopPage)
 
 	// e.GET("/index", templates.TopPage)
 	e.GET("/free-time", templates.FreeTimePage)
 	e.GET("/free-times", templates.FreeTimesPage)
 	e.GET("/free-time/create", templates.CreateFreeTimePage)
+	e.POST("/free-time/create", freetime.CreateFreeTime(ctx, db))
 	e.GET("/free-time/update", templates.UpdateFreeTimePage)
 	e.GET("/share/with_someone", templates.ShareWithSomeonePage)
 	e.GET("/share/with_me", templates.ShareWithMePage)

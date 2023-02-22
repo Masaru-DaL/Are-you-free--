@@ -1,10 +1,14 @@
 package templates
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"src/internal/config"
+	"src/internal/pkg/strings"
+	"src/internal/pkg/time"
 
+	"github.com/jmoiron/sqlx"
 	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
 )
@@ -28,13 +32,18 @@ func LoginPage(c echo.Context) error {
 }
 
 /* トップページ */
-func TopPage(c echo.Context) error {
-	sess, _ := session.Get(config.Config.Session.Name, c)
-	fmt.Println(sess)
-	fmt.Println(sess.ID)
-	fmt.Println(sess.Values)
-	return c.Render(http.StatusOK, "index", "")
+func TopPage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		jpWeekday := time.GetWeekdayByDate(2023, 2, 20)
+		fmt.Println(jpWeekday)
+
+		return c.Render(http.StatusOK, "index", "")
+	}
 }
+
+// func TopPage(c echo.Context) error {
+// 	return c.Render(http.StatusOK, "index", "")
+// }
 
 /* スケジュールページ */
 func FreeTimePage(c echo.Context) error {
@@ -48,7 +57,27 @@ func FreeTimesPage(c echo.Context) error {
 
 /* スケジュール作成ページ */
 func CreateFreeTimePage(c echo.Context) error {
-	return c.Render(http.StatusOK, "create-free-time", "")
+	dateString := c.QueryParam("date")
+	if dateString == "" {
+		return c.Render(http.StatusOK, "create-free-time", echo.Map{
+			"year":          nil,
+			"month":         nil,
+			"day":           nil,
+			"weekday":       nil,
+			"error_message": nil,
+		})
+	}
+
+	year, month, day := strings.SplitDateByHyphen(dateString)
+	jpWeekday := time.GetWeekdayByDate(2023, 2, 20)
+
+	return c.Render(http.StatusOK, "create-free-time", echo.Map{
+		"year":          year,
+		"month":         month,
+		"day":           day,
+		"weekday":       jpWeekday,
+		"error_message": nil,
+	})
 }
 
 /* スケジュール更新ページ */

@@ -20,6 +20,7 @@ var Config = struct {
 
 	Session struct {
 		Name      string `yaml:"name"`
+		KeyName   string `yaml:"keyName"`
 		SecretKey string `yaml:"secretKey"`
 		Path      string `yaml:"Path"`
 		Domain    string `yaml:"Domain"`
