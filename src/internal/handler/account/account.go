@@ -30,18 +30,18 @@ func Signup(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 		/* Checking input data from forms Start here. */
 		// 空入力の場合
 		if signupName == "" || signupPassword == "" || signupPasswordConfirmation == "" || signupEmail == "" {
-			return c.Render(http.StatusOK, "signup", echo.Map{
+			return c.Render(http.StatusOK, "signup", map[string]interface{}{
 				"error_message": entity.ERR_INPUT_EMPTY,
 			})
 			// パスワードと再確認用パスワードが一致しなかった場合
 		} else if signupPassword != signupPasswordConfirmation {
-			return c.Render(http.StatusOK, "signup", echo.Map{
+			return c.Render(http.StatusOK, "signup", map[string]interface{}{
 				"error_message": entity.ERR_INPUT_MISSING,
 			})
 		}
 		// 入力された値が文字数制限を超えている場合
 		if len(signupName) > entity.LimitCharCountOfUsername || len(signupPassword) > entity.LimitCharCountOfPassword {
-			return c.Render(http.StatusOK, "signup", echo.Map{
+			return c.Render(http.StatusOK, "signup", map[string]interface{}{
 				"error_message": entity.ERR_INPUT_LIMIT_OVER,
 			})
 		}
@@ -49,7 +49,7 @@ func Signup(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 		checkResultSignupName := strings.CheckWhitespaceInString(signupName)
 		checkResultSignupPassword := strings.CheckWhitespaceInString(signupPassword)
 		if checkResultSignupName || checkResultSignupPassword {
-			return c.Render(http.StatusOK, "signup", echo.Map{
+			return c.Render(http.StatusOK, "signup", map[string]interface{}{
 				"error_message": entity.ERR_NO_WHITESPACE,
 			})
 		}
@@ -57,14 +57,14 @@ func Signup(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 		checkResultSignupName = strings.CheckQuotationInString(signupName)
 		checkResultSignupPassword = strings.CheckQuotationInString(signupPassword)
 		if checkResultSignupName || checkResultSignupPassword {
-			return c.Render(http.StatusOK, "signup", echo.Map{
+			return c.Render(http.StatusOK, "signup", map[string]interface{}{
 				"error_message": entity.ERR_NO_QUOTATION,
 			})
 		}
 		// メールアドレスの形式が正しくない場合
 		checkResultSignupEmail := strings.CheckEmailFormat(signupEmail)
 		if !checkResultSignupEmail {
-			return c.Render(http.StatusOK, "signup", echo.Map{
+			return c.Render(http.StatusOK, "signup", map[string]interface{}{
 				"error_message": entity.ERR_FAILED_EMAIL_FORMAT,
 			})
 		}
@@ -76,7 +76,7 @@ func Signup(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 			err = auth.CompareHashAndPlaintext(user.Password, signupPassword)
 			// err == nil => DBに既に存在している
 			if err == nil {
-				return c.Render(http.StatusOK, "signup", echo.Map{
+				return c.Render(http.StatusOK, "signup", map[string]interface{}{
 					"error_message": entity.ERR_ALREADY_USER_EXISTS,
 				})
 			}
@@ -85,7 +85,7 @@ func Signup(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 		// 入力されたパスワードのハッシュ化
 		encryptedSignupPassword, err := auth.PasswordEncrypt(signupPassword)
 		if err != nil {
-			return c.Render(http.StatusOK, "signup", echo.Map{
+			return c.Render(http.StatusOK, "signup", map[string]interface{}{
 				"error_message": entity.ERR_INTERNAL_SERVER_ERROR,
 			})
 		}
@@ -98,12 +98,12 @@ func Signup(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 		}
 		_, err = users.CreateUser(ctx, db, user)
 		if err != nil {
-			return c.Render(http.StatusOK, "signup", echo.Map{
+			return c.Render(http.StatusOK, "signup", map[string]interface{}{
 				"error_message": entity.ERR_INTERNAL_SERVER_ERROR,
 			})
 		}
 
-		return c.Render(http.StatusCreated, "login", echo.Map{
+		return c.Render(http.StatusCreated, "login", map[string]interface{}{
 			"error_message": nil,
 		})
 	}
@@ -119,7 +119,7 @@ func Login(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 		/* Checking input data from forms Start here. */
 		// 空入力の場合
 		if loginName == "" || loginPassword == "" {
-			return c.Render(http.StatusOK, "login", echo.Map{
+			return c.Render(http.StatusOK, "login", map[string]interface{}{
 				"error_message": entity.ERR_INPUT_EMPTY,
 			})
 		}
@@ -127,7 +127,7 @@ func Login(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 		user, err := users.GetUserByUsername(ctx, db, loginName)
 		// ユーザ情報が取得できなかった場合
 		if err == sql.ErrNoRows {
-			return c.Render(http.StatusOK, "login", echo.Map{
+			return c.Render(http.StatusOK, "login", map[string]interface{}{
 				"error_message": entity.ERR_NO_USER,
 			})
 			// パスワードをチェックする
@@ -136,7 +136,7 @@ func Login(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 			err = auth.CompareHashAndPlaintext(user.Password, loginPassword)
 			// err != nil => DBに存在していない
 			if err != nil {
-				return c.Render(http.StatusOK, "login", echo.Map{
+				return c.Render(http.StatusOK, "login", map[string]interface{}{
 					"error_message": entity.ERR_ALREADY_USER_EXISTS,
 				})
 			}
