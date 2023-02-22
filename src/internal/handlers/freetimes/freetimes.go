@@ -44,7 +44,7 @@ func CreateFreeTime(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 				return c.Render(http.StatusOK, "create-free-time", map[string]interface{}{
 					"error_message": entity.ERR_NO_CHOICE,
 				})
-			}
+			} else if len(dateStr) != 10
 			yearStr, monthStr, dayStr = strings.SplitDateByHyphen(dateStr)
 			year, _ = strconv.Atoi(yearStr)
 			month, _ = strconv.Atoi(monthStr)
