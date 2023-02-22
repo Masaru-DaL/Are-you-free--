@@ -1,4 +1,4 @@
-package freetimes
+package gateway
 
 import (
 	"context"

@@ -1,4 +1,4 @@
-package freetimes
+package gateway
 
 import (
 	"context"
@@ -6,10 +6,10 @@ import (
 	"net/http"
 	"src/internal/config"
 	"src/internal/entity"
-	"src/internal/pkg/models/freetimes"
-	"src/internal/pkg/num"
-	"src/internal/pkg/strings"
-	"src/internal/pkg/time"
+	"src/internal/repository/gateway"
+	"src/internal/utils/num"
+	"src/internal/utils/strings"
+	"src/internal/utils/time"
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
@@ -76,7 +76,7 @@ func CreateFreeTime(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 			})
 		}
 
-		dateFreeTime, err := freetimes.GetDateFreeTimeByUserIDAndDate(ctx, db, userID, year, month, day)
+		dateFreeTime, err := gateway.GetDateFreeTimeByUserIDAndDate(ctx, db, userID, year, month, day)
 		// 存在しなかった場合はDateFreeTimeを作成する
 		if err != nil {
 			// DateFreeTime構造体で値を設定する
@@ -87,7 +87,7 @@ func CreateFreeTime(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 				Day:    day,
 			}
 			// DateFreeTimeの作成
-			dateFreeTime, err := freetimes.CreateDateFreeTime(ctx, db, dateFreeTime)
+			dateFreeTime, err := gateway.CreateDateFreeTime(ctx, db, dateFreeTime)
 			if err != nil {
 				return c.Render(http.StatusOK, "create-free-time", map[string]interface{}{
 					"error_message": entity.ERR_INTERNAL_SERVER_ERROR,
@@ -103,7 +103,7 @@ func CreateFreeTime(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 				EndMinute:      endFreeTimeMinute,
 			}
 			// FreeTimeの作成
-			_, err = freetimes.CreateFreeTime(ctx, db, freeTime)
+			_, err = gateway.CreateFreeTime(ctx, db, freeTime)
 			if err != nil {
 				return c.Render(http.StatusOK, "create-free-time", map[string]interface{}{
 					"error_message": entity.ERR_INTERNAL_SERVER_ERROR,
@@ -121,7 +121,7 @@ func CreateFreeTime(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 				EndMinute:      endFreeTimeMinute,
 			}
 			// FreeTimeの作成
-			_, err = freetimes.CreateFreeTime(ctx, db, freeTime)
+			_, err = gateway.CreateFreeTime(ctx, db, freeTime)
 			if err != nil {
 				return c.Render(http.StatusOK, "create-free-time", map[string]interface{}{
 					"error_message": entity.ERR_INTERNAL_SERVER_ERROR,

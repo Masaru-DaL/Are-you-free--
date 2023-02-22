@@ -5,11 +5,11 @@ import (
 	"database/sql"
 	"errors"
 	"net/http"
+	"src/internal/auth"
 	"src/internal/config"
 	"src/internal/entity"
-	"src/internal/pkg/auth"
-	"src/internal/pkg/models/users"
-	"src/internal/pkg/strings"
+	"src/internal/repository/gateway"
+	"src/internal/utils/strings"
 
 	"github.com/gorilla/securecookie"
 	"github.com/gorilla/sessions"
@@ -69,7 +69,7 @@ func Signup(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 			})
 		}
 		// 入力された名前でDBから情報を取得する
-		user, err := users.GetUserByUsername(ctx, db, signupName)
+		user, err := gateway.GetUserByUsername(ctx, db, signupName)
 		// ユーザ情報が既に存在している場合
 		if !errors.Is(err, entity.ErrNoUserFound) {
 			// 入力されたパスワードをユーザ情報のパスワードと比較する
@@ -96,7 +96,7 @@ func Signup(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 			Password: encryptedSignupPassword,
 			Email:    signupEmail,
 		}
-		_, err = users.CreateUser(ctx, db, user)
+		_, err = gateway.CreateUser(ctx, db, user)
 		if err != nil {
 			return c.Render(http.StatusOK, "signup", map[string]interface{}{
 				"error_message": entity.ERR_INTERNAL_SERVER_ERROR,
@@ -124,7 +124,7 @@ func Login(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 			})
 		}
 		// ユーザ名をチェックする
-		user, err := users.GetUserByUsername(ctx, db, loginName)
+		user, err := gateway.GetUserByUsername(ctx, db, loginName)
 		// ユーザ情報が取得できなかった場合
 		if err == sql.ErrNoRows {
 			return c.Render(http.StatusOK, "login", map[string]interface{}{

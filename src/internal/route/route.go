@@ -4,12 +4,12 @@ import (
 	"context"
 	"html/template"
 	"io"
+	"src/internal/auth"
 	"src/internal/config"
 	"src/internal/handlers/account"
 	"src/internal/handlers/admin"
 	freetime "src/internal/handlers/freetimes"
 	"src/internal/handlers/templates"
-	"src/internal/pkg/auth"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/labstack/echo/v4"
