@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"net/http"
 	"src/internal/config"
-	"src/internal/pkg/num"
 	"src/internal/pkg/strings"
 	"src/internal/pkg/time"
+	"strconv"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/labstack/echo-contrib/session"
@@ -49,10 +49,10 @@ func TopPage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 /* スケジュールページ */
 func FreeTimePage(c echo.Context) error {
 	dateStr := c.QueryParam("date")
-	year, month, day := strings.SplitDateByHyphen(dateStr)
-	yearStr := num.NumToFormattedString(year)
-	monthStr := num.NumToFormattedString(month)
-	dayStr := num.NumToFormattedString(day)
+	yearStr, monthStr, dayStr := strings.SplitDateByHyphen(dateStr)
+	year, _ := strconv.Atoi(yearStr)
+	month, _ := strconv.Atoi(monthStr)
+	day, _ := strconv.Atoi(dayStr)
 	weekday := time.GetWeekdayByDate(year, month, day)
 
 	return c.Render(http.StatusOK, "free-time", map[string]interface{}{
@@ -73,8 +73,8 @@ func FreeTimesPage(c echo.Context) error {
 
 /* スケジュール作成ページ */
 func CreateFreeTimePage(c echo.Context) error {
-	dateString := c.QueryParam("date")
-	if dateString == "" {
+	dateStr := c.QueryParam("date")
+	if dateStr == "" {
 		return c.Render(http.StatusOK, "create-free-time", echo.Map{
 			"year":          nil,
 			"month":         nil,
@@ -84,7 +84,10 @@ func CreateFreeTimePage(c echo.Context) error {
 		})
 	}
 
-	year, month, day := strings.SplitDateByHyphen(dateString)
+	yearStr, monthStr, dayStr := strings.SplitDateByHyphen(dateStr)
+	year, _ := strconv.Atoi(yearStr)
+	month, _ := strconv.Atoi(monthStr)
+	day, _ := strconv.Atoi(dayStr)
 	jpWeekday := time.GetWeekdayByDate(year, month, day)
 
 	return c.Render(http.StatusOK, "create-free-time", echo.Map{

@@ -25,9 +25,12 @@ func CreateFreeTime(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 		var year int
 		var month int
 		var day int
+		var yearStr string
+		var monthStr string
+		var dayStr string
 
 		/* 入力されたデータの処理 */
-		yearStr, monthStr, dayStr := c.FormValue("year"), c.FormValue("month"), c.FormValue("day")
+		yearStr, monthStr, dayStr = c.FormValue("year"), c.FormValue("month"), c.FormValue("day")
 		// 日付が事前に入力されていた場合
 		if yearStr != "" || monthStr != "" || dayStr != "" {
 			year, _ = strconv.Atoi(yearStr)
@@ -36,13 +39,16 @@ func CreateFreeTime(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 
 			// 日付が事前に入力されていなかった場合
 		} else {
-			dateString := c.FormValue("date")
-			if dateString == "" {
+			dateStr := c.FormValue("date")
+			if dateStr == "" {
 				return c.Render(http.StatusOK, "create-free-time", echo.Map{
 					"error_message": entity.ERR_NO_CHOICE,
 				})
 			}
-			year, month, day = strings.SplitDateByHyphen(dateString)
+			yearStr, monthStr, dayStr = strings.SplitDateByHyphen(dateStr)
+			year, _ = strconv.Atoi(yearStr)
+			month, _ = strconv.Atoi(monthStr)
+			day, _ = strconv.Atoi(dayStr)
 		}
 
 		startFreeTimeHourStr, startFreeTimeMinuteStr := c.FormValue("start-free-time-hour"), c.FormValue("start-free-time-minute")
@@ -124,12 +130,12 @@ func CreateFreeTime(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 		}
 
 		jpWeekday := time.GetWeekdayByDate(year, month, day)
-		monthStr = num.NumToFormattedString(month)
-		dayStr = num.NumToFormattedString(day)
 		startFreeTimeHourStr = num.NumToFormattedString(startFreeTimeHour)
+		startFreeTimeMinuteStr = num.NumToFormattedString(startFreeTimeMinute)
 		endFreeTimeHourStr = num.NumToFormattedString(endFreeTimeHour)
+		endFreeTimeMinuteStr = num.NumToFormattedString(endFreeTimeMinute)
 
-		successMessage := fmt.Sprintf("%d/%s/%s（%s）%s:%s〜%s:%sでfree-timeを作成しました。", year, monthStr, dayStr, jpWeekday, startFreeTimeHourStr, startFreeTimeMinuteStr, endFreeTimeHourStr, endFreeTimeMinuteStr)
+		successMessage := fmt.Sprintf("%s/%s/%s（%s）%s:%s〜%s:%sでfree-timeを作成しました。", yearStr, monthStr, dayStr, jpWeekday, startFreeTimeHourStr, startFreeTimeMinuteStr, endFreeTimeHourStr, endFreeTimeMinuteStr)
 
 		fmt.Println(successMessage)
 
