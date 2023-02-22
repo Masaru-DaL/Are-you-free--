@@ -35,7 +35,7 @@ func GetDateFreeTime(ctx context.Context, db *sqlx.DB, userID int, year int, mon
 }
 
 /* date_free_time_idの条件に合う情報を、free-timesから全て取得する */
-func GetFreeTimes(ctx context.Context, db *sqlx.DB, dateFreeTimeID int) ([]*entity.FreeTime, error) {
+func ListFreeTime(ctx context.Context, db *sqlx.DB, dateFreeTimeID int) ([]*entity.FreeTime, error) {
 	var freeTimes []*entity.FreeTime
 
 	err := db.SelectContext(ctx, &freeTimes, `
