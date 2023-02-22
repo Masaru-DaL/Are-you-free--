@@ -47,7 +47,14 @@ func TopPage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 
 /* スケジュールページ */
 func FreeTimePage(c echo.Context) error {
-	return c.Render(http.StatusOK, "free-time", "")
+	dateStr := c.Param("date")
+	year, month, day := strings.SplitDateByHyphen(dateStr)
+
+	return c.Render(http.StatusOK, "free-time", map[string]interface{}{
+		"year":  year,
+		"month": month,
+		"day":   day,
+	})
 }
 
 /* スケジュールページ */
