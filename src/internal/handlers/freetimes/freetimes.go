@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"src/internal/config"
 	"src/internal/entity"
+	"src/internal/entity/validation"
 	"src/internal/repository/gateway"
 	"src/internal/utils/num"
 	"src/internal/utils/strings"
@@ -33,6 +34,7 @@ func CreateFreeTime(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 		yearStr, monthStr, dayStr = c.FormValue("year"), c.FormValue("month"), c.FormValue("day")
 		// 日付が事前に入力されていた場合
 		if yearStr != "" || monthStr != "" || dayStr != "" {
+
 			year, _ = strconv.Atoi(yearStr)
 			month, _ = strconv.Atoi(monthStr)
 			day, _ = strconv.Atoi(dayStr)
@@ -40,11 +42,19 @@ func CreateFreeTime(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 			// 日付が事前に入力されていなかった場合
 		} else {
 			dateStr := c.FormValue("date")
+			// 日付文字列が空だった場合
 			if dateStr == "" {
 				return c.Render(http.StatusOK, "create-free-time", map[string]interface{}{
 					"error_message": entity.ERR_NO_CHOICE,
 				})
-			} else if len(dateStr) != 10
+			}
+			// 日付文字列が不正だった場合
+			isDateString := validation.IsDateString(dateStr)
+			if !isDateString {
+				return c.Render(http.StatusOK, "create-free-time", map[string]interface{}{
+					"error_message": entity.ERR_INTERNAL_SERVER_ERROR,
+				})
+			}
 			yearStr, monthStr, dayStr = strings.SplitDateByHyphen(dateStr)
 			year, _ = strconv.Atoi(yearStr)
 			month, _ = strconv.Atoi(monthStr)
@@ -76,7 +86,7 @@ func CreateFreeTime(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 			})
 		}
 
-		dateFreeTime, err := gateway.GetDateFreeTimeByUserIDAndDate(ctx, db, userID, year, month, day)
+		dateFreeTime, err := gateway.GetDateFreeTime(ctx, db, userID, year, month, day)
 		// 存在しなかった場合はDateFreeTimeを作成する
 		if err != nil {
 			// DateFreeTime構造体で値を設定する

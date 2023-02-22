@@ -76,7 +76,7 @@ func CreateFreeTime(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 			})
 		}
 
-		dateFreeTime, err := gateway.GetDateFreeTimeByUserIDAndDate(ctx, db, userID, year, month, day)
+		dateFreeTime, err := gateway.GetDateFreeTime(ctx, db, userID, year, month, day)
 		// 存在しなかった場合はDateFreeTimeを作成する
 		if err != nil {
 			// DateFreeTime構造体で値を設定する
