@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"net/http"
 	"src/internal/config"
-	"src/internal/pkg/strings"
-	"src/internal/pkg/time"
+	"src/internal/utils/strings"
+	"src/internal/utils/time"
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
