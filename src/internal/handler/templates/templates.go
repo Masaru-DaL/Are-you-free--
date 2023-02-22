@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"src/internal/config"
+	"src/internal/pkg/num"
 	"src/internal/pkg/strings"
 	"src/internal/pkg/time"
 
@@ -47,7 +48,22 @@ func TopPage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 
 /* スケジュールページ */
 func FreeTimePage(c echo.Context) error {
-	return c.Render(http.StatusOK, "free-time", "")
+	dateStr := c.QueryParam("date")
+	year, month, day := strings.SplitDateByHyphen(dateStr)
+	yearStr := num.NumToFormattedString(year)
+	monthStr := num.NumToFormattedString(month)
+	dayStr := num.NumToFormattedString(day)
+	weekday := time.GetWeekdayByDate(year, month, day)
+
+	return c.Render(http.StatusOK, "free-time", map[string]interface{}{
+		"year":      year,
+		"month":     month,
+		"day":       day,
+		"year_str":  yearStr,
+		"month_str": monthStr,
+		"day_str":   dayStr,
+		"weekday":   weekday,
+	})
 }
 
 /* スケジュールページ */
@@ -69,7 +85,7 @@ func CreateFreeTimePage(c echo.Context) error {
 	}
 
 	year, month, day := strings.SplitDateByHyphen(dateString)
-	jpWeekday := time.GetWeekdayByDate(2023, 2, 20)
+	jpWeekday := time.GetWeekdayByDate(year, month, day)
 
 	return c.Render(http.StatusOK, "create-free-time", echo.Map{
 		"year":          year,

@@ -64,7 +64,16 @@
         </div>
         <div class="heading-area-wrapper flex">
           <div class="heading-left-area flex justify-center items-center">
-            <p class="font-20 bold">2023/02/27</p>
+            {{ if and .year .month .day .weekday}}
+              <p class="font-20 bold">
+                {{.year_str}}/{{.month_str}}/{{.day_str}}（{{.weekday}}）
+              </p>
+            {{ else }}
+              <p class="font-20 bold">
+                最新の日付
+              </p>
+            {{ end }}
+
           </div>
           <div class="heading-right-area">
             <ul >
