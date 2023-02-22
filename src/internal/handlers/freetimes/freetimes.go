@@ -1,4 +1,4 @@
-package freetime
+package freetimes
 
 import (
 	"context"
