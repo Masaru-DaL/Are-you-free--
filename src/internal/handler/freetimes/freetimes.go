@@ -41,7 +41,7 @@ func CreateFreeTime(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 		} else {
 			dateStr := c.FormValue("date")
 			if dateStr == "" {
-				return c.Render(http.StatusOK, "create-free-time", echo.Map{
+				return c.Render(http.StatusOK, "create-free-time", map[string]interface{}{
 					"error_message": entity.ERR_NO_CHOICE,
 				})
 			}
@@ -54,7 +54,7 @@ func CreateFreeTime(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 		startFreeTimeHourStr, startFreeTimeMinuteStr := c.FormValue("start-free-time-hour"), c.FormValue("start-free-time-minute")
 		endFreeTimeHourStr, endFreeTimeMinuteStr := c.FormValue("end-free-time-hour"), c.FormValue("end-free-time-minute")
 		if startFreeTimeHourStr == "" || startFreeTimeMinuteStr == "" || endFreeTimeHourStr == "" || endFreeTimeMinuteStr == "" {
-			return c.Render(http.StatusOK, "create-free-time", echo.Map{
+			return c.Render(http.StatusOK, "create-free-time", map[string]interface{}{
 				"error_message": entity.ERR_NO_CHOICE,
 			})
 		}
@@ -63,15 +63,15 @@ func CreateFreeTime(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 		endFreeTimeHour, _ := strconv.Atoi(endFreeTimeHourStr)
 		endFreeTimeMinute, _ := strconv.Atoi(endFreeTimeMinuteStr)
 		if startFreeTimeHour > endFreeTimeHour {
-			return c.Render(http.StatusOK, "create-free-time", echo.Map{
+			return c.Render(http.StatusOK, "create-free-time", map[string]interface{}{
 				"error_message": entity.ERR_CHOICE_TIME,
 			})
 		} else if startFreeTimeHour == endFreeTimeHour && startFreeTimeMinute > endFreeTimeMinute {
-			return c.Render(http.StatusOK, "create-free-time", echo.Map{
+			return c.Render(http.StatusOK, "create-free-time", map[string]interface{}{
 				"error_message": entity.ERR_CHOICE_TIME,
 			})
 		} else if startFreeTimeHour == endFreeTimeHour && startFreeTimeMinute == endFreeTimeMinute {
-			return c.Render(http.StatusOK, "create-free-time", echo.Map{
+			return c.Render(http.StatusOK, "create-free-time", map[string]interface{}{
 				"error_message": entity.ERR_CHOICE_SAME_TIME,
 			})
 		}
@@ -89,7 +89,7 @@ func CreateFreeTime(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 			// DateFreeTimeの作成
 			dateFreeTime, err := freetimes.CreateDateFreeTime(ctx, db, dateFreeTime)
 			if err != nil {
-				return c.Render(http.StatusOK, "create-free-time", echo.Map{
+				return c.Render(http.StatusOK, "create-free-time", map[string]interface{}{
 					"error_message": entity.ERR_INTERNAL_SERVER_ERROR,
 				})
 			}
@@ -105,7 +105,7 @@ func CreateFreeTime(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 			// FreeTimeの作成
 			_, err = freetimes.CreateFreeTime(ctx, db, freeTime)
 			if err != nil {
-				return c.Render(http.StatusOK, "create-free-time", echo.Map{
+				return c.Render(http.StatusOK, "create-free-time", map[string]interface{}{
 					"error_message": entity.ERR_INTERNAL_SERVER_ERROR,
 				})
 			}
@@ -123,7 +123,7 @@ func CreateFreeTime(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 			// FreeTimeの作成
 			_, err = freetimes.CreateFreeTime(ctx, db, freeTime)
 			if err != nil {
-				return c.Render(http.StatusOK, "create-free-time", echo.Map{
+				return c.Render(http.StatusOK, "create-free-time", map[string]interface{}{
 					"error_message": entity.ERR_INTERNAL_SERVER_ERROR,
 				})
 			}
@@ -139,7 +139,7 @@ func CreateFreeTime(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 
 		fmt.Println(successMessage)
 
-		return c.Render(http.StatusOK, "create-free-time", echo.Map{
+		return c.Render(http.StatusOK, "create-free-time", map[string]interface{}{
 			"year":            nil,
 			"month":           nil,
 			"day":             nil,

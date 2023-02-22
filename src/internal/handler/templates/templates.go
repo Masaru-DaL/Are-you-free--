@@ -16,7 +16,7 @@ import (
 
 /* サインアップページ */
 func SignupPage(c echo.Context) error {
-	return c.Render(http.StatusOK, "signup", echo.Map{
+	return c.Render(http.StatusOK, "signup", map[string]interface{}{
 		"error_message": nil,
 	})
 }
@@ -27,7 +27,7 @@ func LoginPage(c echo.Context) error {
 	fmt.Println(sess)
 	fmt.Println(sess.Values)
 
-	return c.Render(http.StatusOK, "login", echo.Map{
+	return c.Render(http.StatusOK, "login", map[string]interface{}{
 		"error_message": nil,
 	})
 }
@@ -75,7 +75,7 @@ func FreeTimesPage(c echo.Context) error {
 func CreateFreeTimePage(c echo.Context) error {
 	dateStr := c.QueryParam("date")
 	if dateStr == "" {
-		return c.Render(http.StatusOK, "create-free-time", echo.Map{
+		return c.Render(http.StatusOK, "create-free-time", map[string]interface{}{
 			"year":          nil,
 			"month":         nil,
 			"day":           nil,
@@ -90,7 +90,7 @@ func CreateFreeTimePage(c echo.Context) error {
 	day, _ := strconv.Atoi(dayStr)
 	jpWeekday := time.GetWeekdayByDate(year, month, day)
 
-	return c.Render(http.StatusOK, "create-free-time", echo.Map{
+	return c.Render(http.StatusOK, "create-free-time", map[string]interface{}{
 		"year":          year,
 		"month":         month,
 		"day":           day,
