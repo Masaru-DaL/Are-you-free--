@@ -36,13 +36,16 @@ func CreateFreeTime(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 
 			// 日付が事前に入力されていなかった場合
 		} else {
-			dateString := c.FormValue("date")
-			if dateString == "" {
+			dateStr := c.FormValue("date")
+			if dateStr == "" {
 				return c.Render(http.StatusOK, "create-free-time", echo.Map{
 					"error_message": entity.ERR_NO_CHOICE,
 				})
 			}
-			year, month, day = strings.SplitDateByHyphen(dateString)
+			yearStr, monthStr, dayStr = strings.SplitDateByHyphen(dateStr)
+			year, _ = strconv.Atoi(yearStr)
+			month, _ = strconv.Atoi(monthStr)
+			day, _ = strconv.Atoi(dayStr)
 		}
 
 		startFreeTimeHourStr, startFreeTimeMinuteStr := c.FormValue("start-free-time-hour"), c.FormValue("start-free-time-minute")

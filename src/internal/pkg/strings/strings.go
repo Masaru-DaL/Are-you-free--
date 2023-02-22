@@ -2,7 +2,6 @@ package strings
 
 import (
 	"regexp"
-	"strconv"
 	"strings"
 )
 
@@ -42,22 +41,12 @@ func CheckEmailFormat(emailAddress string) bool {
 }
 
 /* 日付文字列を年/月/日で分割する */
-func SplitDateByHyphen(dateString string) (int, int, int) {
-	var year int
-	var month int
-	var day int
-
+func SplitDateByHyphen(dateString string) (string, string, string) {
 	dateArray := strings.Split(dateString, "-")
 
-	for i, s := range dateArray {
-		if i == 0 {
-			year, _ = strconv.Atoi(s)
-		} else if i == 1 {
-			month, _ = strconv.Atoi(s)
-		} else {
-			day, _ = strconv.Atoi(s)
-		}
-	}
+	yearStr := dateArray[0]
+	monthStr := dateArray[1]
+	dayStr := dateArray[2]
 
-	return year, month, day
+	return yearStr, monthStr, dayStr
 }
