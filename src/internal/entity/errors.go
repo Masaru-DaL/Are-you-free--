@@ -7,6 +7,7 @@ var (
 	ErrInternalServerError = errors.New("internal Server Error")
 
 	ErrNoUserFound           = errors.New("no user found")
+	ErrNoDateFreeTimeFound   = errors.New("no date-free-time found")
 	ErrNoFreeTimeFound       = errors.New("no free-time found")
 	ErrSQLGetFailed          = errors.New("failed to get data from table")
 	ErrSQLCreateStmt         = errors.New("failed to create prepared statement")
