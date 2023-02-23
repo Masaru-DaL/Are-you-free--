@@ -7,6 +7,7 @@ import (
 	"src/internal/config"
 	"src/internal/entity"
 	"src/internal/entity/validation"
+	"src/internal/repository"
 	"src/internal/repository/gateway"
 	"src/internal/utils/num"
 	"src/internal/utils/strings"
@@ -34,6 +35,15 @@ func CreateFreeTime(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 		yearStr, monthStr, dayStr = c.FormValue("year"), c.FormValue("month"), c.FormValue("day")
 		// 日付が事前に入力されていた場合
 		if yearStr != "" || monthStr != "" || dayStr != "" {
+			// 別々に送られてきた日付文字列をチェックする
+			isYearStr := validation.IsYearString(yearStr)
+			isMonthStr := validation.IsMonthDayString(monthStr)
+			isDayStr := validation.IsMonthDayString(dayStr)
+			if !isYearStr || !isMonthStr || !isDayStr {
+				return c.Render(http.StatusOK, "create-free-time", map[string]interface{}{
+					"error_message": entity.ERR_INTERNAL_SERVER_ERROR,
+				})
+			}
 
 			year, _ = strconv.Atoi(yearStr)
 			month, _ = strconv.Atoi(monthStr)
@@ -48,7 +58,7 @@ func CreateFreeTime(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 					"error_message": entity.ERR_NO_CHOICE,
 				})
 			}
-			// 日付文字列が不正だった場合
+			// 日付文字列をチェックする
 			isDateString := validation.IsDateString(dateStr)
 			if !isDateString {
 				return c.Render(http.StatusOK, "create-free-time", map[string]interface{}{
@@ -61,34 +71,42 @@ func CreateFreeTime(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 			day, _ = strconv.Atoi(dayStr)
 		}
 
+		// free-time情報を受け取る
 		startFreeTimeHourStr, startFreeTimeMinuteStr := c.FormValue("start-free-time-hour"), c.FormValue("start-free-time-minute")
 		endFreeTimeHourStr, endFreeTimeMinuteStr := c.FormValue("end-free-time-hour"), c.FormValue("end-free-time-minute")
+		// 全ての時間情報を入力されたかどうか
 		if startFreeTimeHourStr == "" || startFreeTimeMinuteStr == "" || endFreeTimeHourStr == "" || endFreeTimeMinuteStr == "" {
 			return c.Render(http.StatusOK, "create-free-time", map[string]interface{}{
 				"error_message": entity.ERR_NO_CHOICE,
 			})
 		}
+		// 入力された時間文字列をチェックする
+		isStartFreeTimeHourStr := validation.IsTimeString(startFreeTimeHourStr)
+		isStartFreeTimeMinuteStr := validation.IsTimeString(startFreeTimeMinuteStr)
+		isEndFreeTimeHourStr := validation.IsTimeString(endFreeTimeHourStr)
+		isEndFreeTimeMinuteStr := validation.IsTimeString(endFreeTimeMinuteStr)
+		if !isStartFreeTimeHourStr || !isStartFreeTimeMinuteStr || !isEndFreeTimeHourStr || !isEndFreeTimeMinuteStr {
+			return c.Render(http.StatusOK, "create-free-time", map[string]interface{}{
+				"error_message": entity.ERR_INTERNAL_SERVER_ERROR,
+			})
+		}
+
 		startFreeTimeHour, _ := strconv.Atoi(startFreeTimeHourStr)
 		startFreeTimeMinute, _ := strconv.Atoi(startFreeTimeMinuteStr)
 		endFreeTimeHour, _ := strconv.Atoi(endFreeTimeHourStr)
 		endFreeTimeMinute, _ := strconv.Atoi(endFreeTimeMinuteStr)
-		if startFreeTimeHour > endFreeTimeHour {
+		// 入力されたfree-timeが正常に送られたかどうかをチェックする
+		checkResult := time.CheckInputTime(startFreeTimeHour, startFreeTimeMinute, endFreeTimeHour, endFreeTimeMinute)
+		if !checkResult {
 			return c.Render(http.StatusOK, "create-free-time", map[string]interface{}{
 				"error_message": entity.ERR_CHOICE_TIME,
-			})
-		} else if startFreeTimeHour == endFreeTimeHour && startFreeTimeMinute > endFreeTimeMinute {
-			return c.Render(http.StatusOK, "create-free-time", map[string]interface{}{
-				"error_message": entity.ERR_CHOICE_TIME,
-			})
-		} else if startFreeTimeHour == endFreeTimeHour && startFreeTimeMinute == endFreeTimeMinute {
-			return c.Render(http.StatusOK, "create-free-time", map[string]interface{}{
-				"error_message": entity.ERR_CHOICE_SAME_TIME,
 			})
 		}
 
-		dateFreeTime, err := gateway.GetDateFreeTime(ctx, db, userID, year, month, day)
-		// 存在しなかった場合はDateFreeTimeを作成する
-		if err != nil {
+		// 入力された日付のdate-free-timeを取得する
+		dateFreeTime, err := repository.GetDateFreeTime(ctx, db, userID, year, month, day)
+		// 指定した日付のdate-free-timeが存在しなかった場合
+		if err == entity.ErrNoDateFreeTimeFound {
 			// DateFreeTime構造体で値を設定する
 			dateFreeTime = &entity.DateFreeTime{
 				UserID: userID,
@@ -97,46 +115,40 @@ func CreateFreeTime(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 				Day:    day,
 			}
 			// DateFreeTimeの作成
-			dateFreeTime, err := gateway.CreateDateFreeTime(ctx, db, dateFreeTime)
+			dateFreeTime, err = gateway.CreateDateFreeTime(ctx, db, dateFreeTime)
 			if err != nil {
 				return c.Render(http.StatusOK, "create-free-time", map[string]interface{}{
 					"error_message": entity.ERR_INTERNAL_SERVER_ERROR,
 				})
 			}
+		} else if err != nil {
+			return c.Render(http.StatusOK, "create-free-time", map[string]interface{}{
+				"error_message": entity.ERR_INTERNAL_SERVER_ERROR,
+			})
+		}
 
-			// FreeTime構造体へ値を設定する
-			freeTime := &entity.FreeTime{
-				DateFreeTimeID: dateFreeTime.ID,
-				StartHour:      startFreeTimeHour,
-				StartMinute:    startFreeTimeMinute,
-				EndHour:        endFreeTimeHour,
-				EndMinute:      endFreeTimeMinute,
-			}
-			// FreeTimeの作成
-			_, err = gateway.CreateFreeTime(ctx, db, freeTime)
-			if err != nil {
-				return c.Render(http.StatusOK, "create-free-time", map[string]interface{}{
-					"error_message": entity.ERR_INTERNAL_SERVER_ERROR,
-				})
-			}
+		// free-timeが作成できるかどうか
+		checkResult = time.IsCreateFreeTime(startFreeTimeHour, startFreeTimeMinute, endFreeTimeHour, endFreeTimeMinute, dateFreeTime)
+		if !checkResult {
+			return c.Render(http.StatusOK, "create-free-time", map[string]interface{}{
+				"error_message": entity.ERR_ALREADY_FREE_TIME_EXISTS,
+			})
+		}
 
-			// 既に存在していた場合はCreateDateFreeTimeは作成しない
-		} else {
-			// FreeTime構造体へ値を設定する
-			freeTime := &entity.FreeTime{
-				DateFreeTimeID: dateFreeTime.ID,
-				StartHour:      startFreeTimeHour,
-				StartMinute:    startFreeTimeMinute,
-				EndHour:        endFreeTimeHour,
-				EndMinute:      endFreeTimeMinute,
-			}
-			// FreeTimeの作成
-			_, err = gateway.CreateFreeTime(ctx, db, freeTime)
-			if err != nil {
-				return c.Render(http.StatusOK, "create-free-time", map[string]interface{}{
-					"error_message": entity.ERR_INTERNAL_SERVER_ERROR,
-				})
-			}
+		// free-timeを作成するための値を構造体に格納する
+		freeTime := &entity.FreeTime{
+			DateFreeTimeID: dateFreeTime.ID,
+			StartHour:      startFreeTimeHour,
+			StartMinute:    startFreeTimeMinute,
+			EndHour:        endFreeTimeHour,
+			EndMinute:      endFreeTimeMinute,
+		}
+		// free-timeの作成
+		_, err = gateway.CreateFreeTime(ctx, db, freeTime)
+		if err != nil {
+			return c.Render(http.StatusOK, "create-free-time", map[string]interface{}{
+				"error_message": entity.ERR_INTERNAL_SERVER_ERROR,
+			})
 		}
 
 		jpWeekday := time.GetWeekdayByDate(year, month, day)
@@ -146,8 +158,6 @@ func CreateFreeTime(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 		endFreeTimeMinuteStr = num.NumToFormattedString(endFreeTimeMinute)
 
 		successMessage := fmt.Sprintf("%s/%s/%s（%s）%s:%s〜%s:%sでfree-timeを作成しました。", yearStr, monthStr, dayStr, jpWeekday, startFreeTimeHourStr, startFreeTimeMinuteStr, endFreeTimeHourStr, endFreeTimeMinuteStr)
-
-		fmt.Println(successMessage)
 
 		return c.Render(http.StatusOK, "create-free-time", map[string]interface{}{
 			"year":            nil,

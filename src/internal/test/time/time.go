@@ -23,6 +23,8 @@ func CheckInputTime(startFreeTimeHour int, startFreeTimeMinute int, endFreeTimeH
 	} else if startFreeTimeHour == endFreeTimeHour {
 		if startFreeTimeMinute > endFreeTimeMinute {
 			return false
+		} else if startFreeTimeMinute == endFreeTimeMinute {
+			return false
 		}
 	}
 
