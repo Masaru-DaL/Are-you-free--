@@ -157,3 +157,41 @@ func CreateFreeTime(ctx context.Context, db *sqlx.DB, freeTime *entity.FreeTime)
 
 	return freeTime, err
 }
+
+/* free-timeの更新 */
+func UpdateFreeTime(ctx context.Context, tx *sqlx.Tx, freeTime *entity.FreeTime) (*entity.FreeTime, error) {
+	stmt, err := tx.PrepareNamedContext(ctx, `
+	UPDATE
+		free_times
+	SET
+		start_hour = :start_hour,
+		start_minute = :start_minute,
+		end_hour = :end_hour,
+		end_minute = :end_minute
+	WHERE
+		date_time_id = :date_time_id
+	`)
+
+	if err != nil {
+		return nil, entity.ErrSQLCreateStmt
+	}
+
+	defer func() {
+		if closeErr := stmt.Close(); closeErr != nil {
+			err = closeErr
+		}
+	}()
+
+	result, err := stmt.Exec(freeTime)
+	if err != nil {
+		return nil, entity.ErrSQLExecFailed
+	}
+
+	cnt, err := result.RowsAffected()
+	if err != nil || cnt > 1 {
+		return nil, entity.ErrSQLResultNotDesired
+	}
+
+	return freeTime, nil
+
+}
