@@ -55,8 +55,8 @@ func ListFreeTime(ctx context.Context, db *sqlx.DB, dateFreeTimeID int) ([]*enti
 }
 
 /* date_free_timeを作成する */
-func CreateDateFreeTime(ctx context.Context, db *sqlx.DB, dateFreeTime *entity.DateFreeTime) (*entity.DateFreeTime, error) {
-	stmt, err := db.PrepareNamedContext(ctx, `
+func CreateDateFreeTime(ctx context.Context, tx *sqlx.Tx, dateFreeTime *entity.DateFreeTime) (*entity.DateFreeTime, error) {
+	stmt, err := tx.PrepareNamedContext(ctx, `
 		INSERT INTO date_free_times
 		(
 			user_id,
@@ -106,8 +106,8 @@ func CreateDateFreeTime(ctx context.Context, db *sqlx.DB, dateFreeTime *entity.D
 }
 
 /* free_timeを作成する */
-func CreateFreeTime(ctx context.Context, db *sqlx.DB, freeTime *entity.FreeTime) (*entity.FreeTime, error) {
-	stmt, err := db.PrepareNamedContext(ctx, `
+func CreateFreeTime(ctx context.Context, tx *sqlx.Tx, freeTime *entity.FreeTime) (*entity.FreeTime, error) {
+	stmt, err := tx.PrepareNamedContext(ctx, `
 		INSERT INTO free_times
 		(
 			date_free_time_id,

@@ -144,7 +144,7 @@ func CreateFreeTime(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 			EndMinute:      endFreeTimeMinute,
 		}
 		// free-timeの作成
-		_, err = gateway.CreateFreeTime(ctx, db, freeTime)
+		_, err = gateway.CreateFreeTime(ctx, tx, freeTime)
 		if err != nil {
 			return c.Render(http.StatusOK, "create-free-time", map[string]interface{}{
 				"error_message": entity.ERR_INTERNAL_SERVER_ERROR,
