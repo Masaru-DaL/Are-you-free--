@@ -14,6 +14,7 @@ var (
 	ErrSQLExecFailed         = errors.New("failed to exec sql")
 	ErrSQLResultNotDesired   = errors.New("sql result is not desired")
 	ErrSQLLastInsertIdFailed = errors.New("failed to get last inserted id")
+	ErrSQLTransactionError   = errors.New("sql transaction error")
 )
 
 /* Errors for user */

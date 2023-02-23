@@ -3,6 +3,7 @@ package dbutils
 import (
 	"context"
 	"fmt"
+	"src/internal/entity"
 
 	"github.com/glassonion1/logz"
 	"github.com/jmoiron/sqlx"

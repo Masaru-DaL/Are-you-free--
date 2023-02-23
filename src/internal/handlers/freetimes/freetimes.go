@@ -8,7 +8,6 @@ import (
 	"src/internal/entity"
 	"src/internal/entity/validation"
 	"src/internal/repository"
-	"src/internal/repository/gateway"
 	"src/internal/utils/num"
 	"src/internal/utils/strings"
 	"src/internal/utils/time"
@@ -115,7 +114,7 @@ func CreateFreeTime(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 				Day:    day,
 			}
 			// DateFreeTimeの作成
-			dateFreeTime, err = gateway.CreateDateFreeTime(ctx, db, dateFreeTime)
+			dateFreeTime, err = repository.CreateDateFreeTime(ctx, db, dateFreeTime)
 			if err != nil {
 				return c.Render(http.StatusOK, "create-free-time", map[string]interface{}{
 					"error_message": entity.ERR_INTERNAL_SERVER_ERROR,
@@ -144,7 +143,7 @@ func CreateFreeTime(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 			EndMinute:      endFreeTimeMinute,
 		}
 		// free-timeの作成
-		_, err = gateway.CreateFreeTime(ctx, tx, freeTime)
+		_, err = repository.CreateFreeTime(ctx, db, freeTime)
 		if err != nil {
 			return c.Render(http.StatusOK, "create-free-time", map[string]interface{}{
 				"error_message": entity.ERR_INTERNAL_SERVER_ERROR,
