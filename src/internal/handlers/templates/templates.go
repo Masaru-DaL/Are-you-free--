@@ -91,9 +91,9 @@ func CreateFreeTimePage(c echo.Context) error {
 	jpWeekday := time.GetWeekdayByDate(year, month, day)
 
 	return c.Render(http.StatusOK, "create-free-time", map[string]interface{}{
-		"year":          year,
-		"month":         month,
-		"day":           day,
+		"year_str":      yearStr,
+		"month_str":     monthStr,
+		"day_str":       dayStr,
 		"weekday":       jpWeekday,
 		"error_message": nil,
 	})

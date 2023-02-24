@@ -55,8 +55,8 @@ func ListFreeTime(ctx context.Context, db *sqlx.DB, dateFreeTimeID int) ([]*enti
 }
 
 /* date_free_timeを作成する */
-func CreateDateFreeTime(ctx context.Context, db *sqlx.DB, dateFreeTime *entity.DateFreeTime) (*entity.DateFreeTime, error) {
-	stmt, err := db.PrepareNamedContext(ctx, `
+func CreateDateFreeTime(ctx context.Context, tx *sqlx.Tx, dateFreeTime *entity.DateFreeTime) (*entity.DateFreeTime, error) {
+	stmt, err := tx.PrepareNamedContext(ctx, `
 		INSERT INTO date_free_times
 		(
 			user_id,
@@ -106,8 +106,8 @@ func CreateDateFreeTime(ctx context.Context, db *sqlx.DB, dateFreeTime *entity.D
 }
 
 /* free_timeを作成する */
-func CreateFreeTime(ctx context.Context, db *sqlx.DB, freeTime *entity.FreeTime) (*entity.FreeTime, error) {
-	stmt, err := db.PrepareNamedContext(ctx, `
+func CreateFreeTime(ctx context.Context, tx *sqlx.Tx, freeTime *entity.FreeTime) (*entity.FreeTime, error) {
+	stmt, err := tx.PrepareNamedContext(ctx, `
 		INSERT INTO free_times
 		(
 			date_free_time_id,
@@ -156,4 +156,42 @@ func CreateFreeTime(ctx context.Context, db *sqlx.DB, freeTime *entity.FreeTime)
 	freeTime.ID = int(id)
 
 	return freeTime, err
+}
+
+/* free-timeの更新 */
+func UpdateFreeTime(ctx context.Context, tx *sqlx.Tx, freeTime *entity.FreeTime) (*entity.FreeTime, error) {
+	stmt, err := tx.PrepareNamedContext(ctx, `
+	UPDATE
+		free_times
+	SET
+		start_hour = :start_hour,
+		start_minute = :start_minute,
+		end_hour = :end_hour,
+		end_minute = :end_minute
+	WHERE
+		date_time_id = :date_time_id
+	`)
+
+	if err != nil {
+		return nil, entity.ErrSQLCreateStmt
+	}
+
+	defer func() {
+		if closeErr := stmt.Close(); closeErr != nil {
+			err = closeErr
+		}
+	}()
+
+	result, err := stmt.Exec(freeTime)
+	if err != nil {
+		return nil, entity.ErrSQLExecFailed
+	}
+
+	cnt, err := result.RowsAffected()
+	if err != nil || cnt > 1 {
+		return nil, entity.ErrSQLResultNotDesired
+	}
+
+	return freeTime, nil
+
 }
