@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"net/http"
 	"src/internal/config"
+	"src/internal/entity"
 	"src/internal/utils/strings"
 	"src/internal/utils/times"
 	"strconv"
-	"time"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/labstack/echo-contrib/session"
@@ -41,10 +41,6 @@ func TopPage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 		fmt.Println(sess)
 		fmt.Println(sess.Values)
 		fmt.Println(sess.ID)
-
-		fmt.Println("----------2222222222----------")
-		now := time.Now().Format("2006-01-02")
-		fmt.Println(now)
 
 		jpWeekday := times.GetWeekdayByDate(2023, 2, 20)
 		fmt.Println(jpWeekday)
@@ -92,6 +88,13 @@ func CreateFreeTimePage(c echo.Context) error {
 			"day":           nil,
 			"weekday":       nil,
 			"error_message": nil,
+		})
+	}
+	// 入力された日付情報が現在の日付より後かチェックする
+	isAfterCurrentTime := times.IsAfterCurrentTime(dateStr)
+	if !isAfterCurrentTime {
+		return c.Render(http.StatusOK, "create-free-time", map[string]interface{}{
+			"error_message": entity.ERR_CHOICE_DATE,
 		})
 	}
 

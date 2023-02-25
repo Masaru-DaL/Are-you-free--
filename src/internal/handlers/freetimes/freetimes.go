@@ -11,6 +11,7 @@ import (
 	"src/internal/repository"
 	"src/internal/test/time"
 	"src/internal/utils/strings"
+	"src/internal/utils/times"
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
@@ -62,6 +63,13 @@ func CreateFreeTime(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 			if !isDateString {
 				return c.Render(http.StatusOK, "create-free-time", map[string]interface{}{
 					"error_message": entity.ERR_INTERNAL_SERVER_ERROR,
+				})
+			}
+			// 入力された日付情報が現在の日付より後かチェックする
+			isAfterCurrentTime := times.IsAfterCurrentTime(dateStr)
+			if !isAfterCurrentTime {
+				return c.Render(http.StatusOK, "create-free-time", map[string]interface{}{
+					"error_message": entity.ERR_CHOICE_DATE,
 				})
 			}
 			yearStr, monthStr, dayStr = strings.SplitDateByHyphen(dateStr)
