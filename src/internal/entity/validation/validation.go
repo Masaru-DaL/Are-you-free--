@@ -38,10 +38,10 @@ func IsMonthDayString(dateStr string) bool {
 
 // 時間が送られて来た場合の文字列をチェックする
 func IsTimeString(dateStr string) bool {
-	lenMonthAndDayStr := 2
+	lenTimeStr := 2
 	timeRegex := regexp.MustCompile(`^[0-9]+$`)
 
-	if len(dateStr) == lenMonthAndDayStr {
+	if len(dateStr) == lenTimeStr {
 		return timeRegex.MatchString(dateStr)
 	} else {
 		return false

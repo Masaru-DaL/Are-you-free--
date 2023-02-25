@@ -6,8 +6,9 @@ import (
 	"net/http"
 	"src/internal/config"
 	"src/internal/utils/strings"
-	"src/internal/utils/time"
+	"src/internal/utils/times"
 	"strconv"
+	"time"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/labstack/echo-contrib/session"
@@ -35,7 +36,17 @@ func LoginPage(c echo.Context) error {
 /* トップページ */
 func TopPage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		jpWeekday := time.GetWeekdayByDate(2023, 2, 20)
+		sess, _ := session.Get(config.Config.Session.Name, c)
+		fmt.Println("----------1111111111----------")
+		fmt.Println(sess)
+		fmt.Println(sess.Values)
+		fmt.Println(sess.ID)
+
+		fmt.Println("----------2222222222----------")
+		now := time.Now().Format("2006-01-02")
+		fmt.Println(now)
+
+		jpWeekday := times.GetWeekdayByDate(2023, 2, 20)
 		fmt.Println(jpWeekday)
 
 		return c.Render(http.StatusOK, "index", "")
@@ -53,7 +64,7 @@ func FreeTimePage(c echo.Context) error {
 	year, _ := strconv.Atoi(yearStr)
 	month, _ := strconv.Atoi(monthStr)
 	day, _ := strconv.Atoi(dayStr)
-	weekday := time.GetWeekdayByDate(year, month, day)
+	weekday := times.GetWeekdayByDate(year, month, day)
 
 	return c.Render(http.StatusOK, "free-time", map[string]interface{}{
 		"year":      year,
@@ -88,7 +99,7 @@ func CreateFreeTimePage(c echo.Context) error {
 	year, _ := strconv.Atoi(yearStr)
 	month, _ := strconv.Atoi(monthStr)
 	day, _ := strconv.Atoi(dayStr)
-	jpWeekday := time.GetWeekdayByDate(year, month, day)
+	jpWeekday := times.GetWeekdayByDate(year, month, day)
 
 	return c.Render(http.StatusOK, "create-free-time", map[string]interface{}{
 		"year_str":      yearStr,

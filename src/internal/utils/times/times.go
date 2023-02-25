@@ -1,4 +1,4 @@
-package time
+package times
 
 import (
 	"src/internal/entity"
@@ -40,7 +40,7 @@ func IsCreateFreeTime(startFreeTimeHour int, startFreeTimeMinute int, endFreeTim
 			// 開始時刻（分）が既存の開始時刻（分）以上の場合
 			if startFreeTimeMinute >= ft.EndMinute {
 				result = true
-				continue
+				break
 			}
 		}
 		// 終了時刻が既存の開始時刻以下
@@ -48,7 +48,7 @@ func IsCreateFreeTime(startFreeTimeHour int, startFreeTimeMinute int, endFreeTim
 			// 終了時刻（分）が既存の終了時刻（分）以下の場合
 			if endFreeTimeMinute <= ft.StartMinute {
 				result = true
-				continue
+				break
 			}
 		}
 
@@ -57,4 +57,9 @@ func IsCreateFreeTime(startFreeTimeHour int, startFreeTimeMinute int, endFreeTim
 	}
 
 	return result
+}
+
+func IsAfterCurrentTime(dateTime string) bool {
+	currentTime := time.Now().Format("2006-01-02")
+
 }

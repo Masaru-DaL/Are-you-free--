@@ -32,7 +32,7 @@ func UnAuthenticatedMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 		}
 
 		// セッションIDが空ではなかった場合
-		if session.Values["UserID"] != "" {
+		if session.ID != "" {
 			return HandleUnAuthError(c)
 		}
 
@@ -48,12 +48,9 @@ func AuthenticatedMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 		if err != nil {
 			return HandleAuthError(c)
 		}
-		// // セッションIDが空だった場合
-		// if sess.ID == "" {
-		// 	return HandleAuthError(c)
-		// }
+
 		// セッションの値が空だった場合
-		if sess.Values["UserID"] == "" {
+		if sess.ID == "" {
 			return HandleAuthError(c)
 		}
 
