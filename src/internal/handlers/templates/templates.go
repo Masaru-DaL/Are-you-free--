@@ -4,9 +4,10 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	"src/internal/config"
+	"src/internal/entity"
+	"src/internal/infra/config"
 	"src/internal/utils/strings"
-	"src/internal/utils/time"
+	"src/internal/utils/times"
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
@@ -35,7 +36,13 @@ func LoginPage(c echo.Context) error {
 /* トップページ */
 func TopPage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		jpWeekday := time.GetWeekdayByDate(2023, 2, 20)
+		sess, _ := session.Get(config.Config.Session.Name, c)
+		fmt.Println("----------1111111111----------")
+		fmt.Println(sess)
+		fmt.Println(sess.Values)
+		fmt.Println(sess.ID)
+
+		jpWeekday := times.GetWeekdayByDate(2023, 2, 20)
 		fmt.Println(jpWeekday)
 
 		return c.Render(http.StatusOK, "index", "")
@@ -53,7 +60,7 @@ func FreeTimePage(c echo.Context) error {
 	year, _ := strconv.Atoi(yearStr)
 	month, _ := strconv.Atoi(monthStr)
 	day, _ := strconv.Atoi(dayStr)
-	weekday := time.GetWeekdayByDate(year, month, day)
+	weekday := times.GetWeekdayByDate(year, month, day)
 
 	return c.Render(http.StatusOK, "free-time", map[string]interface{}{
 		"year":      year,
@@ -83,12 +90,19 @@ func CreateFreeTimePage(c echo.Context) error {
 			"error_message": nil,
 		})
 	}
+	// 入力された日付情報が現在の日付より後かチェックする
+	isAfterCurrentTime := times.IsAfterCurrentTime(dateStr)
+	if !isAfterCurrentTime {
+		return c.Render(http.StatusOK, "create-free-time", map[string]interface{}{
+			"error_message": entity.ERR_CHOICE_DATE,
+		})
+	}
 
 	yearStr, monthStr, dayStr := strings.SplitDateByHyphen(dateStr)
 	year, _ := strconv.Atoi(yearStr)
 	month, _ := strconv.Atoi(monthStr)
 	day, _ := strconv.Atoi(dayStr)
-	jpWeekday := time.GetWeekdayByDate(year, month, day)
+	jpWeekday := times.GetWeekdayByDate(year, month, day)
 
 	return c.Render(http.StatusOK, "create-free-time", map[string]interface{}{
 		"year_str":      yearStr,

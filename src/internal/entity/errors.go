@@ -30,5 +30,6 @@ const (
 	ERR_NO_USER                  = "入力された情報が存在しません。"
 	ERR_INPUT_LIMIT_OVER         = "制限文字数以内で入力してください。"
 	ERR_CHOICE_TIME              = "作成するfree-timeの指定に誤りがあります。"
+	ERR_CHOICE_DATE              = "現在の日付より前に作成することはできません。"
 	ERR_ALREADY_FREE_TIME_EXISTS = "設定された時刻の範囲に既にfree-timeが存在します。"
 )

@@ -38,7 +38,7 @@ var Config = struct {
 func LoadConfigForYaml() {
 	err := configor.New(&configor.Config{
 		AutoReload: true,
-	}).Load(&Config, "internal/config/config.yaml")
+	}).Load(&Config, "internal/infra/config/config.yaml")
 
 	if err != nil {
 		panic("ERROR: config cannot be loaded")

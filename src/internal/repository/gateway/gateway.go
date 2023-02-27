@@ -10,6 +10,10 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
+// --------------------------------
+// 		Get
+// --------------------------------
+
 /* user_idとdateの条件に合う情報を、date_free_timesから1件取得する */
 func GetDateFreeTime(ctx context.Context, db *sqlx.DB, userID int, year int, month int, day int) (*entity.DateFreeTime, error) {
 	var dateFreeTime entity.DateFreeTime
@@ -34,6 +38,64 @@ func GetDateFreeTime(ctx context.Context, db *sqlx.DB, userID int, year int, mon
 	return &dateFreeTime, nil
 }
 
+/*
+ユーザ情報の1件取得
+指定したユーザIDのユーザの情報を取得する
+*/
+func GetUserByUserID(ctx context.Context, db *sqlx.DB, userID int) (*entity.User, error) {
+	var user entity.User
+
+	err := db.GetContext(ctx, &user, `
+		SELECT
+			*
+		FROM
+			users
+		WHERE
+			id = ?
+	`, userID)
+
+	if errors.Is(err, sql.ErrNoRows) {
+		return nil, entity.ErrNoUserFound
+	}
+
+	if err != nil {
+		return nil, entity.ErrSQLGetFailed
+	}
+
+	return &user, err
+}
+
+/*
+ユーザ情報の1件取得
+指定した名前のユーザの情報を取得する
+*/
+func GetUserByUsername(ctx context.Context, db *sqlx.DB, username string) (*entity.User, error) {
+	var user entity.User
+
+	err := db.GetContext(ctx, &user, `
+		SELECT
+			*
+		FROM
+			users
+		WHERE
+			name = ?
+	`, username)
+
+	if errors.Is(err, sql.ErrNoRows) {
+		return nil, entity.ErrNoUserFound
+	}
+
+	if err != nil {
+		return nil, entity.ErrSQLGetFailed
+	}
+
+	return &user, err
+}
+
+// --------------------------------
+// 		List
+// --------------------------------
+
 /* date_free_time_idの条件に合う情報を、free-timesから全て取得する */
 func ListFreeTime(ctx context.Context, db *sqlx.DB, dateFreeTimeID int) ([]*entity.FreeTime, error) {
 	var freeTimes []*entity.FreeTime
@@ -53,6 +115,10 @@ func ListFreeTime(ctx context.Context, db *sqlx.DB, dateFreeTimeID int) ([]*enti
 
 	return freeTimes, nil
 }
+
+// --------------------------------
+// 		Create
+// --------------------------------
 
 /* date_free_timeを作成する */
 func CreateDateFreeTime(ctx context.Context, tx *sqlx.Tx, dateFreeTime *entity.DateFreeTime) (*entity.DateFreeTime, error) {
@@ -158,6 +224,59 @@ func CreateFreeTime(ctx context.Context, tx *sqlx.Tx, freeTime *entity.FreeTime)
 	return freeTime, err
 }
 
+/* ユーザの新規作成 */
+func CreateUser(ctx context.Context, db *sqlx.DB, user *entity.User) (*entity.User, error) {
+	stmt, err := db.PrepareNamedContext(ctx, `
+		INSERT INTO users
+		(
+			name,
+			password,
+			email
+		)
+		VALUES
+		(
+			:name,
+			:password,
+			:email
+		)
+	`)
+
+	if err != nil {
+		log.Println(err)
+		return nil, entity.ErrSQLCreateStmt
+	}
+
+	defer func() {
+		if closeErr := stmt.Close(); closeErr != nil {
+			err = closeErr
+		}
+	}()
+
+	result, err := stmt.Exec(user)
+	if err != nil {
+		log.Println(err)
+		return nil, entity.ErrSQLExecFailed
+	}
+
+	cnt, err := result.RowsAffected()
+	if err != nil || cnt != 1 {
+		return nil, entity.ErrSQLResultNotDesired
+	}
+
+	id, err := result.LastInsertId()
+	if err != nil {
+		return nil, entity.ErrSQLLastInsertIdFailed
+	}
+
+	user.ID = int(id)
+
+	return user, err
+}
+
+// --------------------------------
+// 		Update
+// --------------------------------
+
 /* free-timeの更新 */
 func UpdateFreeTime(ctx context.Context, tx *sqlx.Tx, freeTime *entity.FreeTime) (*entity.FreeTime, error) {
 	stmt, err := tx.PrepareNamedContext(ctx, `
@@ -195,3 +314,7 @@ func UpdateFreeTime(ctx context.Context, tx *sqlx.Tx, freeTime *entity.FreeTime)
 	return freeTime, nil
 
 }
+
+// --------------------------------
+// 		Delete
+// --------------------------------

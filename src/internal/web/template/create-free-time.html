@@ -63,8 +63,8 @@
           <h1 class="text-center">CREATE SCHEDULE</h1>
         </div>
         <div class="subject-to">
-          {{ if and .year .month .day .weekday }}
-          <h1 class="text-center">{{ .year }}/{{ .month }}/{{ .day }}（{{ .weekday }}）</h1>
+          {{ if and .year_str .month_str .day_str .weekday }}
+          <h1 class="text-center">{{ .year_str }}/{{ .month_str }}/{{ .day_str }}（{{ .weekday }}）</h1>
           {{ else }}
           <p class="text-center">日付が選択されていません。</p>
           {{ end }}
@@ -88,31 +88,35 @@
           <p class="error-message-in-create-free-time font-21 text-darkred">{{ .error_message }}</p>
           <p class="error-message-in-create-free-time font-21 text-skyblue">{{ .success_message }}</p>
 
-          {{ if and .year .month .day .weekday }}
+          {{ if and .year_str .month_str .day_str .weekday }}
           <p class="ml-100 font-18 text-dimgrey">上記の日付でスケジュールを作成します。（日付の選択は不要です）<br>フリータイムの開始/終了時刻を選択してください。</p>
           {{ else }}
           <p class="ml-100 font-18 text-dimgrey">日付が選択されていないため日付の指定が必要です。<br>日付/フリータイムの開始/終了時刻を選択してください。</p>
           {{ end }}
 
           <div class="select-time-wrapper ml-100">
+
             <form
               action="/free-time/create"
               method="POST"
               class="flex items-end"
               >
+              {{ if and .year_str .month_str .day_str .weekday }}
+              {{ else }}
               <label for="date" class="calendar-label-create-page">
                 <input class="input-calendar" type="date" name="date" id="today-input" style="font-size:1.2em" />
               </label>
+              {{ end }}
               <input type="hidden" value="{{.year_str}}" name="year" />
               <input type="hidden" value="{{.month_str}}" name="month" />
               <input type="hidden" value="{{.day_str}}" name="day" />
               <div class="select-time-start-hour-area flex">
                 <select class="select-time-start-hour font-17" name="start-free-time-hour">
                   <option value="">開始時刻</option>
-                  <option value="6">06</option>
-                  <option value="7">07</option>
-                  <option value="8">08</option>
-                  <option value="9">09</option>
+                  <option value="06">06</option>
+                  <option value="07">07</option>
+                  <option value="08">08</option>
+                  <option value="09">09</option>
                   <option value="10">10</option>
                   <option value="11">11</option>
                   <option value="12">12</option>
@@ -140,10 +144,10 @@
               <div class="select-time-end-hour-area">
                 <select class="select-time-end-hour font-17" name="end-free-time-hour">
                   <option value="">終了時刻</option>
-                  <option value="6">06</option>
-                  <option value="7">07</option>
-                  <option value="8">08</option>
-                  <option value="9">09</option>
+                  <option value="06">06</option>
+                  <option value="07">07</option>
+                  <option value="08">08</option>
+                  <option value="09">09</option>
                   <option value="10">10</option>
                   <option value="11">11</option>
                   <option value="12">12</option>

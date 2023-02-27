@@ -2,8 +2,8 @@ package repository
 
 import (
 	"context"
-	"src/internal/db/dbutils"
 	"src/internal/entity"
+	"src/internal/infra/dbutils"
 	"src/internal/repository/gateway"
 
 	"github.com/glassonion1/logz"

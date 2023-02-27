@@ -2,12 +2,12 @@ package account
 
 import (
 	"context"
-	"database/sql"
 	"errors"
 	"net/http"
-	"src/internal/auth"
-	"src/internal/config"
 	"src/internal/entity"
+	"src/internal/entity/validation"
+	"src/internal/infra/auth"
+	"src/internal/infra/config"
 	"src/internal/repository/gateway"
 	"src/internal/utils/strings"
 
@@ -62,7 +62,7 @@ func Signup(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 			})
 		}
 		// メールアドレスの形式が正しくない場合
-		checkResultSignupEmail := strings.CheckEmailFormat(signupEmail)
+		checkResultSignupEmail := validation.IsEmail(signupEmail)
 		if !checkResultSignupEmail {
 			return c.Render(http.StatusOK, "signup", map[string]interface{}{
 				"error_message": entity.ERR_FAILED_EMAIL_FORMAT,
@@ -126,24 +126,27 @@ func Login(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 		// ユーザ名をチェックする
 		user, err := gateway.GetUserByUsername(ctx, db, loginName)
 		// ユーザ情報が取得できなかった場合
-		if err == sql.ErrNoRows {
+		if errors.Is(err, entity.ErrNoUserFound) {
 			return c.Render(http.StatusOK, "login", map[string]interface{}{
 				"error_message": entity.ERR_NO_USER,
 			})
 			// パスワードをチェックする
-		} else {
-			// 入力されたパスワードをユーザ情報のパスワードと比較する
-			err = auth.CompareHashAndPlaintext(user.Password, loginPassword)
-			// err != nil => DBに存在していない
-			if err != nil {
-				return c.Render(http.StatusOK, "login", map[string]interface{}{
-					"error_message": entity.ERR_ALREADY_USER_EXISTS,
-				})
-			}
+		} else if err != nil {
+			return c.Render(http.StatusOK, "login", map[string]interface{}{
+				"error_message": entity.ERR_INTERNAL_SERVER_ERROR,
+			})
+		}
+
+		// 入力されたパスワードをユーザ情報のパスワードと比較する
+		err = auth.CompareHashAndPlaintext(user.Password, loginPassword)
+		// err != nil => DBに存在していない
+		if err != nil {
+			return c.Render(http.StatusOK, "login", map[string]interface{}{
+				"error_message": entity.ERR_NO_USER,
+			})
 		}
 
 		/* Checking input data from form Here. */
-
 		/* Setting up a user's session From here. */
 		sess, _ := session.Get(config.Config.Session.Name, c)
 		sess.Options = &sessions.Options{

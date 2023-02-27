@@ -1,4 +1,4 @@
-package time
+package times
 
 import (
 	"src/internal/entity"
@@ -40,7 +40,7 @@ func IsCreateFreeTime(startFreeTimeHour int, startFreeTimeMinute int, endFreeTim
 			// 開始時刻（分）が既存の開始時刻（分）以上の場合
 			if startFreeTimeMinute >= ft.EndMinute {
 				result = true
-				continue
+				break
 			}
 		}
 		// 終了時刻が既存の開始時刻以下
@@ -48,7 +48,7 @@ func IsCreateFreeTime(startFreeTimeHour int, startFreeTimeMinute int, endFreeTim
 			// 終了時刻（分）が既存の終了時刻（分）以下の場合
 			if endFreeTimeMinute <= ft.StartMinute {
 				result = true
-				continue
+				break
 			}
 		}
 
@@ -57,4 +57,27 @@ func IsCreateFreeTime(startFreeTimeHour int, startFreeTimeMinute int, endFreeTim
 	}
 
 	return result
+}
+
+// 入力された年月日が現在の年月日以降かチェックする
+func IsAfterCurrentTime(dateTime string) bool {
+	var timeFormat = "2006-01-02"
+
+	parsedTime, _ := time.Parse(timeFormat, dateTime)
+	timeNow := time.Now()
+	timeTokyo, _ := time.LoadLocation("Asia/Tokyo")
+	currentTimeTokyo := timeNow.In(timeTokyo)
+
+	dateData := time.Date(parsedTime.Year(), parsedTime.Month(), parsedTime.Day(), 0, 0, 0, 0, time.Local)
+	currentDateData := time.Date(currentTimeTokyo.Year(), currentTimeTokyo.Month(), currentTimeTokyo.Day(), 0, 0, 0, 0, time.Local)
+
+	timeDiff := dateData.Sub(currentDateData)
+
+	if timeDiff == 0 {
+		return true
+	} else if timeDiff > 0 {
+		return true
+	} else {
+		return false
+	}
 }
