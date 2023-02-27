@@ -1,7 +1,7 @@
 package main
 
 import (
-	"src/internal/db"
+	"src/internal/infra/db"
 	"src/internal/route"
 
 	"github.com/labstack/echo/v4"

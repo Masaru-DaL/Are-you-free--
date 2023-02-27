@@ -1,7 +1,7 @@
 package auth
 
 import (
-	"src/internal/config"
+	"src/internal/infra/config"
 
 	"github.com/gorilla/sessions"
 	"github.com/labstack/echo-contrib/session"

@@ -4,9 +4,10 @@ import (
 	"context"
 	"errors"
 	"net/http"
-	"src/internal/auth"
-	"src/internal/config"
 	"src/internal/entity"
+	"src/internal/entity/validation"
+	"src/internal/infra/auth"
+	"src/internal/infra/config"
 	"src/internal/repository/gateway"
 	"src/internal/utils/strings"
 
@@ -61,7 +62,7 @@ func Signup(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 			})
 		}
 		// メールアドレスの形式が正しくない場合
-		checkResultSignupEmail := strings.CheckEmailFormat(signupEmail)
+		checkResultSignupEmail := validation.IsEmail(signupEmail)
 		if !checkResultSignupEmail {
 			return c.Render(http.StatusOK, "signup", map[string]interface{}{
 				"error_message": entity.ERR_FAILED_EMAIL_FORMAT,

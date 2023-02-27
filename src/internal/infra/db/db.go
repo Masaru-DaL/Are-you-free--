@@ -2,7 +2,7 @@ package db
 
 import (
 	"log"
-	"src/internal/config"
+	"src/internal/infra/config"
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/mattn/go-sqlite3"

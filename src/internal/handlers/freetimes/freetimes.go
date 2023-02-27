@@ -1,13 +1,12 @@
-package gateway
+package freetimes
 
 import (
 	"context"
 	"errors"
 	"fmt"
 	"net/http"
-	"src/internal/config"
 	"src/internal/entity"
-	"src/internal/entity/validation"
+	"src/internal/infra/config"
 	"src/internal/repository"
 	"src/internal/test/time"
 	"src/internal/utils/strings"
@@ -36,9 +35,9 @@ func CreateFreeTime(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 		// 日付が事前に入力されていた場合
 		if yearStr != "" || monthStr != "" || dayStr != "" {
 			// 別々に送られてきた日付文字列をチェックする
-			isYearStr := validation.IsYearString(yearStr)
-			isMonthStr := validation.IsMonthDayString(monthStr)
-			isDayStr := validation.IsMonthDayString(dayStr)
+			isYearStr := strings.IsYearString(yearStr)
+			isMonthStr := strings.IsMonthDayString(monthStr)
+			isDayStr := strings.IsMonthDayString(dayStr)
 			if !isYearStr || !isMonthStr || !isDayStr {
 				return c.Render(http.StatusOK, "create-free-time", map[string]interface{}{
 					"error_message": entity.ERR_INTERNAL_SERVER_ERROR,
@@ -59,7 +58,7 @@ func CreateFreeTime(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 				})
 			}
 			// 日付文字列をチェックする
-			isDateString := validation.IsDateString(dateStr)
+			isDateString := strings.IsDateString(dateStr)
 			if !isDateString {
 				return c.Render(http.StatusOK, "create-free-time", map[string]interface{}{
 					"error_message": entity.ERR_INTERNAL_SERVER_ERROR,
@@ -88,10 +87,10 @@ func CreateFreeTime(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 			})
 		}
 		// 入力された時間文字列をチェックする
-		isStartFreeTimeHourStr := validation.IsTimeString(startFreeTimeHourStr)
-		isStartFreeTimeMinuteStr := validation.IsTimeString(startFreeTimeMinuteStr)
-		isEndFreeTimeHourStr := validation.IsTimeString(endFreeTimeHourStr)
-		isEndFreeTimeMinuteStr := validation.IsTimeString(endFreeTimeMinuteStr)
+		isStartFreeTimeHourStr := strings.IsTimeString(startFreeTimeHourStr)
+		isStartFreeTimeMinuteStr := strings.IsTimeString(startFreeTimeMinuteStr)
+		isEndFreeTimeHourStr := strings.IsTimeString(endFreeTimeHourStr)
+		isEndFreeTimeMinuteStr := strings.IsTimeString(endFreeTimeMinuteStr)
 		if !isStartFreeTimeHourStr || !isStartFreeTimeMinuteStr || !isEndFreeTimeHourStr || !isEndFreeTimeMinuteStr {
 			return c.Render(http.StatusOK, "create-free-time", map[string]interface{}{
 				"error_message": entity.ERR_INTERNAL_SERVER_ERROR,

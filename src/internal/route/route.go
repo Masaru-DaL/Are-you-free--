@@ -4,12 +4,12 @@ import (
 	"context"
 	"html/template"
 	"io"
-	"src/internal/auth"
-	"src/internal/config"
 	"src/internal/handlers/account"
 	"src/internal/handlers/admin"
-	freetime "src/internal/handlers/freetimes"
+	"src/internal/handlers/freetimes"
 	"src/internal/handlers/templates"
+	"src/internal/infra/auth"
+	"src/internal/infra/config"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/labstack/echo/v4"
@@ -48,7 +48,7 @@ func InitRouting(db *sqlx.DB) *echo.Echo {
 	e.GET("/free-time/:date", templates.FreeTimePage)
 	e.GET("/free-times", templates.FreeTimesPage)
 	e.GET("/free-time/create", templates.CreateFreeTimePage)
-	e.POST("/free-time/create", freetime.CreateFreeTime(ctx, db))
+	e.POST("/free-time/create", freetimes.CreateFreeTime(ctx, db))
 	e.GET("/free-time/update", templates.UpdateFreeTimePage)
 	e.GET("/share/with_someone", templates.ShareWithSomeonePage)
 	e.GET("/share/with_me", templates.ShareWithMePage)
