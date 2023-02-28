@@ -11,7 +11,9 @@ import (
 	"github.com/pkg/errors"
 )
 
-// date-free-time: 指定した日付のfree-timeを全て格納して返す
+/* 現在の日付からもっとも最新の日付を取得する */
+
+/* 指定した日付のfree-timeを全て格納して返す */
 func GetDateFreeTime(ctx context.Context, db *sqlx.DB, userID int, year int, month int, day int) (*entity.DateFreeTime, error) {
 	// ユーザの指定した日付の情報を取得する
 	dateFreeTime, err := gateway.GetDateFreeTime(ctx, db, userID, year, month, day)

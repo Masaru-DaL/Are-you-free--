@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"src/internal/entity"
 	"src/internal/infra/config"
+	"src/internal/repository/gateway"
 	"src/internal/utils/strings"
 	"src/internal/utils/times"
 	"strconv"
@@ -37,13 +38,19 @@ func LoginPage(c echo.Context) error {
 func TopPage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		sess, _ := session.Get(config.Config.Session.Name, c)
-		fmt.Println("----------1111111111----------")
-		fmt.Println(sess)
-		fmt.Println(sess.Values)
-		fmt.Println(sess.ID)
+		// fmt.Println("----------1111111111----------")
+		// fmt.Println(sess)
+		// fmt.Println(sess.Values)
+		// fmt.Println(sess.ID)
+		userID := sess.Values[config.Config.Session.KeyName].(int)
+		fmt.Println(userID)
 
-		jpWeekday := times.GetWeekdayByDate(2023, 2, 20)
-		fmt.Println(jpWeekday)
+		// jpWeekday := times.GetWeekdayByDate(2023, 2, 20)
+		// fmt.Println(jpWeekday)
+
+		dateFreeTimes, _ := gateway.ListDateFreeTime(ctx, db, userID)
+		fmt.Println(dateFreeTimes)
+		fmt.Println(dateFreeTimes[0])
 
 		return c.Render(http.StatusOK, "index", "")
 	}
