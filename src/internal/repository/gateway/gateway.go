@@ -28,10 +28,12 @@ func GetDateFreeTime(ctx context.Context, db *sqlx.DB, userID int, year int, mon
 	`, userID, year, month, day)
 
 	if errors.Is(err, sql.ErrNoRows) {
+
 		return nil, entity.ErrNoFreeTimeFound
 	}
 
 	if err != nil {
+
 		return nil, entity.ErrSQLGetFailed
 	}
 
@@ -55,10 +57,12 @@ func GetUserByUserID(ctx context.Context, db *sqlx.DB, userID int) (*entity.User
 	`, userID)
 
 	if errors.Is(err, sql.ErrNoRows) {
+
 		return nil, entity.ErrNoUserFound
 	}
 
 	if err != nil {
+
 		return nil, entity.ErrSQLGetFailed
 	}
 
@@ -82,10 +86,12 @@ func GetUserByUsername(ctx context.Context, db *sqlx.DB, username string) (*enti
 	`, username)
 
 	if errors.Is(err, sql.ErrNoRows) {
+
 		return nil, entity.ErrNoUserFound
 	}
 
 	if err != nil {
+
 		return nil, entity.ErrSQLGetFailed
 	}
 
@@ -110,6 +116,7 @@ func ListFreeTime(ctx context.Context, db *sqlx.DB, dateFreeTimeID int) ([]*enti
 	`, dateFreeTimeID)
 
 	if err != nil {
+
 		return nil, entity.ErrSQLGetFailed
 	}
 
@@ -141,6 +148,7 @@ func CreateDateFreeTime(ctx context.Context, tx *sqlx.Tx, dateFreeTime *entity.D
 
 	if err != nil {
 		log.Println(err)
+
 		return nil, entity.ErrSQLCreateStmt
 	}
 
@@ -153,16 +161,19 @@ func CreateDateFreeTime(ctx context.Context, tx *sqlx.Tx, dateFreeTime *entity.D
 	result, err := stmt.Exec(dateFreeTime)
 	if err != nil {
 		log.Println(err)
+
 		return nil, entity.ErrSQLExecFailed
 	}
 
 	cnt, err := result.RowsAffected()
 	if err != nil || cnt != 1 {
+
 		return nil, entity.ErrSQLResultNotDesired
 	}
 
 	id, err := result.LastInsertId()
 	if err != nil {
+
 		return nil, entity.ErrSQLLastInsertIdFailed
 	}
 
@@ -194,6 +205,7 @@ func CreateFreeTime(ctx context.Context, tx *sqlx.Tx, freeTime *entity.FreeTime)
 
 	if err != nil {
 		log.Println(err)
+
 		return nil, entity.ErrSQLCreateStmt
 	}
 
@@ -206,16 +218,19 @@ func CreateFreeTime(ctx context.Context, tx *sqlx.Tx, freeTime *entity.FreeTime)
 	result, err := stmt.Exec(freeTime)
 	if err != nil {
 		log.Println(err)
+
 		return nil, entity.ErrSQLExecFailed
 	}
 
 	cnt, err := result.RowsAffected()
 	if err != nil || cnt != 1 {
+
 		return nil, entity.ErrSQLResultNotDesired
 	}
 
 	id, err := result.LastInsertId()
 	if err != nil {
+
 		return nil, entity.ErrSQLLastInsertIdFailed
 	}
 
@@ -243,6 +258,7 @@ func CreateUser(ctx context.Context, db *sqlx.DB, user *entity.User) (*entity.Us
 
 	if err != nil {
 		log.Println(err)
+
 		return nil, entity.ErrSQLCreateStmt
 	}
 
@@ -255,16 +271,19 @@ func CreateUser(ctx context.Context, db *sqlx.DB, user *entity.User) (*entity.Us
 	result, err := stmt.Exec(user)
 	if err != nil {
 		log.Println(err)
+
 		return nil, entity.ErrSQLExecFailed
 	}
 
 	cnt, err := result.RowsAffected()
 	if err != nil || cnt != 1 {
+
 		return nil, entity.ErrSQLResultNotDesired
 	}
 
 	id, err := result.LastInsertId()
 	if err != nil {
+
 		return nil, entity.ErrSQLLastInsertIdFailed
 	}
 
@@ -292,6 +311,7 @@ func UpdateFreeTime(ctx context.Context, tx *sqlx.Tx, freeTime *entity.FreeTime)
 	`)
 
 	if err != nil {
+
 		return nil, entity.ErrSQLCreateStmt
 	}
 
@@ -303,16 +323,17 @@ func UpdateFreeTime(ctx context.Context, tx *sqlx.Tx, freeTime *entity.FreeTime)
 
 	result, err := stmt.Exec(freeTime)
 	if err != nil {
+
 		return nil, entity.ErrSQLExecFailed
 	}
 
 	cnt, err := result.RowsAffected()
 	if err != nil || cnt > 1 {
+
 		return nil, entity.ErrSQLResultNotDesired
 	}
 
 	return freeTime, nil
-
 }
 
 // --------------------------------
