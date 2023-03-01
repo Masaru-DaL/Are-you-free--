@@ -12,12 +12,25 @@ import (
 )
 
 /* 現在の日付からもっとも最新の日付を取得する */
+func GetLatestDateFreeTime(ctx context.Context, db *sqlx.DB, userID int) (*entity.DateFreeTime, error) {
+	// date-free-timeを全件取得する
+	dateFreeTimes, err := gateway.ListDateFreeTime(ctx, db, userID)
+	if err != nil {
+
+		return nil, entity.ErrNoDateFreeTimeFound
+	}
+
+	latestDateFreeTime := dateFreeTimes[0]
+
+	return latestDateFreeTime, err
+}
 
 /* 指定した日付のfree-timeを全て格納して返す */
 func GetDateFreeTime(ctx context.Context, db *sqlx.DB, userID int, year int, month int, day int) (*entity.DateFreeTime, error) {
 	// ユーザの指定した日付の情報を取得する
 	dateFreeTime, err := gateway.GetDateFreeTime(ctx, db, userID, year, month, day)
 	if err != nil {
+
 		return nil, entity.ErrNoDateFreeTimeFound
 	}
 

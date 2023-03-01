@@ -116,18 +116,20 @@ func CreateFreeTime(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 			// DateFreeTime構造体で値を設定する
 			dateFreeTime = &entity.DateFreeTime{
 				UserID: userID,
-				Year:   year,
-				Month:  month,
-				Day:    day,
+				Year:   yearStr,
+				Month:  monthStr,
+				Day:    dayStr,
 			}
 			// DateFreeTimeの作成
 			dateFreeTime, err = repository.CreateDateFreeTime(ctx, db, dateFreeTime)
 			if err != nil {
+
 				return c.Render(http.StatusOK, "create-free-time", map[string]interface{}{
 					"error_message": entity.ERR_INTERNAL_SERVER_ERROR,
 				})
 			}
 		} else if err != nil {
+
 			return c.Render(http.StatusOK, "create-free-time", map[string]interface{}{
 				"error_message": entity.ERR_INTERNAL_SERVER_ERROR,
 			})

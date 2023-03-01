@@ -13,9 +13,9 @@ type User struct {
 type DateFreeTime struct {
 	ID        int         `db:"id"`
 	UserID    int         `db:"user_id"`
-	Year      int         `db:"year"`
-	Month     int         `db:"month"`
-	Day       int         `db:"day"`
+	Year      string      `db:"year"`
+	Month     string      `db:"month"`
+	Day       string      `db:"day"`
 	CreatedAt string      `db:"created_at"`
 	UpdatedAt string      `db:"updated_at"`
 	FreeTimes []*FreeTime `db:"free_times"`

@@ -48,9 +48,10 @@ func TopPage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 		// jpWeekday := times.GetWeekdayByDate(2023, 2, 20)
 		// fmt.Println(jpWeekday)
 
-		dateFreeTimes, _ := gateway.ListDateFreeTime(ctx, db, userID)
-		fmt.Println(dateFreeTimes)
-		fmt.Println(dateFreeTimes[0])
+		// latestFreeTime, _ := repository.GetLatestDateFreeTime(ctx, db, userID)
+		// fmt.Println(latestFreeTime)
+		nearestDateFreeTime, _ := gateway.GetNearestDateFreeTime(ctx, db, 1)
+		fmt.Println(nearestDateFreeTime)
 
 		return c.Render(http.StatusOK, "index", "")
 	}

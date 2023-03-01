@@ -14,13 +14,54 @@ import (
 // 		Get
 // --------------------------------
 
+func GetNearestDateFreeTime(ctx context.Context, db *sqlx.DB, userID int) (*entity.DateFreeTime, error) {
+	var dateFreeTime entity.DateFreeTime
+
+	err := db.GetContext(ctx, &dateFreeTime, `
+		SELECT
+			id,
+			user_id,
+			year,
+			month,
+			day,
+			created_at,
+			updated_at
+		FROM
+			date_free_times
+		WHERE
+			user_id = ? AND
+			julianday(year || '-' || month || '-' || day) >= julianday(date('now', 'localtime', 'start of day')))
+		ORDER BY
+			ABS((julianday(year || '-' || month || '-' || day) - julianday(date('now', 'localtime', 'start of day')))) ASC
+			LIMIT 1;
+	`, userID)
+
+	if errors.Is(err, sql.ErrNoRows) {
+
+		return nil, entity.ErrNoFreeTimeFound
+	}
+
+	if err != nil {
+
+		return nil, entity.ErrSQLGetFailed
+	}
+
+	return &dateFreeTime, nil
+}
+
 /* user_idとdateの条件に合う情報を、date_free_timesから1件取得する */
 func GetDateFreeTime(ctx context.Context, db *sqlx.DB, userID int, year int, month int, day int) (*entity.DateFreeTime, error) {
 	var dateFreeTime entity.DateFreeTime
 
 	err := db.GetContext(ctx, &dateFreeTime, `
 		SELECT
-			id, user_id, year, month, day, created_at, updated_at
+			id,
+			user_id,
+			year,
+			month,
+			day,
+			created_at,
+			updated_at
 		FROM
 			date_free_times
 		WHERE
@@ -57,6 +98,8 @@ func ListDateFreeTime(ctx context.Context, db *sqlx.DB, userID int) ([]*entity.D
 			date_free_times
 		WHERE
 			user_id = ?
+		ORDER BY
+			year, month, day
 	`, userID)
 
 	if err != nil {
