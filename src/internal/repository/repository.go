@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"fmt"
 	"src/internal/entity"
 	"src/internal/infra/dbutils"
 	"src/internal/repository/gateway"
@@ -26,23 +27,36 @@ func GetLatestDateFreeTime(ctx context.Context, db *sqlx.DB, userID int) (*entit
 }
 
 /* 指定した日付のfree-timeを全て格納して返す */
-func GetDateFreeTime(ctx context.Context, db *sqlx.DB, userID int, year int, month int, day int) (*entity.DateFreeTime, error) {
+func GetDateFreeTime(ctx context.Context, db *sqlx.DB, userID int, year string, month string, day string) (*entity.DateFreeTime, error) {
 	// ユーザの指定した日付の情報を取得する
 	dateFreeTime, err := gateway.GetDateFreeTime(ctx, db, userID, year, month, day)
 	if err != nil {
 
 		return nil, entity.ErrNoDateFreeTimeFound
 	}
+	fmt.Println("----------2222222222----------")
+	fmt.Println(dateFreeTime)
 
 	// 指定した日付の全てのfree-timeを取得する
 	freeTimes, err := gateway.ListFreeTime(ctx, db, dateFreeTime.ID)
 	if err != nil {
 		return nil, entity.ErrNoFreeTimeFound
 	}
+	fmt.Println(freeTimes)
 
 	dateFreeTime.FreeTimes = append(dateFreeTime.FreeTimes, freeTimes...)
 
 	return dateFreeTime, nil
+}
+
+func GetUserByUserID(ctx context.Context, db *sqlx.DB, userID int) (*entity.User, error) {
+	user, err := gateway.GetUserByUserID(ctx, db, userID)
+	if err != nil {
+
+		return nil, entity.ErrNoUserFound
+	}
+
+	return user, nil
 }
 
 // date-free-timeを作成（トランザクション対応）

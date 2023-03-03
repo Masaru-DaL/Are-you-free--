@@ -110,7 +110,7 @@ func CreateFreeTime(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 		}
 
 		// 入力された日付のdate-free-timeを取得する
-		dateFreeTime, err := repository.GetDateFreeTime(ctx, db, userID, year, month, day)
+		dateFreeTime, err := repository.GetDateFreeTime(ctx, db, userID, yearStr, monthStr, dayStr)
 		// 指定した日付のdate-free-timeが存在しなかった場合
 		if errors.Is(err, entity.ErrNoDateFreeTimeFound) {
 			// DateFreeTime構造体で値を設定する

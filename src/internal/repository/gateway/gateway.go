@@ -14,6 +14,37 @@ import (
 // 		Get
 // --------------------------------
 
+func GetDateFreeTimeByID(ctx context.Context, db *sqlx.DB, dateFreeTimeID int) (*entity.DateFreeTime, error) {
+	var dateFreeTime entity.DateFreeTime
+
+	err := db.GetContext(ctx, &dateFreeTime, `
+		SELECT
+			id,
+			user_id,
+			year,
+			month,
+			day,
+			created_at,
+			updated_at
+		FROM
+			date_free_times
+		WHERE
+			id = ?
+	`, dateFreeTimeID)
+
+	if errors.Is(err, sql.ErrNoRows) {
+
+		return nil, entity.ErrNoFreeTimeFound
+	}
+
+	if err != nil {
+
+		return nil, entity.ErrSQLGetFailed
+	}
+
+	return &dateFreeTime, nil
+}
+
 func GetNearestDateFreeTime(ctx context.Context, db *sqlx.DB, userID int) (*entity.DateFreeTime, error) {
 	var dateFreeTime entity.DateFreeTime
 
@@ -29,8 +60,7 @@ func GetNearestDateFreeTime(ctx context.Context, db *sqlx.DB, userID int) (*enti
 		FROM
 			date_free_times
 		WHERE
-			user_id = ? AND
-			julianday(year || '-' || month || '-' || day) >= julianday(date('now', 'localtime', 'start of day')))
+			user_id = ?
 		ORDER BY
 			ABS((julianday(year || '-' || month || '-' || day) - julianday(date('now', 'localtime', 'start of day')))) ASC
 			LIMIT 1;
@@ -50,7 +80,7 @@ func GetNearestDateFreeTime(ctx context.Context, db *sqlx.DB, userID int) (*enti
 }
 
 /* user_idとdateの条件に合う情報を、date_free_timesから1件取得する */
-func GetDateFreeTime(ctx context.Context, db *sqlx.DB, userID int, year int, month int, day int) (*entity.DateFreeTime, error) {
+func GetDateFreeTime(ctx context.Context, db *sqlx.DB, userID int, year string, month string, day string) (*entity.DateFreeTime, error) {
 	var dateFreeTime entity.DateFreeTime
 
 	err := db.GetContext(ctx, &dateFreeTime, `
@@ -119,7 +149,13 @@ func GetUserByUserID(ctx context.Context, db *sqlx.DB, userID int) (*entity.User
 
 	err := db.GetContext(ctx, &user, `
 		SELECT
-			*
+			id,
+			name,
+			password,
+			email,
+			is_admin,
+			created_at,
+			updated_at
 		FROM
 			users
 		WHERE

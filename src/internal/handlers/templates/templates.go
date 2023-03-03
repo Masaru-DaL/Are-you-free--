@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"src/internal/entity"
 	"src/internal/infra/config"
+	"src/internal/repository"
 	"src/internal/repository/gateway"
 	"src/internal/utils/strings"
 	"src/internal/utils/times"
@@ -38,22 +39,16 @@ func LoginPage(c echo.Context) error {
 func TopPage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		sess, _ := session.Get(config.Config.Session.Name, c)
-		// fmt.Println("----------1111111111----------")
-		// fmt.Println(sess)
-		// fmt.Println(sess.Values)
-		// fmt.Println(sess.ID)
 		userID := sess.Values[config.Config.Session.KeyName].(int)
 		fmt.Println(userID)
-
-		// jpWeekday := times.GetWeekdayByDate(2023, 2, 20)
-		// fmt.Println(jpWeekday)
-
-		// latestFreeTime, _ := repository.GetLatestDateFreeTime(ctx, db, userID)
-		// fmt.Println(latestFreeTime)
-		nearestDateFreeTime, _ := gateway.GetNearestDateFreeTime(ctx, db, 1)
+		nearestDateFreeTime, _ := gateway.GetNearestDateFreeTime(ctx, db, userID)
 		fmt.Println(nearestDateFreeTime)
+		fmt.Println(nearestDateFreeTime.ID)
 
-		return c.Render(http.StatusOK, "index", "")
+		// return c.Render(http.StatusOK, "index", "")
+		return c.Render(http.StatusOK, "index", map[string]interface{}{
+			"nearest_date_free_time_id": nearestDateFreeTime.ID,
+		})
 	}
 }
 
@@ -62,23 +57,44 @@ func TopPage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 // }
 
 /* スケジュールページ */
-func FreeTimePage(c echo.Context) error {
-	dateStr := c.QueryParam("date")
-	yearStr, monthStr, dayStr := strings.SplitDateByHyphen(dateStr)
-	year, _ := strconv.Atoi(yearStr)
-	month, _ := strconv.Atoi(monthStr)
-	day, _ := strconv.Atoi(dayStr)
-	weekday := times.GetWeekdayByDate(year, month, day)
+func FreeTimePage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		sess, _ := session.Get(config.Config.Session.Name, c)
+		userID := sess.Values[config.Config.Session.KeyName].(int)
 
-	return c.Render(http.StatusOK, "free-time", map[string]interface{}{
-		"year":      year,
-		"month":     month,
-		"day":       day,
-		"year_str":  yearStr,
-		"month_str": monthStr,
-		"day_str":   dayStr,
-		"weekday":   weekday,
-	})
+		user, _ := repository.GetUserByUserID(ctx, db, userID)
+
+		dateFreeTimeIDStr := c.Param("id")
+		dateFreeTimeID, _ := strconv.Atoi(dateFreeTimeIDStr)
+
+		dateFreeTime, _ := gateway.GetDateFreeTimeByID(ctx, db, dateFreeTimeID)
+		year, _ := strconv.Atoi(dateFreeTime.Year)
+		month, _ := strconv.Atoi(dateFreeTime.Month)
+		day, _ := strconv.Atoi(dateFreeTime.Day)
+		dateFreeTime, _ = repository.GetDateFreeTime(ctx, db, userID, dateFreeTime.Year, dateFreeTime.Month, dateFreeTime.Day)
+
+		// dateStr := c.QueryParam("date")
+		// yearStr, monthStr, dayStr := strings.SplitDateByHyphen(dateStr)
+		weekday := times.GetWeekdayByDate(year, month, day)
+		fmt.Println("----------1111111111----------")
+		fmt.Println(dateFreeTime)
+
+		fmt.Println(userID)
+		fmt.Println(year)
+		fmt.Println(month)
+		fmt.Println(day)
+		return c.Render(http.StatusOK, "free-time", map[string]interface{}{
+			"year":           year,
+			"month":          month,
+			"day":            day,
+			"year_str":       dateFreeTime.Year,
+			"month_str":      dateFreeTime.Month,
+			"day_str":        dateFreeTime.Day,
+			"weekday":        weekday,
+			"user":           user,
+			"date_free_time": dateFreeTime,
+		})
+	}
 }
 
 /* スケジュールページ */
