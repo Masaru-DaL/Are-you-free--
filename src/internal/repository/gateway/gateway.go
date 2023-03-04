@@ -14,6 +14,30 @@ import (
 // 		Get
 // --------------------------------
 
+/* ユーザがfree-timeを共有している人を全て取得する */
+func ListSharedUser(ctx context.Context, db *sqlx.DB, userID int) ([]*entity.User, error) {
+	var sharedUsers []*entity.User
+
+	err := db.SelectContext(ctx, &sharedUsers, `
+		SELECT
+			user_id,
+			shared_user_id,
+			created_at,
+			updated_at
+		FROM
+			shares
+		WHERE
+			user_id = ?
+	`, userID)
+
+	if err != nil {
+
+		return nil, entity.ErrSQLGetFailed
+	}
+
+	return sharedUsers, nil
+}
+
 func GetDateFreeTimeByID(ctx context.Context, db *sqlx.DB, dateFreeTimeID int) (*entity.DateFreeTime, error) {
 	var dateFreeTime entity.DateFreeTime
 

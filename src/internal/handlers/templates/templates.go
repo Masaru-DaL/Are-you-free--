@@ -2,6 +2,7 @@ package templates
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/http"
 	"src/internal/entity"
@@ -44,7 +45,12 @@ func TopPage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 		fmt.Println("sessValues: ", sess.Values)
 		userID := sess.Values[config.Config.Session.KeyName].(int)
 		fmt.Println(userID)
-		nearestDateFreeTime, _ := gateway.GetNearestDateFreeTime(ctx, db, userID)
+		nearestDateFreeTime, err := gateway.GetNearestDateFreeTime(ctx, db, userID)
+		if errors.Is(err, entity.ErrNoFreeTimeFound) {
+			return c.Render(http.StatusOK, "index", map[string]interface{}{
+				"nearest_date_free_time_id": nil,
+			})
+		}
 		fmt.Println(nearestDateFreeTime)
 		fmt.Println(nearestDateFreeTime.ID)
 

@@ -177,6 +177,8 @@ func Logout(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 		}
 		// セッション情報から値の削除
 		sess.Values["UserID"] = ""
+		sess.Values[config.Config.Session.KeyName] = ""
+
 		sess.Options.MaxAge = -1
 		// 新たに別のセッションIDに変更する
 		newSessID := securecookie.GenerateRandomKey(32)
