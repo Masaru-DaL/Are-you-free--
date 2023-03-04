@@ -38,7 +38,10 @@ func LoginPage(c echo.Context) error {
 /* トップページ */
 func TopPage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
+		fmt.Println("session")
 		sess, _ := session.Get(config.Config.Session.Name, c)
+		fmt.Println("sessID: ", sess.ID)
+		fmt.Println("sessValues: ", sess.Values)
 		userID := sess.Values[config.Config.Session.KeyName].(int)
 		fmt.Println(userID)
 		nearestDateFreeTime, _ := gateway.GetNearestDateFreeTime(ctx, db, userID)
@@ -98,8 +101,16 @@ func FreeTimePage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 }
 
 /* スケジュールページ */
-func FreeTimesPage(c echo.Context) error {
-	return c.Render(http.StatusOK, "free-times", "")
+func FreeTimesPage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		sess, _ := session.Get(config.Config.Session.Name, c)
+		userID := sess.Values[config.Config.Session.KeyName].(int)
+		nearestDateFreeTime, _ := gateway.GetNearestDateFreeTime(ctx, db, userID)
+
+		return c.Render(http.StatusOK, "free-times", map[string]interface{}{
+			"nearest_date_free_time_id": nearestDateFreeTime.ID,
+		})
+	}
 }
 
 /* スケジュール作成ページ */
@@ -138,38 +149,94 @@ func CreateFreeTimePage(c echo.Context) error {
 }
 
 /* スケジュール更新ページ */
-func UpdateFreeTimePage(c echo.Context) error {
-	return c.Render(http.StatusOK, "update-free-time", "")
+func UpdateFreeTimePage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		sess, _ := session.Get(config.Config.Session.Name, c)
+		userID := sess.Values[config.Config.Session.KeyName].(int)
+		nearestDateFreeTime, _ := gateway.GetNearestDateFreeTime(ctx, db, userID)
+
+		return c.Render(http.StatusOK, "update-free-time", map[string]interface{}{
+			"nearest_date_free_time_id": nearestDateFreeTime.ID,
+		})
+	}
 }
 
 /* 自身のスケジュールを共有するページ */
-func ShareWithSomeonePage(c echo.Context) error {
-	return c.Render(http.StatusOK, "share-with-someone", "")
+func ShareWithSomeonePage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		sess, _ := session.Get(config.Config.Session.Name, c)
+		userID := sess.Values[config.Config.Session.KeyName].(int)
+		nearestDateFreeTime, _ := gateway.GetNearestDateFreeTime(ctx, db, userID)
+
+		return c.Render(http.StatusOK, "share-with-someone", map[string]interface{}{
+			"nearest_date_free_time_id": nearestDateFreeTime.ID,
+		})
+	}
 }
 
 /* 相手のスケジュールを共有するページ */
-func ShareWithMePage(c echo.Context) error {
-	return c.Render(http.StatusOK, "share-with-me", "")
+func ShareWithMePage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		sess, _ := session.Get(config.Config.Session.Name, c)
+		userID := sess.Values[config.Config.Session.KeyName].(int)
+		nearestDateFreeTime, _ := gateway.GetNearestDateFreeTime(ctx, db, userID)
+
+		return c.Render(http.StatusOK, "share-with-me", map[string]interface{}{
+			"nearest_date_free_time_id": nearestDateFreeTime.ID,
+		})
+	}
 }
 
 /* アカウントページ */
-func AccountPage(c echo.Context) error {
-	return c.Render(http.StatusOK, "account", "")
+func AccountPage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		sess, _ := session.Get(config.Config.Session.Name, c)
+		userID := sess.Values[config.Config.Session.KeyName].(int)
+		nearestDateFreeTime, _ := gateway.GetNearestDateFreeTime(ctx, db, userID)
+
+		return c.Render(http.StatusOK, "account", map[string]interface{}{
+			"nearest_date_free_time_id": nearestDateFreeTime.ID,
+		})
+	}
 }
 
 /* アカウント編集ページ */
-func AccountEditPage(c echo.Context) error {
-	return c.Render(http.StatusOK, "account-edit", "")
+func AccountEditPage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		sess, _ := session.Get(config.Config.Session.Name, c)
+		userID := sess.Values[config.Config.Session.KeyName].(int)
+		nearestDateFreeTime, _ := gateway.GetNearestDateFreeTime(ctx, db, userID)
+
+		return c.Render(http.StatusOK, "account-edit", map[string]interface{}{
+			"nearest_date_free_time_id": nearestDateFreeTime.ID,
+		})
+	}
 }
 
 /* パスワードリセットページ */
-func PasswordResetPage(c echo.Context) error {
-	return c.Render(http.StatusOK, "password-reset", "")
+func PasswordResetPage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		sess, _ := session.Get(config.Config.Session.Name, c)
+		userID := sess.Values[config.Config.Session.KeyName].(int)
+		nearestDateFreeTime, _ := gateway.GetNearestDateFreeTime(ctx, db, userID)
+
+		return c.Render(http.StatusOK, "password-reset", map[string]interface{}{
+			"nearest_date_free_time_id": nearestDateFreeTime.ID,
+		})
+	}
 }
 
 /* パスワード再登録ページ */
-func PasswordReRegistrationPage(c echo.Context) error {
-	return c.Render(http.StatusOK, "password-re-registration", "")
+func PasswordReRegistrationPage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		sess, _ := session.Get(config.Config.Session.Name, c)
+		userID := sess.Values[config.Config.Session.KeyName].(int)
+		nearestDateFreeTime, _ := gateway.GetNearestDateFreeTime(ctx, db, userID)
+
+		return c.Render(http.StatusOK, "password-re-registration", map[string]interface{}{
+			"nearest_date_free_time_id": nearestDateFreeTime.ID,
+		})
+	}
 }
 
 /* htmlのformにもPUTやDELETEにも対応させるメソッド */

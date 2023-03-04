@@ -104,11 +104,11 @@
 
       <div class="content-wrapper flex">
         <div class="select-schedule-left-area border-none border-right flex-col">
-          <div class="items-center">
-            <div class="content-left flex justify-center items-center m-auto">
-              <p class="font-24">{{.user.Name}}</p>
+          <div class="username-wrapper items-center">
+            <div class="username flex justify-center items-center m-auto">
+              <p class="font-22">{{.user.Name}}</p>
             </div>
-            <div class="content-left flex justify-center items-center m-auto">
+            <div class="username flex justify-center items-center m-auto">
               <p>Kaoru12345</p>
             </div>
             <div class="content-left flex justify-center items-center m-auto">
@@ -132,14 +132,10 @@
           </div>
         </div>
         <div class="content-right-area flex-col">
-
           <canvas id="free-time" width="600" height="400" class="free-time-canvas"></canvas>
         </div>
-
       </div>
     </main>
-
-
   </body>
   <script type="text/javascript">
     var free_times = JSON.parse('{{marshal .date_free_time.FreeTimes}}');

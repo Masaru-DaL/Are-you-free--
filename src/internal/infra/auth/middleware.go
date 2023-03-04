@@ -50,7 +50,7 @@ func AuthenticatedMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 		}
 
 		// セッションの値が空だった場合
-		if sess.ID == "" {
+		if sess.Values[config.Config.Session.KeyName] == nil {
 			return HandleAuthError(c)
 		}
 

@@ -48,20 +48,20 @@ func InitRouting(db *sqlx.DB) *echo.Echo {
 	// e.GET("index", templates.TopPage)
 
 	// e.GET("/index", templates.TopPage)
-	e.GET("/free-time/:id", templates.FreeTimePage(ctx, db))
-	e.GET("/free-times", templates.FreeTimesPage)
-	e.GET("/free-time/create", templates.CreateFreeTimePage)
-	e.POST("/free-time/create", freetimes.CreateFreeTime(ctx, db))
-	e.GET("/free-time/update", templates.UpdateFreeTimePage)
-	e.GET("/share/with_someone", templates.ShareWithSomeonePage)
-	e.GET("/share/with_me", templates.ShareWithMePage)
+	authenticatedGroup.GET("free-time/:id", templates.FreeTimePage(ctx, db))
+	authenticatedGroup.GET("free-times", templates.FreeTimesPage(ctx, db))
+	authenticatedGroup.GET("free-time/create", templates.CreateFreeTimePage)
+	authenticatedGroup.POST("free-time/create", freetimes.CreateFreeTime(ctx, db))
+	authenticatedGroup.GET("free-time/update", templates.UpdateFreeTimePage(ctx, db))
+	authenticatedGroup.GET("share/with_someone", templates.ShareWithSomeonePage(ctx, db))
+	authenticatedGroup.GET("share/with_me", templates.ShareWithMePage(ctx, db))
 	// e.GET("/account/", templates.AccountPage)
-	authenticatedGroup.GET("account/", templates.AccountPage)
-	authenticatedGroup.GET("account/edit", templates.AccountEditPage)
+	authenticatedGroup.GET("account/", templates.AccountPage(ctx, db))
+	authenticatedGroup.GET("account/edit", templates.AccountEditPage(ctx, db))
 	authenticatedGroup.GET("logout", account.Logout(ctx, db))
 
-	e.GET("/account/password_reset", templates.PasswordResetPage)
-	e.GET("/account/password_re_registration", templates.PasswordReRegistrationPage)
+	authenticatedGroup.GET("account/password_reset", templates.PasswordResetPage(ctx, db))
+	authenticatedGroup.GET("account/password_re_registration", templates.PasswordReRegistrationPage(ctx, db))
 
 	return e
 }

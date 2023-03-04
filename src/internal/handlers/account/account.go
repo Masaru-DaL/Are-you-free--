@@ -3,6 +3,7 @@ package account
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/http"
 	"src/internal/entity"
 	"src/internal/entity/validation"
@@ -137,6 +138,7 @@ func Login(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 			})
 		}
 
+		fmt.Println("------------------------")
 		// 入力されたパスワードをユーザ情報のパスワードと比較する
 		err = auth.CompareHashAndPlaintext(user.Password, loginPassword)
 		// err != nil => DBに存在していない
