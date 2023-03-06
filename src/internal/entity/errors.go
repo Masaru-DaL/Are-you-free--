@@ -32,4 +32,5 @@ const (
 	ERR_CHOICE_TIME              = "作成するfree-timeの指定に誤りがあります。"
 	ERR_CHOICE_DATE              = "現在の日付より前に作成することはできません。"
 	ERR_ALREADY_FREE_TIME_EXISTS = "設定された時刻の範囲に既にfree-timeが存在します。"
+	ERR_NO_DATE_FREE_TIME_FOUND  = "ERR_NO_DATE_FREE_TIME_FOUND"
 )

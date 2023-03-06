@@ -87,7 +87,13 @@ func FreeTimePage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 			dateFreeTimeID, _ := strconv.Atoi(dateFreeTimeIDStr)
 
 			dateFreeTime, err := repository.GetDateFreeTimeByID(ctx, db, dateFreeTimeID)
-			if err != nil {
+			if errors.Is(err, entity.ErrNoDateFreeTimeFound) {
+				logz.Errorf(ctx, entity.ERR_NO_DATE_FREE_TIME_FOUND)
+
+				return c.Render(http.StatusInternalServerError, "free-time", map[string]interface{}{
+					"error_message": "free-timeが作成されていません。",
+				})
+			} else if err != nil {
 				logz.Errorf(ctx, entity.ERR_INTERNAL_SERVER_ERROR)
 
 				return c.Render(http.StatusInternalServerError, "free-time", map[string]interface{}{
@@ -244,12 +250,12 @@ func ShareWithMePage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 /* アカウントページ */
 func AccountPage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		// sess, _ := session.Get(config.Config.Session.Name, c)
-		// userID := sess.Values[config.Config.Session.KeyName].(string)
-		// nearestDateFreeTime, _ := gateway.GetNearestDateFreeTime(ctx, db, userID)
+		sess, _ := session.Get(config.Config.Session.Name, c)
+		userID := sess.Values[config.Config.Session.KeyName].(string)
+		nearestDateFreeTime, _ := gateway.GetNearestDateFreeTime(ctx, db, userID)
 
 		return c.Render(http.StatusOK, "account", map[string]interface{}{
-			// "nearest_date_free_time_id": nearestDateFreeTime.ID,
+			"nearest_date_free_time_id": nearestDateFreeTime.ID,
 		})
 	}
 }
