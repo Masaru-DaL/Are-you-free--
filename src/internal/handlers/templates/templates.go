@@ -13,6 +13,7 @@ import (
 	"src/internal/utils/times"
 	"strconv"
 
+	"github.com/glassonion1/logz"
 	"github.com/jmoiron/sqlx"
 	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
@@ -43,10 +44,16 @@ func TopPage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 		sess, _ := session.Get(config.Config.Session.Name, c)
 		fmt.Println("sessID: ", sess.ID)
 		fmt.Println("sessValues: ", sess.Values)
-		userID := sess.Values[config.Config.Session.KeyName].(int)
+		userID := sess.Values[config.Config.Session.KeyName].(string)
 		fmt.Println(userID)
 		nearestDateFreeTime, err := gateway.GetNearestDateFreeTime(ctx, db, userID)
 		if errors.Is(err, entity.ErrNoFreeTimeFound) {
+
+			return c.Render(http.StatusOK, "index", map[string]interface{}{
+				"nearest_date_free_time_id": nil,
+			})
+		} else if err != nil {
+
 			return c.Render(http.StatusOK, "index", map[string]interface{}{
 				"nearest_date_free_time_id": nil,
 			})
@@ -68,41 +75,85 @@ func TopPage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 /* スケジュールページ */
 func FreeTimePage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
+		// セッションからユーザ情報を取得する
 		sess, _ := session.Get(config.Config.Session.Name, c)
-		userID := sess.Values[config.Config.Session.KeyName].(int)
-
+		userID := sess.Values[config.Config.Session.KeyName].(string)
 		user, _ := repository.GetUserByUserID(ctx, db, userID)
 
-		dateFreeTimeIDStr := c.Param("id")
-		dateFreeTimeID, _ := strconv.Atoi(dateFreeTimeIDStr)
+		switch c.Request().Method {
+		case "GET":
+			// date_free_time_idを指定し、dateFreeTimeを取得する
+			dateFreeTimeIDStr := c.Param("id")
+			dateFreeTimeID, _ := strconv.Atoi(dateFreeTimeIDStr)
 
-		dateFreeTime, _ := gateway.GetDateFreeTimeByID(ctx, db, dateFreeTimeID)
-		year, _ := strconv.Atoi(dateFreeTime.Year)
-		month, _ := strconv.Atoi(dateFreeTime.Month)
-		day, _ := strconv.Atoi(dateFreeTime.Day)
-		dateFreeTime, _ = repository.GetDateFreeTime(ctx, db, userID, dateFreeTime.Year, dateFreeTime.Month, dateFreeTime.Day)
+			dateFreeTime, err := repository.GetDateFreeTimeByID(ctx, db, dateFreeTimeID)
+			if err != nil {
+				logz.Errorf(ctx, entity.ERR_INTERNAL_SERVER_ERROR)
 
-		// dateStr := c.QueryParam("date")
-		// yearStr, monthStr, dayStr := strings.SplitDateByHyphen(dateStr)
-		weekday := times.GetWeekdayByDate(year, month, day)
-		fmt.Println("----------1111111111----------")
-		fmt.Println(dateFreeTime)
+				return c.Render(http.StatusInternalServerError, "free-time", map[string]interface{}{
+					"error_message": "エラーが発生しました。",
+				})
+			}
 
-		fmt.Println(userID)
-		fmt.Println(year)
-		fmt.Println(month)
-		fmt.Println(day)
-		return c.Render(http.StatusOK, "free-time", map[string]interface{}{
-			"year":           year,
-			"month":          month,
-			"day":            day,
-			"year_str":       dateFreeTime.Year,
-			"month_str":      dateFreeTime.Month,
-			"day_str":        dateFreeTime.Day,
-			"weekday":        weekday,
-			"user":           user,
-			"date_free_time": dateFreeTime,
-		})
+			// 自身が共有している人の中間テーブルを取得する
+			userIDsharedUserID, err := repository.ListUserIDSharedUserID(ctx, db, userID)
+			if err != nil {
+				logz.Errorf(ctx, entity.ERR_INTERNAL_SERVER_ERROR)
+
+				return c.Render(http.StatusInternalServerError, "free-time", map[string]interface{}{
+					"error_message": "エラーが発生しました。",
+				})
+			}
+
+			// ユーザが共有しているユーザ情報を全て取得する
+			sharedUsers, err := repository.ListSharedUser(ctx, db, userIDsharedUserID)
+			if err != nil {
+				logz.Errorf(ctx, entity.ERR_INTERNAL_SERVER_ERROR)
+
+				return c.Render(http.StatusInternalServerError, "free-time", map[string]interface{}{
+					"error_message": "エラーが発生しました。",
+				})
+			}
+
+			// ユーザが共有しているユーザのdate-free-timeを全て取得する
+			var sharedDateFreeTimes []*entity.DateFreeTime
+			for _, us := range userIDsharedUserID {
+				dateFreeTime, err := repository.GetDateFreeTimeByUserIDAndDate(ctx, db, us.SharedUserID, dateFreeTime.Year, dateFreeTime.Month, dateFreeTime.Day)
+				if err != nil {
+					logz.Errorf(ctx, entity.ERR_INTERNAL_SERVER_ERROR)
+
+					return c.Render(http.StatusInternalServerError, "free-time", map[string]interface{}{
+						"error_message": "エラーが発生しました。",
+					})
+				}
+
+				sharedDateFreeTimes = append(sharedDateFreeTimes, dateFreeTime)
+			}
+
+			weekday := times.GetWeekdayByDate(dateFreeTime.Year, dateFreeTime.Month, dateFreeTime.Day)
+
+			return c.Render(http.StatusOK, "free-time", map[string]interface{}{
+				"year":                   dateFreeTime.Year,
+				"month":                  dateFreeTime.Month,
+				"day":                    dateFreeTime.Day,
+				"weekday":                weekday,
+				"user":                   user,
+				"date_free_time":         dateFreeTime,
+				"shared_users":           sharedUsers,
+				"shared_date_free_times": sharedDateFreeTimes,
+			})
+		case "POST":
+			date := c.FormValue("date")
+			// POSTリクエストの処理
+			return c.String(http.StatusOK, fmt.Sprintf("Date: %s", date))
+		default:
+			// サポートされていないHTTPメソッドの場合は、405 Method Not Allowedを返す
+			return c.NoContent(http.StatusMethodNotAllowed)
+
+			// dateStr := c.QueryParam("date")
+			// yearStr, monthStr, dayStr := strings.SplitDateByHyphen(dateStr)
+
+		}
 	}
 }
 
@@ -110,7 +161,7 @@ func FreeTimePage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 func FreeTimesPage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		sess, _ := session.Get(config.Config.Session.Name, c)
-		userID := sess.Values[config.Config.Session.KeyName].(int)
+		userID := sess.Values[config.Config.Session.KeyName].(string)
 		nearestDateFreeTime, _ := gateway.GetNearestDateFreeTime(ctx, db, userID)
 
 		return c.Render(http.StatusOK, "free-times", map[string]interface{}{
@@ -140,10 +191,7 @@ func CreateFreeTimePage(c echo.Context) error {
 	}
 
 	yearStr, monthStr, dayStr := strings.SplitDateByHyphen(dateStr)
-	year, _ := strconv.Atoi(yearStr)
-	month, _ := strconv.Atoi(monthStr)
-	day, _ := strconv.Atoi(dayStr)
-	jpWeekday := times.GetWeekdayByDate(year, month, day)
+	jpWeekday := times.GetWeekdayByDate(yearStr, monthStr, dayStr)
 
 	return c.Render(http.StatusOK, "create-free-time", map[string]interface{}{
 		"year_str":      yearStr,
@@ -158,7 +206,7 @@ func CreateFreeTimePage(c echo.Context) error {
 func UpdateFreeTimePage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		sess, _ := session.Get(config.Config.Session.Name, c)
-		userID := sess.Values[config.Config.Session.KeyName].(int)
+		userID := sess.Values[config.Config.Session.KeyName].(string)
 		nearestDateFreeTime, _ := gateway.GetNearestDateFreeTime(ctx, db, userID)
 
 		return c.Render(http.StatusOK, "update-free-time", map[string]interface{}{
@@ -171,7 +219,7 @@ func UpdateFreeTimePage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 func ShareWithSomeonePage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		sess, _ := session.Get(config.Config.Session.Name, c)
-		userID := sess.Values[config.Config.Session.KeyName].(int)
+		userID := sess.Values[config.Config.Session.KeyName].(string)
 		nearestDateFreeTime, _ := gateway.GetNearestDateFreeTime(ctx, db, userID)
 
 		return c.Render(http.StatusOK, "share-with-someone", map[string]interface{}{
@@ -184,7 +232,7 @@ func ShareWithSomeonePage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 func ShareWithMePage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		sess, _ := session.Get(config.Config.Session.Name, c)
-		userID := sess.Values[config.Config.Session.KeyName].(int)
+		userID := sess.Values[config.Config.Session.KeyName].(string)
 		nearestDateFreeTime, _ := gateway.GetNearestDateFreeTime(ctx, db, userID)
 
 		return c.Render(http.StatusOK, "share-with-me", map[string]interface{}{
@@ -196,12 +244,12 @@ func ShareWithMePage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 /* アカウントページ */
 func AccountPage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		sess, _ := session.Get(config.Config.Session.Name, c)
-		userID := sess.Values[config.Config.Session.KeyName].(int)
-		nearestDateFreeTime, _ := gateway.GetNearestDateFreeTime(ctx, db, userID)
+		// sess, _ := session.Get(config.Config.Session.Name, c)
+		// userID := sess.Values[config.Config.Session.KeyName].(string)
+		// nearestDateFreeTime, _ := gateway.GetNearestDateFreeTime(ctx, db, userID)
 
 		return c.Render(http.StatusOK, "account", map[string]interface{}{
-			"nearest_date_free_time_id": nearestDateFreeTime.ID,
+			// "nearest_date_free_time_id": nearestDateFreeTime.ID,
 		})
 	}
 }
@@ -210,7 +258,7 @@ func AccountPage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 func AccountEditPage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		sess, _ := session.Get(config.Config.Session.Name, c)
-		userID := sess.Values[config.Config.Session.KeyName].(int)
+		userID := sess.Values[config.Config.Session.KeyName].(string)
 		nearestDateFreeTime, _ := gateway.GetNearestDateFreeTime(ctx, db, userID)
 
 		return c.Render(http.StatusOK, "account-edit", map[string]interface{}{
@@ -223,7 +271,7 @@ func AccountEditPage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 func PasswordResetPage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		sess, _ := session.Get(config.Config.Session.Name, c)
-		userID := sess.Values[config.Config.Session.KeyName].(int)
+		userID := sess.Values[config.Config.Session.KeyName].(string)
 		nearestDateFreeTime, _ := gateway.GetNearestDateFreeTime(ctx, db, userID)
 
 		return c.Render(http.StatusOK, "password-reset", map[string]interface{}{
@@ -236,7 +284,7 @@ func PasswordResetPage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 func PasswordReRegistrationPage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		sess, _ := session.Get(config.Config.Session.Name, c)
-		userID := sess.Values[config.Config.Session.KeyName].(int)
+		userID := sess.Values[config.Config.Session.KeyName].(string)
 		nearestDateFreeTime, _ := gateway.GetNearestDateFreeTime(ctx, db, userID)
 
 		return c.Render(http.StatusOK, "password-re-registration", map[string]interface{}{

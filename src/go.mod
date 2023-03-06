@@ -4,6 +4,7 @@ go 1.19
 
 require (
 	github.com/glassonion1/logz v0.3.12
+	github.com/google/uuid v1.3.0
 	github.com/gorilla/securecookie v1.1.1
 	github.com/gorilla/sessions v1.2.1
 	github.com/jinzhu/configor v1.2.1

@@ -7,35 +7,45 @@ function drawCanvas() {
   const canvas = document.getElementById('free-time');
   canvas.style.position = "absolute";
   canvas.style.left = "260px";
-  canvas.style.top = "30px"
+  canvas.style.top = "40px"
 
   if (canvas.getContext) {
     const context = canvas.getContext('2d');
     const lineHeight = 60; // スケジュールの行間隔
     const radius = 15;
     const lineColor = "rgba(195, 128, 41, 0.9)"
-    // const fillColor = "rgba(0,100,0,0.3)";
-    // const fillColor = "rgba(0,100,0,0.3)";
     const fillColor = "rgba(212,225,245,0.7)";
 
     reset();
 
     function reset() {
       context.clearRect(0,0,canvas.width,canvas.height);
-      for (let i = 0; i < free_times.length; i++) {
-        console.log(free_times[i].StartHour)
-        console.log(free_times[i].StartMinute)
-        console.log(free_times[i].EndHour)
-        console.log(free_times[i].EndMinute)
 
+      // 自身のfree-timeを描画する
+      for (let i = 0; i < free_times.length; i++) {
         const x = 65 + ((free_times[i].StartHour - 6) * 65) + free_times[i].StartMinute;
         const y = lineHeight;
         const width = ((free_times[i].EndHour - free_times[i].StartHour) * 65) + free_times[i].EndMinute - free_times[i].StartMinute;
         drawFreeTime(x, y, width, lineHeight, radius, lineColor, fillColor);
       }
+
+      // 共有している人のfree-timeを描画する
+      for (let i = 0; i < shared_date_free_times.length; i++) {
+        const date_free_time = shared_date_free_times[i];
+        const free_times = date_free_time.FreeTimes;
+        console.log(free_times)
+
+        for (let j = 0; j < free_times.length; j++) {
+          const free_time = free_times[j];
+          const x = 65 + ((free_time.StartHour - 6) * 65) + free_time.StartMinute;
+          const y = lineHeight*(2+i)+((i+1)*20);
+          const width = ((free_time.EndHour - free_time.StartHour) * 65) + free_time.EndMinute - free_time.StartMinute;
+          drawFreeTime(x, y, width, lineHeight, radius, lineColor, fillColor);
+        }
+      }
     }
 
-    // スケジュールを描画する関数（角を丸める）
+    // free-timeを描画する関数
     function drawFreeTime(x, y, width, height, radius, lineColor, fillColor) {
       context.beginPath();
       context.lineWidth = 1;

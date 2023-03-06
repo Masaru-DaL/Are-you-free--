@@ -2,18 +2,18 @@
     create table
 /* ------------------------------- */
 CREATE TABLE users(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id VARCHAR(36) NOT NULL PRIMARY KEY,
         name CHAR(10) NOT NULL,
-        password CHAR(20) NOT NULL,
-        email VARCHAR(255) NOT NULL UNIQUE CHECK(email LIKE '%_@__%.__%'),
-        is_admin BOOLEAN DEFAULT 0,
+        password VARCHAR(255) NOT NULL,
+        email VARCHAR(191) NOT NULL UNIQUE CHECK(email LIKE '%_@__%.__%'),
+        is_admin tinyint(1) DEFAULT 0,
         created_at TIMESTAMP DEFAULT (DATETIME('now','localtime')),
         updated_at TIMESTAMP DEFAULT (DATETIME('now','localtime'))
 );
 
 CREATE TABLE date_free_times (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  user_id INTEGER NOT NULL REFERENCES users(id),
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  user_id VARCHAR(36) NOT NULL REFERENCES users(id),
   year VARCHAR(4) NOT NULL,
   month VARCHAR(2) NOT NULL,
   day VARCHAR(2) NOT NULL,
@@ -22,7 +22,7 @@ CREATE TABLE date_free_times (
 );
 
 CREATE TABLE free_times (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
   date_free_time_id INTEGER NOT NULL REFERENCES date_free_times(id),
   start_hour INTEGER NOT NULL,
   start_minute INTEGER NOT NULL,
@@ -33,13 +33,35 @@ CREATE TABLE free_times (
 );
 
 CREATE TABLE shares (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  user_id INTEGER NOT NULL REFERENCES users(id),
-  shared_user_id INTEGER NOT NULL REFERENCES users(id),
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  user_id VARCHAR(36) NOT NULL REFERENCES users(id),
+  shared_user_id VARCHAR(36) NOT NULL REFERENCES users(id),
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+insert into date_free_times(user_id, year, month, day) values(
+  "eabf0fb9-191e-4f3b-9f91-3ed37804f3bd", "2023", "04", "01"
+),(
+  "f24a2fcc-8297-4533-9381-5fb2462bf9e1", "2023", "04", "01"
+),(
+  "62994986-9e04-4b62-97f8-a190e3b16502", "2023", "04", "01"
+);
+
+insert into free_times(date_free_time_id, start_hour, start_minute, end_hour, end_minute) values(
+  1, 6, 0, 10, 0
+),(
+  2, 6, 0, 12, 0
+),(
+  3, 6, 0, 12, 0
+);
+
+insert into shares(user_id, shared_user_id) values(
+  "eabf0fb9-191e-4f3b-9f91-3ed37804f3bd", "f24a2fcc-8297-4533-9381-5fb2462bf9e1"
+), (
+  "eabf0fb9-191e-4f3b-9f91-3ed37804f3bd",
+  "62994986-9e04-4b62-97f8-a190e3b16502"
+);
 
 import (
     "github.com/labstack/echo"

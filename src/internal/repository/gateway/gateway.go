@@ -7,6 +7,7 @@ import (
 	"log"
 	"src/internal/entity"
 
+	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -14,9 +15,9 @@ import (
 // 		Get
 // --------------------------------
 
-/* ユーザがfree-timeを共有している人を全て取得する */
-func ListSharedUser(ctx context.Context, db *sqlx.DB, userID int) ([]*entity.User, error) {
-	var sharedUsers []*entity.User
+/* ユーザと共有している人の中間テーブル情報を全て取得する */
+func ListUserIDSharedUserID(ctx context.Context, db *sqlx.DB, userID string) ([]*entity.SharedUser, error) {
+	var sharedUsers []*entity.SharedUser
 
 	err := db.SelectContext(ctx, &sharedUsers, `
 		SELECT
@@ -69,7 +70,7 @@ func GetDateFreeTimeByID(ctx context.Context, db *sqlx.DB, dateFreeTimeID int) (
 	return &dateFreeTime, nil
 }
 
-func GetNearestDateFreeTime(ctx context.Context, db *sqlx.DB, userID int) (*entity.DateFreeTime, error) {
+func GetNearestDateFreeTime(ctx context.Context, db *sqlx.DB, userID string) (*entity.DateFreeTime, error) {
 	var dateFreeTime entity.DateFreeTime
 
 	err := db.GetContext(ctx, &dateFreeTime, `
@@ -104,7 +105,7 @@ func GetNearestDateFreeTime(ctx context.Context, db *sqlx.DB, userID int) (*enti
 }
 
 /* user_idとdateの条件に合う情報を、date_free_timesから1件取得する */
-func GetDateFreeTime(ctx context.Context, db *sqlx.DB, userID int, year string, month string, day string) (*entity.DateFreeTime, error) {
+func GetDateFreeTime(ctx context.Context, db *sqlx.DB, userID string, year string, month string, day string) (*entity.DateFreeTime, error) {
 	var dateFreeTime entity.DateFreeTime
 
 	err := db.GetContext(ctx, &dateFreeTime, `
@@ -136,7 +137,7 @@ func GetDateFreeTime(ctx context.Context, db *sqlx.DB, userID int, year string, 
 }
 
 /* ユーザの登録した全てのfree-timeを取得する */
-func ListDateFreeTime(ctx context.Context, db *sqlx.DB, userID int) ([]*entity.DateFreeTime, error) {
+func ListDateFreeTime(ctx context.Context, db *sqlx.DB, userID string) ([]*entity.DateFreeTime, error) {
 	var dateFreeTimes []*entity.DateFreeTime
 
 	err := db.SelectContext(ctx, &dateFreeTimes, `
@@ -168,7 +169,7 @@ func ListDateFreeTime(ctx context.Context, db *sqlx.DB, userID int) ([]*entity.D
 ユーザ情報の1件取得
 指定したユーザIDのユーザの情報を取得する
 */
-func GetUserByUserID(ctx context.Context, db *sqlx.DB, userID int) (*entity.User, error) {
+func GetUserByUserID(ctx context.Context, db *sqlx.DB, userID string) (*entity.User, error) {
 	var user entity.User
 
 	err := db.GetContext(ctx, &user, `
@@ -208,7 +209,13 @@ func GetUserByUsername(ctx context.Context, db *sqlx.DB, username string) (*enti
 
 	err := db.GetContext(ctx, &user, `
 		SELECT
-			*
+			id,
+			name,
+			password,
+			email,
+			is_admin,
+			created_at,
+			updated_at
 		FROM
 			users
 		WHERE
@@ -301,14 +308,6 @@ func CreateDateFreeTime(ctx context.Context, tx *sqlx.Tx, dateFreeTime *entity.D
 		return nil, entity.ErrSQLResultNotDesired
 	}
 
-	id, err := result.LastInsertId()
-	if err != nil {
-
-		return nil, entity.ErrSQLLastInsertIdFailed
-	}
-
-	dateFreeTime.ID = int(id)
-
 	return dateFreeTime, err
 }
 
@@ -358,14 +357,6 @@ func CreateFreeTime(ctx context.Context, tx *sqlx.Tx, freeTime *entity.FreeTime)
 		return nil, entity.ErrSQLResultNotDesired
 	}
 
-	id, err := result.LastInsertId()
-	if err != nil {
-
-		return nil, entity.ErrSQLLastInsertIdFailed
-	}
-
-	freeTime.ID = int(id)
-
 	return freeTime, err
 }
 
@@ -374,12 +365,14 @@ func CreateUser(ctx context.Context, db *sqlx.DB, user *entity.User) (*entity.Us
 	stmt, err := db.PrepareNamedContext(ctx, `
 		INSERT INTO users
 		(
+			id,
 			name,
 			password,
 			email
 		)
 		VALUES
 		(
+			:id,
 			:name,
 			:password,
 			:email
@@ -393,11 +386,14 @@ func CreateUser(ctx context.Context, db *sqlx.DB, user *entity.User) (*entity.Us
 	}
 
 	defer func() {
+
 		if closeErr := stmt.Close(); closeErr != nil {
 			err = closeErr
 		}
 	}()
 
+	uuid := uuid.New().String()
+	user.ID = uuid
 	result, err := stmt.Exec(user)
 	if err != nil {
 		log.Println(err)
@@ -410,14 +406,6 @@ func CreateUser(ctx context.Context, db *sqlx.DB, user *entity.User) (*entity.Us
 
 		return nil, entity.ErrSQLResultNotDesired
 	}
-
-	id, err := result.LastInsertId()
-	if err != nil {
-
-		return nil, entity.ErrSQLLastInsertIdFailed
-	}
-
-	user.ID = int(id)
 
 	return user, err
 }

@@ -82,6 +82,7 @@ func Signup(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 				})
 			}
 		}
+
 		/* Checking input data from form Here. */
 		// 入力されたパスワードのハッシュ化
 		encryptedSignupPassword, err := auth.PasswordEncrypt(signupPassword)
@@ -99,6 +100,7 @@ func Signup(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 		}
 		_, err = gateway.CreateUser(ctx, db, user)
 		if err != nil {
+
 			return c.Render(http.StatusOK, "signup", map[string]interface{}{
 				"error_message": entity.ERR_INTERNAL_SERVER_ERROR,
 			})
