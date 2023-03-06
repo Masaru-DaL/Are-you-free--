@@ -21,7 +21,7 @@ import (
 func CreateFreeTime(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		sess, _ := session.Get(config.Config.Session.Name, c)
-		userID := sess.Values[config.Config.Session.KeyName].(int)
+		userID := sess.Values[config.Config.Session.KeyName].(string)
 
 		var year int
 		var month int
@@ -110,24 +110,26 @@ func CreateFreeTime(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 		}
 
 		// 入力された日付のdate-free-timeを取得する
-		dateFreeTime, err := repository.GetDateFreeTime(ctx, db, userID, year, month, day)
+		dateFreeTime, err := repository.GetDateFreeTimeByUserIDAndDate(ctx, db, userID, yearStr, monthStr, dayStr)
 		// 指定した日付のdate-free-timeが存在しなかった場合
 		if errors.Is(err, entity.ErrNoDateFreeTimeFound) {
 			// DateFreeTime構造体で値を設定する
 			dateFreeTime = &entity.DateFreeTime{
 				UserID: userID,
-				Year:   year,
-				Month:  month,
-				Day:    day,
+				Year:   yearStr,
+				Month:  monthStr,
+				Day:    dayStr,
 			}
 			// DateFreeTimeの作成
 			dateFreeTime, err = repository.CreateDateFreeTime(ctx, db, dateFreeTime)
 			if err != nil {
+
 				return c.Render(http.StatusOK, "create-free-time", map[string]interface{}{
 					"error_message": entity.ERR_INTERNAL_SERVER_ERROR,
 				})
 			}
 		} else if err != nil {
+
 			return c.Render(http.StatusOK, "create-free-time", map[string]interface{}{
 				"error_message": entity.ERR_INTERNAL_SERVER_ERROR,
 			})
@@ -160,14 +162,14 @@ func CreateFreeTime(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 			})
 		}
 
-		jpWeekday := time.GetWeekdayByDate(year, month, day)
+		weekday := times.GetWeekdayByDate(dateFreeTime.Year, dateFreeTime.Month, dateFreeTime.Day)
 
-		successMessage := fmt.Sprintf("%s/%s/%s（%s）%s:%s〜%s:%sでfree-timeを作成しました。", yearStr, monthStr, dayStr, jpWeekday, startFreeTimeHourStr, startFreeTimeMinuteStr, endFreeTimeHourStr, endFreeTimeMinuteStr)
+		successMessage := fmt.Sprintf("%s/%s/%s（%s）%s:%s〜%s:%sでfree-timeを作成しました。", yearStr, monthStr, dayStr, weekday, startFreeTimeHourStr, startFreeTimeMinuteStr, endFreeTimeHourStr, endFreeTimeMinuteStr)
 
 		return c.Render(http.StatusOK, "create-free-time", map[string]interface{}{
-			"year":            nil,
-			"month":           nil,
-			"day":             nil,
+			"year":            year,
+			"month":           month,
+			"day":             day,
 			"weekday":         nil,
 			"error_message":   nil,
 			"success_message": successMessage,

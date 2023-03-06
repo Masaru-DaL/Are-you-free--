@@ -43,6 +43,18 @@ document.addEventListener('DOMContentLoaded', function() {
   todayDiv.style.borderBottom= '1.5px solid var(--WOOD)';
   todayDiv.style.boxShadow= '7px 7px 7px rgba(54, 54, 54, 0.3)';
   todayDiv.style.backgroundColor= 'var(--SNOW)';
+
+
+  // free_time.forEach(function(element) {
+  //   console.log("ID: " + element.ID);
+  //   console.log("DateFreeTimeID: " + element.DateFreeTimeID);
+  //   console.log("StartHour: " + element.StartHour);
+  //   console.log("StartMinute: " + element.StartMinute);
+  //   console.log("EndHour: " + element.EndHour);
+  //   console.log("EndMinute: " + element.EndMinute);
+  //   console.log("CreatedAt: " + element.CreatedAt);
+  //   console.log("UpdatedAt: " + element.UpdatedAt);
+  // });
 });
 // setInterval(getNow, 1000);
 // getNowInput();

@@ -7,6 +7,7 @@ import (
 	"log"
 	"src/internal/entity"
 
+	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -14,13 +15,108 @@ import (
 // 		Get
 // --------------------------------
 
-/* user_idとdateの条件に合う情報を、date_free_timesから1件取得する */
-func GetDateFreeTime(ctx context.Context, db *sqlx.DB, userID int, year int, month int, day int) (*entity.DateFreeTime, error) {
+/* ユーザと共有している人の中間テーブル情報を全て取得する */
+func ListUserIDSharedUserID(ctx context.Context, db *sqlx.DB, userID string) ([]*entity.SharedUser, error) {
+	var sharedUsers []*entity.SharedUser
+
+	err := db.SelectContext(ctx, &sharedUsers, `
+		SELECT
+			user_id,
+			shared_user_id,
+			created_at,
+			updated_at
+		FROM
+			shares
+		WHERE
+			user_id = ?
+	`, userID)
+
+	if err != nil {
+
+		return nil, entity.ErrSQLGetFailed
+	}
+
+	return sharedUsers, nil
+}
+
+func GetDateFreeTimeByID(ctx context.Context, db *sqlx.DB, dateFreeTimeID int) (*entity.DateFreeTime, error) {
 	var dateFreeTime entity.DateFreeTime
 
 	err := db.GetContext(ctx, &dateFreeTime, `
 		SELECT
-			id, user_id, year, month, day, created_at, updated_at
+			id,
+			user_id,
+			year,
+			month,
+			day,
+			created_at,
+			updated_at
+		FROM
+			date_free_times
+		WHERE
+			id = ?
+	`, dateFreeTimeID)
+
+	if errors.Is(err, sql.ErrNoRows) {
+
+		return nil, entity.ErrNoFreeTimeFound
+	}
+
+	if err != nil {
+
+		return nil, entity.ErrSQLGetFailed
+	}
+
+	return &dateFreeTime, nil
+}
+
+func GetNearestDateFreeTime(ctx context.Context, db *sqlx.DB, userID string) (*entity.DateFreeTime, error) {
+	var dateFreeTime entity.DateFreeTime
+
+	err := db.GetContext(ctx, &dateFreeTime, `
+		SELECT
+			id,
+			user_id,
+			year,
+			month,
+			day,
+			created_at,
+			updated_at
+		FROM
+			date_free_times
+		WHERE
+			user_id = ?
+		ORDER BY
+			ABS((julianday(year || '-' || month || '-' || day) - julianday(date('now', 'localtime', 'start of day')))) ASC
+			LIMIT 1;
+	`, userID)
+
+	if errors.Is(err, sql.ErrNoRows) {
+
+		return nil, entity.ErrNoFreeTimeFound
+	}
+
+	if err != nil {
+
+		return nil, entity.ErrSQLGetFailed
+	}
+
+	return &dateFreeTime, nil
+}
+
+/* user_idとdateの条件に合う情報を、date_free_timesから1件取得する */
+func GetDateFreeTime(ctx context.Context, db *sqlx.DB, userID string, year string, month string, day string) (*entity.DateFreeTime, error) {
+	var dateFreeTime entity.DateFreeTime
+
+	err := db.GetContext(ctx, &dateFreeTime, `
+		SELECT
+			id,
+			user_id,
+			year,
+			month,
+			day,
+			created_at,
+			updated_at
 		FROM
 			date_free_times
 		WHERE
@@ -28,26 +124,63 @@ func GetDateFreeTime(ctx context.Context, db *sqlx.DB, userID int, year int, mon
 	`, userID, year, month, day)
 
 	if errors.Is(err, sql.ErrNoRows) {
+
 		return nil, entity.ErrNoFreeTimeFound
 	}
 
 	if err != nil {
+
 		return nil, entity.ErrSQLGetFailed
 	}
 
 	return &dateFreeTime, nil
 }
 
+/* ユーザの登録した全てのfree-timeを取得する */
+func ListDateFreeTime(ctx context.Context, db *sqlx.DB, userID string) ([]*entity.DateFreeTime, error) {
+	var dateFreeTimes []*entity.DateFreeTime
+
+	err := db.SelectContext(ctx, &dateFreeTimes, `
+		SELECT
+			id,
+			user_id,
+			year,
+			month,
+			day,
+			created_at,
+			updated_at
+		FROM
+			date_free_times
+		WHERE
+			user_id = ?
+		ORDER BY
+			year, month, day
+	`, userID)
+
+	if err != nil {
+
+		return nil, entity.ErrSQLGetFailed
+	}
+
+	return dateFreeTimes, nil
+}
+
 /*
 ユーザ情報の1件取得
 指定したユーザIDのユーザの情報を取得する
 */
-func GetUserByUserID(ctx context.Context, db *sqlx.DB, userID int) (*entity.User, error) {
+func GetUserByUserID(ctx context.Context, db *sqlx.DB, userID string) (*entity.User, error) {
 	var user entity.User
 
 	err := db.GetContext(ctx, &user, `
 		SELECT
-			*
+			id,
+			name,
+			password,
+			email,
+			is_admin,
+			created_at,
+			updated_at
 		FROM
 			users
 		WHERE
@@ -55,10 +188,12 @@ func GetUserByUserID(ctx context.Context, db *sqlx.DB, userID int) (*entity.User
 	`, userID)
 
 	if errors.Is(err, sql.ErrNoRows) {
+
 		return nil, entity.ErrNoUserFound
 	}
 
 	if err != nil {
+
 		return nil, entity.ErrSQLGetFailed
 	}
 
@@ -74,7 +209,13 @@ func GetUserByUsername(ctx context.Context, db *sqlx.DB, username string) (*enti
 
 	err := db.GetContext(ctx, &user, `
 		SELECT
-			*
+			id,
+			name,
+			password,
+			email,
+			is_admin,
+			created_at,
+			updated_at
 		FROM
 			users
 		WHERE
@@ -82,10 +223,12 @@ func GetUserByUsername(ctx context.Context, db *sqlx.DB, username string) (*enti
 	`, username)
 
 	if errors.Is(err, sql.ErrNoRows) {
+
 		return nil, entity.ErrNoUserFound
 	}
 
 	if err != nil {
+
 		return nil, entity.ErrSQLGetFailed
 	}
 
@@ -110,6 +253,7 @@ func ListFreeTime(ctx context.Context, db *sqlx.DB, dateFreeTimeID int) ([]*enti
 	`, dateFreeTimeID)
 
 	if err != nil {
+
 		return nil, entity.ErrSQLGetFailed
 	}
 
@@ -141,6 +285,7 @@ func CreateDateFreeTime(ctx context.Context, tx *sqlx.Tx, dateFreeTime *entity.D
 
 	if err != nil {
 		log.Println(err)
+
 		return nil, entity.ErrSQLCreateStmt
 	}
 
@@ -153,20 +298,15 @@ func CreateDateFreeTime(ctx context.Context, tx *sqlx.Tx, dateFreeTime *entity.D
 	result, err := stmt.Exec(dateFreeTime)
 	if err != nil {
 		log.Println(err)
+
 		return nil, entity.ErrSQLExecFailed
 	}
 
 	cnt, err := result.RowsAffected()
 	if err != nil || cnt != 1 {
+
 		return nil, entity.ErrSQLResultNotDesired
 	}
-
-	id, err := result.LastInsertId()
-	if err != nil {
-		return nil, entity.ErrSQLLastInsertIdFailed
-	}
-
-	dateFreeTime.ID = int(id)
 
 	return dateFreeTime, err
 }
@@ -194,6 +334,7 @@ func CreateFreeTime(ctx context.Context, tx *sqlx.Tx, freeTime *entity.FreeTime)
 
 	if err != nil {
 		log.Println(err)
+
 		return nil, entity.ErrSQLCreateStmt
 	}
 
@@ -206,20 +347,15 @@ func CreateFreeTime(ctx context.Context, tx *sqlx.Tx, freeTime *entity.FreeTime)
 	result, err := stmt.Exec(freeTime)
 	if err != nil {
 		log.Println(err)
+
 		return nil, entity.ErrSQLExecFailed
 	}
 
 	cnt, err := result.RowsAffected()
 	if err != nil || cnt != 1 {
+
 		return nil, entity.ErrSQLResultNotDesired
 	}
-
-	id, err := result.LastInsertId()
-	if err != nil {
-		return nil, entity.ErrSQLLastInsertIdFailed
-	}
-
-	freeTime.ID = int(id)
 
 	return freeTime, err
 }
@@ -229,12 +365,14 @@ func CreateUser(ctx context.Context, db *sqlx.DB, user *entity.User) (*entity.Us
 	stmt, err := db.PrepareNamedContext(ctx, `
 		INSERT INTO users
 		(
+			id,
 			name,
 			password,
 			email
 		)
 		VALUES
 		(
+			:id,
 			:name,
 			:password,
 			:email
@@ -243,32 +381,31 @@ func CreateUser(ctx context.Context, db *sqlx.DB, user *entity.User) (*entity.Us
 
 	if err != nil {
 		log.Println(err)
+
 		return nil, entity.ErrSQLCreateStmt
 	}
 
 	defer func() {
+
 		if closeErr := stmt.Close(); closeErr != nil {
 			err = closeErr
 		}
 	}()
 
+	uuid := uuid.New().String()
+	user.ID = uuid
 	result, err := stmt.Exec(user)
 	if err != nil {
 		log.Println(err)
+
 		return nil, entity.ErrSQLExecFailed
 	}
 
 	cnt, err := result.RowsAffected()
 	if err != nil || cnt != 1 {
+
 		return nil, entity.ErrSQLResultNotDesired
 	}
-
-	id, err := result.LastInsertId()
-	if err != nil {
-		return nil, entity.ErrSQLLastInsertIdFailed
-	}
-
-	user.ID = int(id)
 
 	return user, err
 }
@@ -292,6 +429,7 @@ func UpdateFreeTime(ctx context.Context, tx *sqlx.Tx, freeTime *entity.FreeTime)
 	`)
 
 	if err != nil {
+
 		return nil, entity.ErrSQLCreateStmt
 	}
 
@@ -303,16 +441,17 @@ func UpdateFreeTime(ctx context.Context, tx *sqlx.Tx, freeTime *entity.FreeTime)
 
 	result, err := stmt.Exec(freeTime)
 	if err != nil {
+
 		return nil, entity.ErrSQLExecFailed
 	}
 
 	cnt, err := result.RowsAffected()
 	if err != nil || cnt > 1 {
+
 		return nil, entity.ErrSQLResultNotDesired
 	}
 
 	return freeTime, nil
-
 }
 
 // --------------------------------

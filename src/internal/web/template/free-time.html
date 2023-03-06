@@ -24,7 +24,7 @@
           <div class="header-link-wrapper">
             <a href="/free-time">
               <div class="header-link">
-                <p class="font-24 letter-005">FREE-TIME LATEST</p>
+                <p class="font-24 letter-005">NEAREST FREE-TIME</p>
               </div>
             </a>
           </div>
@@ -66,7 +66,7 @@
           <div class="heading-left-area flex justify-center items-center">
             {{ if and .year .month .day .weekday}}
               <p class="font-20 bold">
-                {{.year_str}}/{{.month_str}}/{{.day_str}}（{{.weekday}}）
+                {{.year}}/{{.month}}/{{.day}}（{{.weekday}}）
               </p>
             {{ else }}
               <p class="font-20 bold">
@@ -104,42 +104,29 @@
 
       <div class="content-wrapper flex">
         <div class="select-schedule-left-area border-none border-right flex-col">
-          <div class="items-center">
-            <div class="content-left flex justify-center items-center m-auto">
-              <p class="font-24">Masaru</p>
+          <div class="username-wrapper items-center">
+            <div class="username flex justify-center items-center m-auto">
+              <p class="font-22">{{.user.Name}}</p>
             </div>
-            <div class="content-left flex justify-center items-center m-auto">
-              <p>Kaoru12345</p>
+            {{ range .shared_users }}
+            <div class="username flex justify-center items-center m-auto">
+              <p class="font-22">{{ .Name }}</p>
             </div>
-            <div class="content-left flex justify-center items-center m-auto">
-              <p>ほげほげほげほげほげ</p>
-            </div>
-            <div class="content-left flex justify-center items-center m-auto">
-              <p>Jiichan</p>
-            </div>
-            <div class="content-left flex justify-center items-center m-auto">
-              <p>Baachan</p>
-            </div>
-            <div class="content-left flex justify-center items-center m-auto">
-              <p>MOGE</p>
-            </div>
-            <div class="content-left flex justify-center items-center m-auto">
-              <p>Mogu</p>
-            </div>
-            <div class="content-left flex justify-center items-center m-auto">
-              <p>Risa</p>
-            </div>
+            {{ end }}
           </div>
         </div>
         <div class="content-right-area flex-col">
-
+          <canvas id="free-time" width="600" height="400" class="free-time-canvas"></canvas>
         </div>
-
       </div>
     </main>
-
-
   </body>
+  <script type="text/javascript">
+    const free_times = JSON.parse('{{marshal .date_free_time.FreeTimes}}');
+    const shared_date_free_times = JSON.parse('{{marshal .shared_date_free_times}}');
+
+  </script>
+  <script type="text/javascript" src="../js/free-time.js"></script>
   <script type="text/javascript" src="../js/now.js"></script>
 
 

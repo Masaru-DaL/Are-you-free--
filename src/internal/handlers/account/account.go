@@ -3,6 +3,7 @@ package account
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/http"
 	"src/internal/entity"
 	"src/internal/entity/validation"
@@ -81,6 +82,7 @@ func Signup(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 				})
 			}
 		}
+
 		/* Checking input data from form Here. */
 		// 入力されたパスワードのハッシュ化
 		encryptedSignupPassword, err := auth.PasswordEncrypt(signupPassword)
@@ -98,6 +100,7 @@ func Signup(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 		}
 		_, err = gateway.CreateUser(ctx, db, user)
 		if err != nil {
+
 			return c.Render(http.StatusOK, "signup", map[string]interface{}{
 				"error_message": entity.ERR_INTERNAL_SERVER_ERROR,
 			})
@@ -137,6 +140,7 @@ func Login(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 			})
 		}
 
+		fmt.Println("------------------------")
 		// 入力されたパスワードをユーザ情報のパスワードと比較する
 		err = auth.CompareHashAndPlaintext(user.Password, loginPassword)
 		// err != nil => DBに存在していない
@@ -175,6 +179,8 @@ func Logout(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 		}
 		// セッション情報から値の削除
 		sess.Values["UserID"] = ""
+		sess.Values[config.Config.Session.KeyName] = ""
+
 		sess.Options.MaxAge = -1
 		// 新たに別のセッションIDに変更する
 		newSessID := securecookie.GenerateRandomKey(32)

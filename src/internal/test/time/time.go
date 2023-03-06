@@ -2,11 +2,16 @@ package time
 
 import (
 	"src/internal/entity"
+	"strconv"
 	"time"
 )
 
 /* 年月日の情報から曜日を取得する */
-func GetWeekdayByDate(year int, month int, day int) string {
+func GetWeekdayByDate(yearStr, monthStr, dayStr string) string {
+	year, _ := strconv.Atoi(yearStr)
+	month, _ := strconv.Atoi(monthStr)
+	day, _ := strconv.Atoi(dayStr)
+
 	// 日本語返却用
 	jpWeekdayArray := []string{"日", "月", "火", "水", "木", "金", "土"}
 

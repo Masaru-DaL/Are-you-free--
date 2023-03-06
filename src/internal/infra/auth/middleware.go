@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"fmt"
 	"src/internal/infra/config"
 
 	"github.com/gorilla/sessions"
@@ -45,12 +46,15 @@ func AuthenticatedMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		// セッション情報の取得
 		sess, err := session.Get(config.Config.Session.Name, c)
+		fmt.Println(sess)
+		fmt.Println(sess.Values)
+
 		if err != nil {
 			return HandleAuthError(c)
 		}
 
 		// セッションの値が空だった場合
-		if sess.ID == "" {
+		if sess.Values[config.Config.Session.KeyName] == nil {
 			return HandleAuthError(c)
 		}
 

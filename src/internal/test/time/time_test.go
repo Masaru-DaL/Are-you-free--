@@ -53,10 +53,10 @@ func TestIsCreateFreeTime(t *testing.T) {
 	// テスト用のフリータイムを作成
 	df := entity.DateFreeTime{
 		ID:        1,
-		UserID:    100,
-		Year:      2022,
-		Month:     2,
-		Day:       23,
+		UserID:    "100",
+		Year:      "2022",
+		Month:     "02",
+		Day:       "23",
 		CreatedAt: "2022-02-23 00:00:00",
 		UpdatedAt: "2022-02-23 00:00:00",
 	}
