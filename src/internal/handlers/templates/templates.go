@@ -159,6 +159,7 @@ func FreeTimePage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 		case "POST":
 			// POSTされた日付データからdateFreeTimeを取得する
 			date := c.FormValue("date")
+			fmt.Println(date)
 			year, month, day := strings.SplitDateByHyphen(date)
 
 			dateFreeTime, err := repository.GetDateFreeTimeByUserIDAndDate(ctx, db, userID, year, month, day)

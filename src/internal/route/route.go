@@ -49,6 +49,7 @@ func InitRouting(db *sqlx.DB) *echo.Echo {
 
 	// e.GET("/index", templates.TopPage)
 	authenticatedGroup.GET("free-time/:id", templates.FreeTimePage(ctx, db))
+	authenticatedGroup.POST("free-time", templates.FreeTimePage(ctx, db))
 	authenticatedGroup.GET("free-times", templates.FreeTimesPage(ctx, db))
 	authenticatedGroup.GET("free-time/create", templates.CreateFreeTimePage)
 	authenticatedGroup.POST("free-time/create", freetimes.CreateFreeTime(ctx, db))
