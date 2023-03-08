@@ -157,18 +157,89 @@ func FreeTimePage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 			}
 
 		case "POST":
+			// POSTされた日付データからdateFreeTimeを取得する
 			date := c.FormValue("date")
-			yearStr, monthStr, dayStr := strings.SplitDateByHyphen(date)
+			year, month, day := strings.SplitDateByHyphen(date)
 
-			// POSTリクエストの処理
-			return c.String(http.StatusOK, fmt.Sprintf("Date: %s", date))
+			dateFreeTime, err := repository.GetDateFreeTimeByUserIDAndDate(ctx, db, userID, year, month, day)
+			if errors.Is(err, entity.ErrNoDateFreeTimeFound) {
+				log.Printf(entity.ERR_NO_DATE_FREE_TIME_FOUND+": %v", err)
+
+				return c.Render(http.StatusInternalServerError, "free-time", map[string]interface{}{
+					"error_message": entity.MESSAGE_NO_FREE_TIME_FOUND,
+				})
+			} else if err != nil {
+				log.Printf(entity.ERR_INTERNAL_SERVER_ERROR+": %v", err)
+
+				return c.Render(http.StatusInternalServerError, "free-time", map[string]interface{}{
+					"error_message": entity.MESSAGE_INTERNAL_SERVER_ERROR,
+				})
+			}
+
+			// 曜日を取得する
+			weekday := times.GetWeekdayByDate(dateFreeTime.Year, dateFreeTime.Month, dateFreeTime.Day)
+
+			// 自身が共有している人の中間テーブルを取得する
+			userIDsharedUserID, err := repository.ListUserIDSharedUserID(ctx, db, userID)
+			// 共有している人がいた場合
+			if userIDsharedUserID != nil {
+				if err != nil {
+					log.Printf(entity.ERR_INTERNAL_SERVER_ERROR+": %v", err)
+
+					return c.Render(http.StatusInternalServerError, "free-time", map[string]interface{}{
+						"error_message": entity.MESSAGE_INTERNAL_SERVER_ERROR,
+					})
+				}
+
+				// ユーザが共有しているユーザ情報を全て取得する
+				sharedUsers, err := repository.ListSharedUser(ctx, db, userIDsharedUserID)
+				if err != nil {
+					log.Printf(entity.ERR_INTERNAL_SERVER_ERROR+": %v", err)
+
+					return c.Render(http.StatusInternalServerError, "free-time", map[string]interface{}{
+						"error_message": entity.MESSAGE_INTERNAL_SERVER_ERROR,
+					})
+				}
+
+				// ユーザが共有しているユーザのdate-free-timeを全て取得する
+				sharedDateFreeTimes, err := repository.ListDateFreeTimes(ctx, db, sharedUsers, dateFreeTime.Year, dateFreeTime.Month, dateFreeTime.Day)
+				if err != nil {
+					log.Printf(entity.ERR_INTERNAL_SERVER_ERROR+": %v", err)
+
+					return c.Render(http.StatusInternalServerError, "free-time", map[string]interface{}{
+						"error_message": entity.MESSAGE_INTERNAL_SERVER_ERROR,
+					})
+				}
+
+				return c.Render(http.StatusOK, "free-time", map[string]interface{}{
+					"year":                   dateFreeTime.Year,
+					"month":                  dateFreeTime.Month,
+					"day":                    dateFreeTime.Day,
+					"weekday":                weekday,
+					"user":                   user,
+					"date_free_time":         dateFreeTime,
+					"shared_users":           sharedUsers,
+					"shared_date_free_times": sharedDateFreeTimes,
+				})
+
+				// 共有している人がいなかった場合
+			} else {
+
+				return c.Render(http.StatusOK, "free-time", map[string]interface{}{
+					"year":                   dateFreeTime.Year,
+					"month":                  dateFreeTime.Month,
+					"day":                    dateFreeTime.Day,
+					"weekday":                weekday,
+					"user":                   user,
+					"date_free_time":         dateFreeTime,
+					"shared_users":           nil,
+					"shared_date_free_times": nil,
+				})
+			}
+
 		default:
-			// サポートされていないHTTPメソッドの場合は、405 Method Not Allowedを返す
-			return c.NoContent(http.StatusMethodNotAllowed)
-
-			// dateStr := c.QueryParam("date")
-			// yearStr, monthStr, dayStr := strings.SplitDateByHyphen(dateStr)
-
+			// サポートされていないHTTPメソッドの場合は、TOPページへリダイレクトする
+			return c.Redirect(http.StatusSeeOther, "/index")
 		}
 	}
 }
