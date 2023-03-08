@@ -115,7 +115,7 @@
         <div class="content-right-area flex-col">
           <!-- エラーメッセージ -->
           {{ if .error_message }}
-          <p class="error-message-in-free-time font-20 text-darkred">エラーメッセージ</p>
+          <p class="error-message-in-free-time font-20 text-darkred">{{ .error_message }}</p>
           {{ end }}
 
           <!-- free-timeを描画 -->

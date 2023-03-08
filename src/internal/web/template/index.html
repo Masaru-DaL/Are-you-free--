@@ -82,6 +82,11 @@
         </div>
 
         <div class="index-content-right-area">
+          <!-- エラーメッセージ -->
+          {{ if .error_message }}
+          <p class="error-message-in-index font-14 text-darkred">{{ .error_message }}</p>
+          {{ end }}
+
           <div class="calender-wrapper">
             <h1 id="years"></h1>
             <div id="next-prev-button">

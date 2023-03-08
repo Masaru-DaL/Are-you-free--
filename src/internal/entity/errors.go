@@ -21,6 +21,7 @@ var (
 var (
 	MESSAGE_INTERNAL_SERVER_ERROR = "エラーが発生しました。"
 	MESSAGE_NO_FREE_TIME_FOUND    = "作成したfree-timeがありません。"
+	MESSAGE_NO_DATE_CHOICE        = "日付が選択されていません。"
 )
 
 /* ERROR CODE */
