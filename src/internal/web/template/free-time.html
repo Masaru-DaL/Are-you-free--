@@ -106,7 +106,7 @@
         <div class="select-schedule-left-area border-none border-right flex-col">
           <div class="username-wrapper items-center">
             <div class="username flex justify-center items-center m-auto">
-              <p class="font-22">{{.user.Name}}</p>
+              <p class="font-22">{{ .user.Name }}</p>
             </div>
             {{ range .shared_users }}
             <div class="username flex justify-center items-center m-auto">
@@ -116,6 +116,12 @@
           </div>
         </div>
         <div class="content-right-area flex-col">
+          <!-- エラーメッセージ -->
+          {{ if .error_message }}
+          <p class="error-message-in-free-time font-20 text-darkred">エラーメッセージ</p>
+          {{ end }}
+
+          <!-- free-timeを描画 -->
           <canvas id="free-time" width="600" height="400" class="free-time-canvas"></canvas>
         </div>
       </div>

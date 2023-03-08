@@ -15,30 +15,6 @@ import (
 // 		Get
 // --------------------------------
 
-/* ユーザと共有している人の中間テーブル情報を全て取得する */
-func ListUserIDSharedUserID(ctx context.Context, db *sqlx.DB, userID string) ([]*entity.SharedUser, error) {
-	var sharedUsers []*entity.SharedUser
-
-	err := db.SelectContext(ctx, &sharedUsers, `
-		SELECT
-			user_id,
-			shared_user_id,
-			created_at,
-			updated_at
-		FROM
-			shares
-		WHERE
-			user_id = ?
-	`, userID)
-
-	if err != nil {
-
-		return nil, entity.ErrSQLGetFailed
-	}
-
-	return sharedUsers, nil
-}
-
 func GetDateFreeTimeByID(ctx context.Context, db *sqlx.DB, dateFreeTimeID int) (*entity.DateFreeTime, error) {
 	var dateFreeTime entity.DateFreeTime
 
@@ -105,7 +81,7 @@ func GetNearestDateFreeTime(ctx context.Context, db *sqlx.DB, userID string) (*e
 }
 
 /* user_idとdateの条件に合う情報を、date_free_timesから1件取得する */
-func GetDateFreeTime(ctx context.Context, db *sqlx.DB, userID string, year string, month string, day string) (*entity.DateFreeTime, error) {
+func GetDateFreeTimeByUserIDAndDate(ctx context.Context, db *sqlx.DB, userID string, year string, month string, day string) (*entity.DateFreeTime, error) {
 	var dateFreeTime entity.DateFreeTime
 
 	err := db.GetContext(ctx, &dateFreeTime, `
@@ -134,6 +110,30 @@ func GetDateFreeTime(ctx context.Context, db *sqlx.DB, userID string, year strin
 	}
 
 	return &dateFreeTime, nil
+}
+
+/* ユーザと共有している人の中間テーブル情報を全て取得する */
+func ListUserIDSharedUserID(ctx context.Context, db *sqlx.DB, userID string) ([]*entity.SharedUser, error) {
+	var sharedUsers []*entity.SharedUser
+
+	err := db.SelectContext(ctx, &sharedUsers, `
+		SELECT
+			user_id,
+			shared_user_id,
+			created_at,
+			updated_at
+		FROM
+			shares
+		WHERE
+			user_id = ?
+	`, userID)
+
+	if err != nil {
+
+		return nil, entity.ErrSQLGetFailed
+	}
+
+	return sharedUsers, nil
 }
 
 /* ユーザの登録した全てのfree-timeを取得する */
