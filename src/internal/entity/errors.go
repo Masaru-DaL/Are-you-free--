@@ -20,8 +20,7 @@ var (
 /* Errors for user */
 var (
 	MESSAGE_INTERNAL_SERVER_ERROR = "エラーが発生しました。"
-	MESSAGE_NO_FREE_TIME_FOUND    = "作成したfree-timeがありません。"
-	MESSAGE_NO_DATE_CHOICE        = "日付が選択されていません。"
+	MESSAGE_NO_FREE_TIME_FOUND    = "選択された日付にはfree-timeが作成されていません。"
 )
 
 /* ERROR CODE */

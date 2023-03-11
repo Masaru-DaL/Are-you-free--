@@ -373,6 +373,10 @@
   width: 100%;
 }
 
+.content-left-button-wrapper {
+  margin-top: 8%;
+}
+
 .content-left-button {
   width: 60%;
   height: 50px;

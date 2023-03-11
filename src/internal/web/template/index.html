@@ -75,16 +75,18 @@
             <label for="today" class="calendar-label">
               <input class="input-calendar" type="date" name="date" id="today-input" style="font-size:1.1em" />
             </label>
-            <button class="content-left-button" formaction="/free-time">SELECT</button>
-            <button class="content-left-button" formaction="/free-time/create">CREATE</button>
-            <button class="content-left-button"formaction="/free-time/update">UPDATE</button>
+            <div class="content-left-button-wrapper text-center">
+              <button class="content-left-button" formaction="/free-time">SELECT</button>
+              <button class="content-left-button" formaction="/free-time/create">CREATE</button>
+              <button class="content-left-button"formaction="/free-time/update">UPDATE</button>
+            </div>
           </form>
         </div>
 
         <div class="index-content-right-area">
           <!-- エラーメッセージ -->
           {{ if .error_message }}
-          <p class="error-message-in-index font-14 text-darkred">{{ .error_message }}</p>
+          <p class="error-message-in-index font-16 text-darkred">{{ .error_message }}</p>
           {{ end }}
 
           <div class="calender-wrapper">

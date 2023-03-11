@@ -161,9 +161,7 @@ func FreeTimePage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 			date := c.FormValue("date")
 			if date == "" {
 
-				return c.Render(http.StatusOK, "index", map[string]interface{}{
-					"error_message": entity.MESSAGE_NO_DATE_CHOICE,
-				})
+				return c.Redirect(http.StatusFound, "/index")
 			}
 			year, month, day := strings.SplitDateByHyphen(date)
 
