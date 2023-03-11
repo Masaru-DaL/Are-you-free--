@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
 	"net/http"
 	"src/internal/entity"
 	"src/internal/infra/config"
@@ -13,7 +14,6 @@ import (
 	"src/internal/utils/times"
 	"strconv"
 
-	"github.com/glassonion1/logz"
 	"github.com/jmoiron/sqlx"
 	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
@@ -40,37 +40,31 @@ func LoginPage(c echo.Context) error {
 /* トップページ */
 func TopPage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		fmt.Println("session")
+		// sessionを取得し、userIDを取得
 		sess, _ := session.Get(config.Config.Session.Name, c)
-		fmt.Println("sessID: ", sess.ID)
-		fmt.Println("sessValues: ", sess.Values)
 		userID := sess.Values[config.Config.Session.KeyName].(string)
-		fmt.Println(userID)
+
+		// userの現在の日付から最も近いfree-timeを取得する
 		nearestDateFreeTime, err := gateway.GetNearestDateFreeTime(ctx, db, userID)
 		if errors.Is(err, entity.ErrNoFreeTimeFound) {
+			log.Printf(entity.ERR_NO_DATE_FREE_TIME_FOUND+": %v", err)
 
 			return c.Render(http.StatusOK, "index", map[string]interface{}{
-				"nearest_date_free_time_id": nil,
+				"error_message": entity.MESSAGE_NO_FREE_TIME_FOUND,
 			})
 		} else if err != nil {
+			log.Printf(entity.ERR_INTERNAL_SERVER_ERROR+": %v", err)
 
 			return c.Render(http.StatusOK, "index", map[string]interface{}{
-				"nearest_date_free_time_id": nil,
+				"error_message": entity.MESSAGE_INTERNAL_SERVER_ERROR,
 			})
 		}
-		fmt.Println(nearestDateFreeTime)
-		fmt.Println(nearestDateFreeTime.ID)
 
-		// return c.Render(http.StatusOK, "index", "")
 		return c.Render(http.StatusOK, "index", map[string]interface{}{
 			"nearest_date_free_time_id": nearestDateFreeTime.ID,
 		})
 	}
 }
-
-// func TopPage(c echo.Context) error {
-// 	return c.Render(http.StatusOK, "index", "")
-// }
 
 /* スケジュールページ */
 func FreeTimePage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
@@ -82,83 +76,174 @@ func FreeTimePage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 
 		switch c.Request().Method {
 		case "GET":
-			// date_free_time_idを指定し、dateFreeTimeを取得する
+			// 指定された直近のdateFreeTimeを取得する
 			dateFreeTimeIDStr := c.Param("id")
 			dateFreeTimeID, _ := strconv.Atoi(dateFreeTimeIDStr)
 
 			dateFreeTime, err := repository.GetDateFreeTimeByID(ctx, db, dateFreeTimeID)
 			if errors.Is(err, entity.ErrNoDateFreeTimeFound) {
-				logz.Errorf(ctx, entity.ERR_NO_DATE_FREE_TIME_FOUND)
+				log.Printf(entity.ERR_NO_DATE_FREE_TIME_FOUND+": %v", err)
 
 				return c.Render(http.StatusInternalServerError, "free-time", map[string]interface{}{
-					"error_message": "free-timeが作成されていません。",
+					"error_message": entity.MESSAGE_NO_FREE_TIME_FOUND,
 				})
 			} else if err != nil {
-				logz.Errorf(ctx, entity.ERR_INTERNAL_SERVER_ERROR)
+				log.Printf(entity.ERR_INTERNAL_SERVER_ERROR+": %v", err)
 
 				return c.Render(http.StatusInternalServerError, "free-time", map[string]interface{}{
-					"error_message": "エラーが発生しました。",
+					"error_message": entity.MESSAGE_INTERNAL_SERVER_ERROR,
 				})
 			}
+
+			// 曜日を取得する
+			weekday := times.GetWeekdayByDate(dateFreeTime.Year, dateFreeTime.Month, dateFreeTime.Day)
 
 			// 自身が共有している人の中間テーブルを取得する
 			userIDsharedUserID, err := repository.ListUserIDSharedUserID(ctx, db, userID)
-			if err != nil {
-				logz.Errorf(ctx, entity.ERR_INTERNAL_SERVER_ERROR)
-
-				return c.Render(http.StatusInternalServerError, "free-time", map[string]interface{}{
-					"error_message": "エラーが発生しました。",
-				})
-			}
-
-			// ユーザが共有しているユーザ情報を全て取得する
-			sharedUsers, err := repository.ListSharedUser(ctx, db, userIDsharedUserID)
-			if err != nil {
-				logz.Errorf(ctx, entity.ERR_INTERNAL_SERVER_ERROR)
-
-				return c.Render(http.StatusInternalServerError, "free-time", map[string]interface{}{
-					"error_message": "エラーが発生しました。",
-				})
-			}
-
-			// ユーザが共有しているユーザのdate-free-timeを全て取得する
-			var sharedDateFreeTimes []*entity.DateFreeTime
-			for _, us := range userIDsharedUserID {
-				dateFreeTime, err := repository.GetDateFreeTimeByUserIDAndDate(ctx, db, us.SharedUserID, dateFreeTime.Year, dateFreeTime.Month, dateFreeTime.Day)
+			// 共有している人がいた場合
+			if userIDsharedUserID != nil {
 				if err != nil {
-					logz.Errorf(ctx, entity.ERR_INTERNAL_SERVER_ERROR)
+					log.Printf(entity.ERR_INTERNAL_SERVER_ERROR+": %v", err)
 
 					return c.Render(http.StatusInternalServerError, "free-time", map[string]interface{}{
-						"error_message": "エラーが発生しました。",
+						"error_message": entity.MESSAGE_INTERNAL_SERVER_ERROR,
 					})
 				}
 
-				sharedDateFreeTimes = append(sharedDateFreeTimes, dateFreeTime)
+				// ユーザが共有しているユーザ情報を全て取得する
+				sharedUsers, err := repository.ListSharedUser(ctx, db, userIDsharedUserID)
+				if err != nil {
+					log.Printf(entity.ERR_INTERNAL_SERVER_ERROR+": %v", err)
+
+					return c.Render(http.StatusInternalServerError, "free-time", map[string]interface{}{
+						"error_message": entity.MESSAGE_INTERNAL_SERVER_ERROR,
+					})
+				}
+
+				// ユーザが共有しているユーザのdate-free-timeを全て取得する
+				sharedDateFreeTimes, err := repository.ListDateFreeTimes(ctx, db, sharedUsers, dateFreeTime.Year, dateFreeTime.Month, dateFreeTime.Day)
+				if err != nil {
+					log.Printf(entity.ERR_INTERNAL_SERVER_ERROR+": %v", err)
+
+					return c.Render(http.StatusInternalServerError, "free-time", map[string]interface{}{
+						"error_message": entity.MESSAGE_INTERNAL_SERVER_ERROR,
+					})
+				}
+
+				return c.Render(http.StatusOK, "free-time", map[string]interface{}{
+					"year":                   dateFreeTime.Year,
+					"month":                  dateFreeTime.Month,
+					"day":                    dateFreeTime.Day,
+					"weekday":                weekday,
+					"user":                   user,
+					"date_free_time":         dateFreeTime,
+					"shared_users":           sharedUsers,
+					"shared_date_free_times": sharedDateFreeTimes,
+				})
+
+				// 共有している人がいなかった場合
+			} else {
+
+				return c.Render(http.StatusOK, "free-time", map[string]interface{}{
+					"year":                   dateFreeTime.Year,
+					"month":                  dateFreeTime.Month,
+					"day":                    dateFreeTime.Day,
+					"weekday":                weekday,
+					"user":                   user,
+					"date_free_time":         dateFreeTime,
+					"shared_users":           nil,
+					"shared_date_free_times": nil,
+				})
 			}
 
+		case "POST":
+			// POSTされた日付データからdateFreeTimeを取得する
+			date := c.FormValue("date")
+			if date == "" {
+
+				return c.Redirect(http.StatusFound, "/index")
+			}
+			year, month, day := strings.SplitDateByHyphen(date)
+
+			dateFreeTime, err := repository.GetDateFreeTimeByUserIDAndDate(ctx, db, userID, year, month, day)
+			if errors.Is(err, entity.ErrNoDateFreeTimeFound) {
+				log.Printf(entity.ERR_NO_DATE_FREE_TIME_FOUND+": %v", err)
+
+				return c.Render(http.StatusInternalServerError, "free-time", map[string]interface{}{
+					"error_message": entity.MESSAGE_NO_FREE_TIME_FOUND,
+				})
+			} else if err != nil {
+				log.Printf(entity.ERR_INTERNAL_SERVER_ERROR+": %v", err)
+
+				return c.Render(http.StatusInternalServerError, "free-time", map[string]interface{}{
+					"error_message": entity.MESSAGE_INTERNAL_SERVER_ERROR,
+				})
+			}
+
+			// 曜日を取得する
 			weekday := times.GetWeekdayByDate(dateFreeTime.Year, dateFreeTime.Month, dateFreeTime.Day)
 
-			return c.Render(http.StatusOK, "free-time", map[string]interface{}{
-				"year":                   dateFreeTime.Year,
-				"month":                  dateFreeTime.Month,
-				"day":                    dateFreeTime.Day,
-				"weekday":                weekday,
-				"user":                   user,
-				"date_free_time":         dateFreeTime,
-				"shared_users":           sharedUsers,
-				"shared_date_free_times": sharedDateFreeTimes,
-			})
-		case "POST":
-			date := c.FormValue("date")
-			// POSTリクエストの処理
-			return c.String(http.StatusOK, fmt.Sprintf("Date: %s", date))
+			// 自身が共有している人の中間テーブルを取得する
+			userIDsharedUserID, err := repository.ListUserIDSharedUserID(ctx, db, userID)
+			// 共有している人がいた場合
+			if userIDsharedUserID != nil {
+				if err != nil {
+					log.Printf(entity.ERR_INTERNAL_SERVER_ERROR+": %v", err)
+
+					return c.Render(http.StatusInternalServerError, "free-time", map[string]interface{}{
+						"error_message": entity.MESSAGE_INTERNAL_SERVER_ERROR,
+					})
+				}
+
+				// ユーザが共有しているユーザ情報を全て取得する
+				sharedUsers, err := repository.ListSharedUser(ctx, db, userIDsharedUserID)
+				if err != nil {
+					log.Printf(entity.ERR_INTERNAL_SERVER_ERROR+": %v", err)
+
+					return c.Render(http.StatusInternalServerError, "free-time", map[string]interface{}{
+						"error_message": entity.MESSAGE_INTERNAL_SERVER_ERROR,
+					})
+				}
+
+				// ユーザが共有しているユーザのdate-free-timeを全て取得する
+				sharedDateFreeTimes, err := repository.ListDateFreeTimes(ctx, db, sharedUsers, dateFreeTime.Year, dateFreeTime.Month, dateFreeTime.Day)
+				if err != nil {
+					log.Printf(entity.ERR_INTERNAL_SERVER_ERROR+": %v", err)
+
+					return c.Render(http.StatusInternalServerError, "free-time", map[string]interface{}{
+						"error_message": entity.MESSAGE_INTERNAL_SERVER_ERROR,
+					})
+				}
+
+				return c.Render(http.StatusOK, "free-time", map[string]interface{}{
+					"year":                   dateFreeTime.Year,
+					"month":                  dateFreeTime.Month,
+					"day":                    dateFreeTime.Day,
+					"weekday":                weekday,
+					"user":                   user,
+					"date_free_time":         dateFreeTime,
+					"shared_users":           sharedUsers,
+					"shared_date_free_times": sharedDateFreeTimes,
+				})
+
+				// 共有している人がいなかった場合
+			} else {
+
+				return c.Render(http.StatusOK, "free-time", map[string]interface{}{
+					"year":                   dateFreeTime.Year,
+					"month":                  dateFreeTime.Month,
+					"day":                    dateFreeTime.Day,
+					"weekday":                weekday,
+					"user":                   user,
+					"date_free_time":         dateFreeTime,
+					"shared_users":           nil,
+					"shared_date_free_times": nil,
+				})
+			}
+
 		default:
-			// サポートされていないHTTPメソッドの場合は、405 Method Not Allowedを返す
-			return c.NoContent(http.StatusMethodNotAllowed)
-
-			// dateStr := c.QueryParam("date")
-			// yearStr, monthStr, dayStr := strings.SplitDateByHyphen(dateStr)
-
+			// サポートされていないHTTPメソッドの場合は、TOPページへリダイレクトする
+			return c.Redirect(http.StatusSeeOther, "/index")
 		}
 	}
 }
@@ -166,9 +251,25 @@ func FreeTimePage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 /* スケジュールページ */
 func FreeTimesPage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
+		// sessionを取得し、userIDを取得
 		sess, _ := session.Get(config.Config.Session.Name, c)
 		userID := sess.Values[config.Config.Session.KeyName].(string)
-		nearestDateFreeTime, _ := gateway.GetNearestDateFreeTime(ctx, db, userID)
+
+		// userの現在の日付から最も近いfree-timeを取得する
+		nearestDateFreeTime, err := gateway.GetNearestDateFreeTime(ctx, db, userID)
+		if errors.Is(err, entity.ErrNoFreeTimeFound) {
+			log.Printf(entity.ERR_NO_DATE_FREE_TIME_FOUND+": %v", err)
+
+			return c.Render(http.StatusOK, "index", map[string]interface{}{
+				"error_message": entity.MESSAGE_NO_FREE_TIME_FOUND,
+			})
+		} else if err != nil {
+			log.Printf(entity.ERR_INTERNAL_SERVER_ERROR+": %v", err)
+
+			return c.Render(http.StatusOK, "index", map[string]interface{}{
+				"error_message": entity.MESSAGE_INTERNAL_SERVER_ERROR,
+			})
+		}
 
 		return c.Render(http.StatusOK, "free-times", map[string]interface{}{
 			"nearest_date_free_time_id": nearestDateFreeTime.ID,
@@ -211,9 +312,25 @@ func CreateFreeTimePage(c echo.Context) error {
 /* スケジュール更新ページ */
 func UpdateFreeTimePage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
+		// sessionを取得し、userIDを取得
 		sess, _ := session.Get(config.Config.Session.Name, c)
 		userID := sess.Values[config.Config.Session.KeyName].(string)
-		nearestDateFreeTime, _ := gateway.GetNearestDateFreeTime(ctx, db, userID)
+
+		// userの現在の日付から最も近いfree-timeを取得する
+		nearestDateFreeTime, err := gateway.GetNearestDateFreeTime(ctx, db, userID)
+		if errors.Is(err, entity.ErrNoFreeTimeFound) {
+			log.Printf(entity.ERR_NO_DATE_FREE_TIME_FOUND+": %v", err)
+
+			return c.Render(http.StatusOK, "index", map[string]interface{}{
+				"error_message": entity.MESSAGE_NO_FREE_TIME_FOUND,
+			})
+		} else if err != nil {
+			log.Printf(entity.ERR_INTERNAL_SERVER_ERROR+": %v", err)
+
+			return c.Render(http.StatusOK, "index", map[string]interface{}{
+				"error_message": entity.MESSAGE_INTERNAL_SERVER_ERROR,
+			})
+		}
 
 		return c.Render(http.StatusOK, "update-free-time", map[string]interface{}{
 			"nearest_date_free_time_id": nearestDateFreeTime.ID,
@@ -224,9 +341,25 @@ func UpdateFreeTimePage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 /* 自身のスケジュールを共有するページ */
 func ShareWithSomeonePage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
+		// sessionを取得し、userIDを取得
 		sess, _ := session.Get(config.Config.Session.Name, c)
 		userID := sess.Values[config.Config.Session.KeyName].(string)
-		nearestDateFreeTime, _ := gateway.GetNearestDateFreeTime(ctx, db, userID)
+
+		// userの現在の日付から最も近いfree-timeを取得する
+		nearestDateFreeTime, err := gateway.GetNearestDateFreeTime(ctx, db, userID)
+		if errors.Is(err, entity.ErrNoFreeTimeFound) {
+			log.Printf(entity.ERR_NO_DATE_FREE_TIME_FOUND+": %v", err)
+
+			return c.Render(http.StatusOK, "index", map[string]interface{}{
+				"error_message": entity.MESSAGE_NO_FREE_TIME_FOUND,
+			})
+		} else if err != nil {
+			log.Printf(entity.ERR_INTERNAL_SERVER_ERROR+": %v", err)
+
+			return c.Render(http.StatusOK, "index", map[string]interface{}{
+				"error_message": entity.MESSAGE_INTERNAL_SERVER_ERROR,
+			})
+		}
 
 		return c.Render(http.StatusOK, "share-with-someone", map[string]interface{}{
 			"nearest_date_free_time_id": nearestDateFreeTime.ID,
@@ -237,9 +370,25 @@ func ShareWithSomeonePage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 /* 相手のスケジュールを共有するページ */
 func ShareWithMePage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
+		// sessionを取得し、userIDを取得
 		sess, _ := session.Get(config.Config.Session.Name, c)
 		userID := sess.Values[config.Config.Session.KeyName].(string)
-		nearestDateFreeTime, _ := gateway.GetNearestDateFreeTime(ctx, db, userID)
+
+		// userの現在の日付から最も近いfree-timeを取得する
+		nearestDateFreeTime, err := gateway.GetNearestDateFreeTime(ctx, db, userID)
+		if errors.Is(err, entity.ErrNoFreeTimeFound) {
+			log.Printf(entity.ERR_NO_DATE_FREE_TIME_FOUND+": %v", err)
+
+			return c.Render(http.StatusOK, "index", map[string]interface{}{
+				"error_message": entity.MESSAGE_NO_FREE_TIME_FOUND,
+			})
+		} else if err != nil {
+			log.Printf(entity.ERR_INTERNAL_SERVER_ERROR+": %v", err)
+
+			return c.Render(http.StatusOK, "index", map[string]interface{}{
+				"error_message": entity.MESSAGE_INTERNAL_SERVER_ERROR,
+			})
+		}
 
 		return c.Render(http.StatusOK, "share-with-me", map[string]interface{}{
 			"nearest_date_free_time_id": nearestDateFreeTime.ID,
@@ -250,9 +399,25 @@ func ShareWithMePage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 /* アカウントページ */
 func AccountPage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
+		// sessionを取得し、userIDを取得
 		sess, _ := session.Get(config.Config.Session.Name, c)
 		userID := sess.Values[config.Config.Session.KeyName].(string)
-		nearestDateFreeTime, _ := gateway.GetNearestDateFreeTime(ctx, db, userID)
+
+		// userの現在の日付から最も近いfree-timeを取得する
+		nearestDateFreeTime, err := gateway.GetNearestDateFreeTime(ctx, db, userID)
+		if errors.Is(err, entity.ErrNoFreeTimeFound) {
+			log.Printf(entity.ERR_NO_DATE_FREE_TIME_FOUND+": %v", err)
+
+			return c.Render(http.StatusOK, "index", map[string]interface{}{
+				"error_message": entity.MESSAGE_NO_FREE_TIME_FOUND,
+			})
+		} else if err != nil {
+			log.Printf(entity.ERR_INTERNAL_SERVER_ERROR+": %v", err)
+
+			return c.Render(http.StatusOK, "index", map[string]interface{}{
+				"error_message": entity.MESSAGE_INTERNAL_SERVER_ERROR,
+			})
+		}
 
 		return c.Render(http.StatusOK, "account", map[string]interface{}{
 			"nearest_date_free_time_id": nearestDateFreeTime.ID,
@@ -263,9 +428,25 @@ func AccountPage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 /* アカウント編集ページ */
 func AccountEditPage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
+		// sessionを取得し、userIDを取得
 		sess, _ := session.Get(config.Config.Session.Name, c)
 		userID := sess.Values[config.Config.Session.KeyName].(string)
-		nearestDateFreeTime, _ := gateway.GetNearestDateFreeTime(ctx, db, userID)
+
+		// userの現在の日付から最も近いfree-timeを取得する
+		nearestDateFreeTime, err := gateway.GetNearestDateFreeTime(ctx, db, userID)
+		if errors.Is(err, entity.ErrNoFreeTimeFound) {
+			log.Printf(entity.ERR_NO_DATE_FREE_TIME_FOUND+": %v", err)
+
+			return c.Render(http.StatusOK, "index", map[string]interface{}{
+				"error_message": entity.MESSAGE_NO_FREE_TIME_FOUND,
+			})
+		} else if err != nil {
+			log.Printf(entity.ERR_INTERNAL_SERVER_ERROR+": %v", err)
+
+			return c.Render(http.StatusOK, "index", map[string]interface{}{
+				"error_message": entity.MESSAGE_INTERNAL_SERVER_ERROR,
+			})
+		}
 
 		return c.Render(http.StatusOK, "account-edit", map[string]interface{}{
 			"nearest_date_free_time_id": nearestDateFreeTime.ID,
@@ -276,9 +457,25 @@ func AccountEditPage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 /* パスワードリセットページ */
 func PasswordResetPage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
+		// sessionを取得し、userIDを取得
 		sess, _ := session.Get(config.Config.Session.Name, c)
 		userID := sess.Values[config.Config.Session.KeyName].(string)
-		nearestDateFreeTime, _ := gateway.GetNearestDateFreeTime(ctx, db, userID)
+
+		// userの現在の日付から最も近いfree-timeを取得する
+		nearestDateFreeTime, err := gateway.GetNearestDateFreeTime(ctx, db, userID)
+		if errors.Is(err, entity.ErrNoFreeTimeFound) {
+			log.Printf(entity.ERR_NO_DATE_FREE_TIME_FOUND+": %v", err)
+
+			return c.Render(http.StatusOK, "index", map[string]interface{}{
+				"error_message": entity.MESSAGE_NO_FREE_TIME_FOUND,
+			})
+		} else if err != nil {
+			log.Printf(entity.ERR_INTERNAL_SERVER_ERROR+": %v", err)
+
+			return c.Render(http.StatusOK, "index", map[string]interface{}{
+				"error_message": entity.MESSAGE_INTERNAL_SERVER_ERROR,
+			})
+		}
 
 		return c.Render(http.StatusOK, "password-reset", map[string]interface{}{
 			"nearest_date_free_time_id": nearestDateFreeTime.ID,
@@ -289,9 +486,25 @@ func PasswordResetPage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 /* パスワード再登録ページ */
 func PasswordReRegistrationPage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
+		// sessionを取得し、userIDを取得
 		sess, _ := session.Get(config.Config.Session.Name, c)
 		userID := sess.Values[config.Config.Session.KeyName].(string)
-		nearestDateFreeTime, _ := gateway.GetNearestDateFreeTime(ctx, db, userID)
+
+		// userの現在の日付から最も近いfree-timeを取得する
+		nearestDateFreeTime, err := gateway.GetNearestDateFreeTime(ctx, db, userID)
+		if errors.Is(err, entity.ErrNoFreeTimeFound) {
+			log.Printf(entity.ERR_NO_DATE_FREE_TIME_FOUND+": %v", err)
+
+			return c.Render(http.StatusOK, "index", map[string]interface{}{
+				"error_message": entity.MESSAGE_NO_FREE_TIME_FOUND,
+			})
+		} else if err != nil {
+			log.Printf(entity.ERR_INTERNAL_SERVER_ERROR+": %v", err)
+
+			return c.Render(http.StatusOK, "index", map[string]interface{}{
+				"error_message": entity.MESSAGE_INTERNAL_SERVER_ERROR,
+			})
+		}
 
 		return c.Render(http.StatusOK, "password-re-registration", map[string]interface{}{
 			"nearest_date_free_time_id": nearestDateFreeTime.ID,

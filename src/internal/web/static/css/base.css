@@ -233,6 +233,18 @@ ul {
 
 /* =================== error message ====================== */
 
+.error-message-in-index {
+  position: absolute;
+  top: 44.5%;
+  left: 4%;
+}
+
+.error-message-in-free-time {
+  position: absolute;
+  top: 23%;
+  left: 25%;
+}
+
 .error-message-in-account {
   position: absolute;
   top: 24%;

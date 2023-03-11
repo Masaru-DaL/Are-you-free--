@@ -337,8 +337,11 @@
 
 .select-schedule-left-area {
   width: 20%;
+  height: 70vh;
   padding-top: 66px;
   padding-bottom: 66px;
+  border: none;
+  border-right: 1px solid #000;
 }
 
 .username-wrapper {
@@ -368,6 +371,10 @@
 
 .form-wrapper {
   width: 100%;
+}
+
+.content-left-button-wrapper {
+  margin-top: 8%;
 }
 
 .content-left-button {

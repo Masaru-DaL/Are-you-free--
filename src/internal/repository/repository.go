@@ -12,31 +12,9 @@ import (
 	"github.com/pkg/errors"
 )
 
-func ListUserIDSharedUserID(ctx context.Context, db *sqlx.DB, userID string) ([]*entity.SharedUser, error) {
-	sharedUsers, err := gateway.ListUserIDSharedUserID(ctx, db, userID)
-	if err != nil {
-
-		return nil, entity.ErrNoUserFound
-	}
-
-	return sharedUsers, nil
-}
-
-func ListSharedUser(ctx context.Context, db *sqlx.DB, userIDSharedUserID []*entity.SharedUser) ([]*entity.User, error) {
-	var users []*entity.User
-
-	for _, us := range userIDSharedUserID {
-		user, err := gateway.GetUserByUserID(ctx, db, us.UserID)
-		if err != nil {
-
-			return nil, entity.ErrNoUserFound
-		}
-
-		users = append(users, user)
-	}
-
-	return users, nil
-}
+// --------------------------------
+// 		Get
+// --------------------------------
 
 /* 現在の日付からもっとも最新の日付を取得する */
 func GetNearestDateFreeTime(ctx context.Context, db *sqlx.DB, userID string) (*entity.DateFreeTime, error) {
@@ -77,7 +55,7 @@ func GetDateFreeTimeByID(ctx context.Context, db *sqlx.DB, dateFreeTimeID int) (
 /* 指定した日付のfree-timeを全て格納して返す */
 func GetDateFreeTimeByUserIDAndDate(ctx context.Context, db *sqlx.DB, userID, year, month, day string) (*entity.DateFreeTime, error) {
 	// ユーザの指定した日付の情報を取得する
-	dateFreeTime, err := gateway.GetDateFreeTime(ctx, db, userID, year, month, day)
+	dateFreeTime, err := gateway.GetDateFreeTimeByUserIDAndDate(ctx, db, userID, year, month, day)
 	if err != nil {
 
 		return nil, entity.ErrNoDateFreeTimeFound
@@ -104,6 +82,48 @@ func GetUserByUserID(ctx context.Context, db *sqlx.DB, userID string) (*entity.U
 	}
 
 	return user, nil
+}
+
+func ListUserIDSharedUserID(ctx context.Context, db *sqlx.DB, userID string) ([]*entity.SharedUser, error) {
+	sharedUsers, err := gateway.ListUserIDSharedUserID(ctx, db, userID)
+	if err != nil {
+
+		return nil, entity.ErrNoUserFound
+	}
+
+	return sharedUsers, nil
+}
+
+func ListSharedUser(ctx context.Context, db *sqlx.DB, userIDSharedUserID []*entity.SharedUser) ([]*entity.User, error) {
+	var users []*entity.User
+
+	for _, us := range userIDSharedUserID {
+		user, err := gateway.GetUserByUserID(ctx, db, us.UserID)
+		if err != nil {
+
+			return nil, entity.ErrNoUserFound
+		}
+
+		users = append(users, user)
+	}
+
+	return users, nil
+}
+
+func ListDateFreeTimes(ctx context.Context, db *sqlx.DB, users []*entity.User, year, month, day string) ([]*entity.DateFreeTime, error) {
+	var dateFreeTimes []*entity.DateFreeTime
+
+	for _, u := range users {
+		dateFreeTime, err := gateway.GetDateFreeTimeByUserIDAndDate(ctx, db, u.ID, year, month, day)
+		if err != nil {
+
+			return nil, err
+		}
+
+		dateFreeTimes = append(dateFreeTimes, dateFreeTime)
+	}
+
+	return dateFreeTimes, nil
 }
 
 // date-free-timeを作成（トランザクション対応）
