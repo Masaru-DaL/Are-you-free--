@@ -1,0 +1,58 @@
+/* =================== content上部 ====================== */
+
+.free-time-header-wrapper {
+  width: 100%;
+  position: fixed;
+  z-index: 10;
+}
+
+.upper-area-wrapper {
+  width: 100%;
+  height: 2vh;
+}
+
+.upper-left-area {
+  width: 20%;
+}
+
+.upper-right-area {
+  width: 80%;
+  border: none;
+  border-left: 1px solid #000;
+}
+
+.header-area-wrapper {
+  width: 100%;
+  height: 6vh;
+}
+
+.header-left-area {
+  width: 20%;
+  border: none;
+  border-top: 1px solid #000;
+  border-bottom: 1px solid #000;
+}
+
+.header-right-area {
+  width: 80%;
+  text-align: center;
+  line-height: 50%;
+  border: none;
+  border-top: 1px solid #000;
+  border-left: 1px solid #000;;
+  border-bottom: 1px solid #000;
+}
+
+.header-right-area ul {
+  display: table;
+  table-layout: fixed;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.header-right-area li {
+  display: table-cell;
+  padding: 4px 20px;
+  font-size: 20px;
+}
