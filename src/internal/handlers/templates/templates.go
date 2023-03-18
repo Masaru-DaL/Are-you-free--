@@ -44,6 +44,16 @@ func TopPage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 		sess, _ := session.Get(config.Config.Session.Name, c)
 		userID := sess.Values[config.Config.Session.KeyName].(string)
 
+		dateFreeTimes, err := repository.ListDateFreeTime(ctx, db, userID)
+		if err != nil {
+
+			log.Printf(entity.ERR_INTERNAL_SERVER_ERROR+": %v", err)
+
+			return c.Render(http.StatusOK, "index", map[string]interface{}{
+				"error_message": entity.MESSAGE_INTERNAL_SERVER_ERROR,
+			})
+		}
+
 		// userの現在の日付から最も近いfree-timeを取得する
 		nearestDateFreeTime, err := gateway.GetNearestDateFreeTime(ctx, db, userID)
 		if errors.Is(err, entity.ErrNoFreeTimeFound) {
@@ -62,6 +72,7 @@ func TopPage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 
 		return c.Render(http.StatusOK, "index", map[string]interface{}{
 			"nearest_date_free_time_id": nearestDateFreeTime.ID,
+			"date_free_times":           dateFreeTimes,
 		})
 	}
 }
@@ -121,7 +132,7 @@ func FreeTimePage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 				}
 
 				// ユーザが共有しているユーザのdate-free-timeを全て取得する
-				sharedDateFreeTimes, err := repository.ListDateFreeTimes(ctx, db, sharedUsers, dateFreeTime.Year, dateFreeTime.Month, dateFreeTime.Day)
+				sharedDateFreeTimes, err := repository.ListDateFreeTimeByUsersAndDate(ctx, db, sharedUsers, dateFreeTime.Year, dateFreeTime.Month, dateFreeTime.Day)
 				if err != nil {
 					log.Printf(entity.ERR_INTERNAL_SERVER_ERROR+": %v", err)
 
@@ -206,7 +217,7 @@ func FreeTimePage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 				}
 
 				// ユーザが共有しているユーザのdate-free-timeを全て取得する
-				sharedDateFreeTimes, err := repository.ListDateFreeTimes(ctx, db, sharedUsers, dateFreeTime.Year, dateFreeTime.Month, dateFreeTime.Day)
+				sharedDateFreeTimes, err := repository.ListDateFreeTimeByUsersAndDate(ctx, db, sharedUsers, dateFreeTime.Year, dateFreeTime.Month, dateFreeTime.Day)
 				if err != nil {
 					log.Printf(entity.ERR_INTERNAL_SERVER_ERROR+": %v", err)
 

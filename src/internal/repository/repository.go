@@ -110,7 +110,7 @@ func ListSharedUser(ctx context.Context, db *sqlx.DB, userIDSharedUserID []*enti
 	return users, nil
 }
 
-func ListDateFreeTimes(ctx context.Context, db *sqlx.DB, users []*entity.User, year, month, day string) ([]*entity.DateFreeTime, error) {
+func ListDateFreeTimeByUsersAndDate(ctx context.Context, db *sqlx.DB, users []*entity.User, year, month, day string) ([]*entity.DateFreeTime, error) {
 	var dateFreeTimes []*entity.DateFreeTime
 
 	for _, u := range users {
@@ -121,6 +121,18 @@ func ListDateFreeTimes(ctx context.Context, db *sqlx.DB, users []*entity.User, y
 		}
 
 		dateFreeTimes = append(dateFreeTimes, dateFreeTime)
+	}
+
+	return dateFreeTimes, nil
+}
+
+func ListDateFreeTime(ctx context.Context, db *sqlx.DB, userID string) ([]*entity.DateFreeTime, error) {
+	var dateFreeTimes []*entity.DateFreeTime
+
+	dateFreeTimes, err := gateway.ListDateFreeTime(ctx, db, userID)
+	if err != nil {
+
+		return nil, err
 	}
 
 	return dateFreeTimes, nil

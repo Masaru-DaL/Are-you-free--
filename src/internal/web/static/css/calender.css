@@ -59,6 +59,10 @@ td.today {
     color: #fff;
 }
 
+td.date-free-time {
+    background-color: #D65E72;
+}
+
 /*ボタン*/
 #next-prev-button {
     position: relative;

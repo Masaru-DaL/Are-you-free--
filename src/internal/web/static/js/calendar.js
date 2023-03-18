@@ -46,11 +46,6 @@ function createProcess(year, month) {
     var lastMonthEndDate = new Date(year, month, 0).getDate();
     var row = Math.ceil((startDayOfWeek + endDate) / week.length);
 
-    // var freeYear = document.getElementById("freeYear")
-    // var freeMonth = document.getElementById("freeMonth")
-    // var freeDay = document.getElementById("freeDay")
-
-
     // 1行ずつ設定
     for (var i = 0; i < row; i++) {
         calendar += "<tr>";
@@ -63,19 +58,27 @@ function createProcess(year, month) {
                 // 最終行で最終日以降、翌月の日付を設定
                 count++;
                 calendar += "<td class='disabled'>" + (count - endDate) + "</td>";
-            } else {
+            } else if (count < endDate) {
                 // 当月の日付を曜日に照らし合わせて設定
                 count++;
-                if(year == today.getFullYear()
-                    && month == (today.getMonth())
-                    && count == today.getDate()){
+                var dateFreeTime = date_free_times.find(function(date) {
+                    return year == date.Year && month+1 == date.Month && count == date.Day;
+                });
+                if (dateFreeTime) {
+                    console.log("true");
+                    calendar += "<td class='date-free-time'>" + count + "</td>";
+                } else if (year == today.getFullYear() && month == (today.getMonth()) && count == today.getDate()) {
                     calendar += "<td class='today'>" + count + "</td>";
                 } else {
                     calendar += "<td>" + count + "</td>";
                 }
+            } else {
+                // 最終行で最終日以降、翌月の日付を設定
+                calendar += "<td class='disabled'>" + (count - endDate) + "</td>";
             }
         }
         calendar += "</tr>";
+
     }
     return calendar;
 }
