@@ -168,11 +168,24 @@ func FreeTimePage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 			}
 
 		case "POST":
+			dateFreeTimes, err := repository.ListDateFreeTime(ctx, db, userID)
+			if err != nil {
+
+				log.Printf(entity.ERR_INTERNAL_SERVER_ERROR+": %v", err)
+
+				return c.Render(http.StatusOK, "index", map[string]interface{}{
+					"error_message": entity.MESSAGE_INTERNAL_SERVER_ERROR,
+				})
+			}
+
 			// POSTされた日付データからdateFreeTimeを取得する
 			date := c.FormValue("date")
 			if date == "" {
 
-				return c.Redirect(http.StatusFound, "/index")
+				return c.Render(http.StatusInternalServerError, "free-time", map[string]interface{}{
+					"error_message":   entity.MESSAGE_NO_FREE_TIME_FOUND,
+					"date_free_times": dateFreeTimes,
+				})
 			}
 			year, month, day := strings.SplitDateByHyphen(date)
 
@@ -181,13 +194,15 @@ func FreeTimePage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 				log.Printf(entity.ERR_NO_DATE_FREE_TIME_FOUND+": %v", err)
 
 				return c.Render(http.StatusInternalServerError, "free-time", map[string]interface{}{
-					"error_message": entity.MESSAGE_NO_FREE_TIME_FOUND,
+					"error_message":   entity.MESSAGE_NO_FREE_TIME_FOUND,
+					"date_free_times": dateFreeTimes,
 				})
 			} else if err != nil {
 				log.Printf(entity.ERR_INTERNAL_SERVER_ERROR+": %v", err)
 
 				return c.Render(http.StatusInternalServerError, "free-time", map[string]interface{}{
-					"error_message": entity.MESSAGE_INTERNAL_SERVER_ERROR,
+					"error_message":   entity.MESSAGE_INTERNAL_SERVER_ERROR,
+					"date_free_times": dateFreeTimes,
 				})
 			}
 
@@ -202,7 +217,8 @@ func FreeTimePage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 					log.Printf(entity.ERR_INTERNAL_SERVER_ERROR+": %v", err)
 
 					return c.Render(http.StatusInternalServerError, "free-time", map[string]interface{}{
-						"error_message": entity.MESSAGE_INTERNAL_SERVER_ERROR,
+						"error_message":   entity.MESSAGE_INTERNAL_SERVER_ERROR,
+						"date_free_times": dateFreeTimes,
 					})
 				}
 
@@ -212,7 +228,8 @@ func FreeTimePage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 					log.Printf(entity.ERR_INTERNAL_SERVER_ERROR+": %v", err)
 
 					return c.Render(http.StatusInternalServerError, "free-time", map[string]interface{}{
-						"error_message": entity.MESSAGE_INTERNAL_SERVER_ERROR,
+						"error_message":   entity.MESSAGE_INTERNAL_SERVER_ERROR,
+						"date_free_times": dateFreeTimes,
 					})
 				}
 
@@ -222,7 +239,8 @@ func FreeTimePage(ctx context.Context, db *sqlx.DB) echo.HandlerFunc {
 					log.Printf(entity.ERR_INTERNAL_SERVER_ERROR+": %v", err)
 
 					return c.Render(http.StatusInternalServerError, "free-time", map[string]interface{}{
-						"error_message": entity.MESSAGE_INTERNAL_SERVER_ERROR,
+						"error_message":   entity.MESSAGE_INTERNAL_SERVER_ERROR,
+						"date_free_times": dateFreeTimes,
 					})
 				}
 

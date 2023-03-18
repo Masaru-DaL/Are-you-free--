@@ -6,8 +6,8 @@ function drawCanvas() {
   // 描画コンテキストの取得
   const canvas = document.getElementById('free-time');
   canvas.style.position = "absolute";
-  canvas.style.left = "260px";
-  canvas.style.top = "40px"
+  canvas.style.left = "268px";
+  canvas.style.top = "45px"
 
   if (canvas.getContext) {
     const context = canvas.getContext('2d');
