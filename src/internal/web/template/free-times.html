@@ -1,0 +1,133 @@
+{{define "free-times"}}
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Are you free? _free-times_</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/header.css" />
+    <link rel="stylesheet" href="../css/main.css" />
+    <link rel="stylesheet" href="../css/free-time.css" />
+  </head>
+  <body>
+    <header class="header-wrapper bg-white">
+      <div class="header-wrapper-line bg-white">
+        <div class="header flex m-auto items-center bg-white">
+          <div class="header-link-wrapper">
+            <a href="/index">
+              <div class="header-link">
+                <p class="font-24 letter-005">TOP</p>
+              </div>
+            </a>
+          </div>
+          <div class="header-link-wrapper">
+            <a href="/free-time/{{.nearest_date_free_time_id}}">
+              <div class="header-link">
+                <p class="font-24 letter-005">NEAREST FREE-TIME</p>
+              </div>
+            </a>
+          </div>
+          <div class="header-link-wrapper">
+            <a href="/free-times">
+              <div class="header-link">
+                <p class="font-24 letter-005">FREE-TIMES</p>
+              </div>
+            </a>
+          </div>
+          <div class="header-link-wrapper">
+            <a href="/share/with_someone">
+              <div class="header-link">
+                <p class="font-24 letter-005">SHARE</p>
+              </div>
+            </a>
+          </div>
+          <div class="header-link-wrapper">
+            <a href="/account/">
+              <div class="header-link">
+                <p class="font-24 letter-005">ACCOUNT</p>
+              </div>
+            </a>
+          </div>
+          <div id="today-wrapper" class="text-center font-24">
+            <span id="today" class="blinking"></span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="main">
+      <div class="free-time-header-wrapper flex-col">
+        <div class="upper-area-wrapper flex">
+          <div class="upper-left-area"></div>
+          <div class="upper-right-area"></div>
+        </div>
+        <div class="header-area-wrapper flex">
+          <div class="header-left-area flex justify-center items-center">
+            <p class="font-20 bold">2023/02/27</p>
+          </div>
+          <div class="header-right-area">
+            <ul >
+              <li>6</li>
+              <li>7</li>
+              <li>8</li>
+              <li>9</li>
+              <li>10</li>
+              <li>11</li>
+              <li>12</li>
+              <li>13</li>
+              <li>14</li>
+              <li>15</li>
+              <li>16</li>
+              <li>17</li>
+              <li>18</li>
+              <li>19</li>
+              <li>20</li>
+              <li>21</li>
+              <li>22</li>
+              <li>23</li>
+              <li>24</li>
+            </ul>
+
+        </div>
+        </div>
+      </div>
+
+      <div class="content-wrapper flex">
+        <div class="select-schedule-left-area border-none border-right flex-col">
+          <div class="items-center">
+            <div class="content-left flex justify-center items-center m-auto">
+              <p class="font-24">2023/02/01</p>
+            </div>
+            <div class="content-left flex justify-center items-center m-auto">
+              <p>2023/02/02</p>
+            </div>
+            <div class="content-left flex justify-center items-center m-auto">
+              <p>2023/02/03</p>
+            </div>
+            <div class="content-left flex justify-center items-center m-auto">
+              <p>2023/02/04</p>
+            </div>
+            <div class="content-left flex justify-center items-center m-auto">
+              <p>2023/02/05</p>
+            </div>
+            <div class="content-left flex justify-center items-center m-auto">
+              <p>2023/02/06</p>
+            </div>
+          </div>
+        </div>
+        <div class="content-right-area flex-col">
+
+        </div>
+
+      </div>
+    </main>
+
+
+  </body>
+  <script type="text/javascript" src="../js/now.js"></script>
+
+
+</html>
+{{end}}

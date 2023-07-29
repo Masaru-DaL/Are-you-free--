@@ -1,0 +1,106 @@
+    :root {
+  --BLACK: #141414;
+  --RED: #ff0000;
+  --DARKRED: #bb2121;
+  --WHITE: #ffffff;
+  --GHOSTWHITE: #f8f8ff;
+  --WOOD: rgb(195, 128, 41);
+  --BURLYWOOD: rgb(222 184 135);
+  --SNOW: #fffafa;
+  --OLDLACE: #fdf5e6;
+  --BEIGE: #f5f5dc;
+  --SKYBLUE: #63A5F2;
+  --SADDLEBROWN: #8b4513;
+  --DARKGREEN: #006400;
+  --DIMGREY: #696969;
+}
+
+.bg-white {
+  background-color: var(--WHITE);
+}
+
+.bg-ghostwhite {
+  background-color: var(--GHOSTWHITE);
+}
+
+.bg-black {
+  background-color: var(--BLACK);
+}
+
+.bg-red {
+  background-color: var(--RED);
+}
+
+.bg-burlywood {
+  background-color: var(--BURLYWOOD);
+}
+
+.bg-wood {
+  background-color: var(--WOOD);
+}
+
+.bg-snow {
+  background-color: var(--SNOW);
+}
+
+.bg-oldlace {
+  background-color: var(--OLDLACE);
+}
+
+.bg-beige {
+  background-color: var(--BEIGE);
+}
+
+.bg-skyblue {
+  background-color: var(--SKYBLUE);
+}
+
+.bg-darkgreen {
+  background-color: var(--DARKGREEN);
+}
+
+.text-white {
+  color: var(--WHITE);
+}
+
+.text-red {
+  color: var(--RED);
+}
+
+.text-darkred {
+  color: var(--DARKRED);
+}
+
+.text-snow {
+  color: var(--SNOW);
+}
+
+.text-wood {
+  color: var(--WOOD);
+}
+
+.text-skyblue {
+  color: var(--SKYBLUE);
+}
+
+.text-darkgreen {
+  color: var(--DARKGREEN);
+}
+
+.text-dimgrey {
+  color: var(--DIMGREY);
+}
+
+.button-darkgreen {
+  color: var(--SNOW);
+  background-color: var(--DARKGREEN);
+  opacity: 0.8;
+}
+.button-saddlebrown {
+  color: var(--SNOW);
+  background-color: var(--SADDLEBROWN);
+  opacity: 0.8;
+}
+.box-ghostwhite {
+  background-color: rgba(248, 248, 255, 0.6);
+}

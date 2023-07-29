@@ -1,0 +1,89 @@
+.header-wrapper {
+  width: 100%;
+  height: 13vh;
+  position: fixed;
+  z-index: 20;
+}
+.header-wrapper-line {
+  width: 97%;
+  height: 95%;
+
+  --bg-gradient: linear-gradient(#333 0 100%);
+    padding: 0.8rem;
+    background-image:
+        var(--bg-gradient),
+        var(--bg-gradient),
+        var(--bg-gradient),
+        var(--bg-gradient);
+    background-repeat: no-repeat;
+    background-size: 60% 2px, 2px 40%, 60% 2px, 2px 40%;
+    background-position: left 15px, right 15px bottom, right bottom 15px, left 15px top;
+}
+.header {
+  width: 99.4%;
+  height: 90.8%;
+  margin-top: 0.3%;
+  margin-right: 0.3%;
+  box-shadow: 7px 7px 7px rgba(54, 54, 54, 0.3);
+}
+.header-link-wrapper {
+  height: 60%;
+  margin-left: 2%;
+}
+.header-link-wrapper:nth-child(1) {
+  width: 6%;
+}
+.header-link-wrapper:nth-child(2) {
+  width: 20%;
+}
+.header-link-wrapper:nth-child(3) {
+  width: 13%;
+}
+.header-link-wrapper:nth-child(4) {
+  width: 8%;
+}
+.header-link-wrapper:nth-child(5) {
+  width: 10%;
+}
+.header-link {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  border-right: 1.5px solid var(--WOOD);
+  border-bottom: 1.5px solid var(--WOOD);
+  background-color: var(--SNOW);
+  box-shadow: 7px 7px 7px rgba(54, 54, 54, 0.3);
+}
+
+#today-wrapper {
+  width: 27%;
+  height: 44%;
+  margin: 0 auto;
+  padding: 0.5% 1%;
+  border: none;
+  border-right: 1.5px solid var(--WOOD);
+  border-bottom: 1.5px solid var(--WOOD);
+  box-shadow: 7px 7px 7px rgba(54, 54, 54, 0.3);
+}
+
+/* 現在時刻を点滅させる */
+.blinking{
+	-webkit-animation:blink 2s ease-in-out infinite alternate;
+  -moz-animation:blink 2s ease-in-out infinite alternate;
+  animation:blink 2s ease-in-out infinite alternate;
+}
+@-webkit-keyframes blink{
+    0% {opacity:0;}
+    100% {opacity:1;}
+}
+@-moz-keyframes blink{
+    0% {opacity:0;}
+    100% {opacity:1;}
+}
+@keyframes blink{
+    0% {opacity:0;}
+    100% {opacity:1;}
+}

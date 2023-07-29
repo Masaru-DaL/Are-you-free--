@@ -1,0 +1,264 @@
+html {
+  overflow: scroll;
+  letter-spacing: 0.15em;
+}
+
+body {
+  margin: 0;
+  font-family: 'Andale Mono','Sitka Heading','Avenir',sans-serif;
+  color: var(--BLACK);
+  background-color: #fff;
+  min-height: 100vh;
+  width: 100%;
+}
+input,textarea,select,button {
+  font-family: 'Andale Mono','Sitka Heading','Avenir',sans-serif;
+  color: var(--BLACK);
+  border: none;
+  outline: none
+
+}
+
+a {
+  text-decoration: none;
+}
+a,a:hover,a:visited{
+  color: inherit;
+}
+
+ul {
+  list-style-type: none;
+}
+
+
+/* =================== FlexBox ====================== */
+
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.items-end {
+  align-items: flex-end;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-end {
+  text-align: end;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-end {
+  justify-content: end;
+}
+
+/* =================== FlexBox ====================== */
+
+.relative {
+  position: relative;
+}
+
+.absolute {
+  position: absolute;
+}
+
+/* =================== 幅、高さ ====================== */
+
+
+.w-70 {
+  width: 70%;
+}
+
+.h-30 {
+  height: 30%;
+}
+
+.h-70 {
+  height: 70%;
+}
+
+/* =================== margin, padding ====================== */
+
+.my-30 {
+  margin: 30px 0;
+}
+
+.ml-1p {
+  margin-left: 1%;
+}
+
+.ml-20 {
+  margin-left: 20px;
+}
+
+.ml-30 {
+  margin-left: 30px;
+}
+
+.ml-80 {
+  margin-left: 80px;
+}
+
+.ml-100 {
+  margin-left: 100px;
+}
+
+.ml-120 {
+  margin-left: 120px;
+}
+
+.mr-20 {
+  margin-right: 20px;
+}
+
+.mt-4 {
+  margin-top: 4px;
+}
+
+.mt-8 {
+  margin-top: 8px;
+}
+
+.mt-9 {
+  margin-top: 9px;
+}
+
+.mt-66 {
+  margin-top: 66px;
+}
+
+
+/* 右寄せ */
+.mr {
+  margin: 0 0 0 auto;
+}
+
+.m-0 {
+  margin: 0;
+}
+
+.m-auto {
+  margin: 0 auto;
+}
+
+
+.pl-20 {
+  padding-left: 20px;
+}
+
+/* =================== font ====================== */
+
+.font-14 {
+  font-size: 14px;
+}
+
+.font-17 {
+  font-size: 17px;
+}
+
+.font-18 {
+  font-size: 18px;
+}
+
+.font-20 {
+  font-size: 20px;
+}
+
+.font-21 {
+  font-size: 21px;
+}
+.font-22 {
+  font-size: 22px;
+}
+
+.font-24 {
+  font-size: 24px;
+}
+
+.font-28 {
+  font-size: 28px;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.letter-005 {
+  letter-spacing: 0.05em;
+}
+
+.letter-01 {
+  letter-spacing: 0.1em;
+}
+
+/* =================== border ====================== */
+
+.border-none {
+  border: none;
+}
+
+.border-top {
+  border-top: 1px solid #000;
+}
+
+.border-bottom {
+  border-bottom: 1px solid #000;
+}
+
+.border-right {
+  border-right: 1px solid #000;
+}
+
+.border-left {
+  border-left: 1px solid #000;
+}
+
+/* =================== error message ====================== */
+
+.error-message-in-index {
+  position: absolute;
+  top: 44.5%;
+  left: 4%;
+}
+
+.error-message-in-free-time {
+  position: absolute;
+  top: 30%;
+  left: 25%;
+}
+
+.error-message-in-account {
+  position: absolute;
+  top: 24%;
+  left: 50%;
+}
+
+.error-message-in-password-reset {
+  position: absolute;
+  top: 47%;
+  left: 50%;
+}
+
+.error-message-in-create-free-time {
+  position: absolute;
+  top: 29%;
+  left: 26.8%;
+}

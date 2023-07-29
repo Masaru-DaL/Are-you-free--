@@ -1,0 +1,51 @@
+{{define "login"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Are you free? _LOGIN_</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/registration.css" />
+</head>
+<body>
+  <main>
+    <div class="registration-wrapper flex-col">
+      <div class="registration-top-area bg-snow flex">
+        <h2 class="title text-center login-title">LOGIN</h2>
+        <div class="registration-link-wrapper">
+          <a href="/auth/signup" class="login-link">アカウントの登録はこちら</a>
+        </div>
+      </div>
+      <div class="login-image-area flex-col">
+        <!-- エラーメッセージ -->
+        {{ if .error_message}}
+        <div class="error-message-in-login">
+          <p class="text-center letter-005 font-20 text-darkred">{{.error_message}}</p>
+        </div>
+        {{ end }}
+
+        <form
+          action="/auth/login"
+          method="POST"
+          class="login-form-area m-auto"
+          >
+          <div class="input-area text-snow flex-col">
+            <label for="name">USERNAME</label>
+            <input type="text" name="username" placeholder="Your username." maxlength="10" />
+          </div>
+          <div class="input-area text-snow flex-col">
+            <label for="password">PASSWORD</label>
+            <input type="text" name="password" placeholder="Your password." maxlength="10" />
+          </div>
+          <div class="login-button-area">
+            <button class="form-button button-darkgreen">LOGIN</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
+{{end}}

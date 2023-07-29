@@ -1,0 +1,166 @@
+.calender-wrapper {
+    width: 80%;
+    height: 50vh;
+    margin: 10% auto;
+    color: #666;
+
+}
+
+.input-calendar {
+    width: 70%;
+}
+
+#years {
+    text-align: center;
+    font-size: 24px;
+    width: 100%;
+    margin: 1rem 0 0;
+}
+
+/*カレンダー*/
+#calendar {
+    text-align: center;
+    width: 100%;
+}
+table {
+    outline: 2px solid #ddd;
+    border-collapse: collapse;
+    width: 100%;
+}
+th {
+    color: #000;
+}
+th, td {
+    outline: 1px solid #ddd;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+}
+/*日曜日*/
+td:first-child {
+    color: red;
+}
+/*土曜日*/
+td:last-child {
+    color: blue;
+}
+/*前後月の日付*/
+td.disabled {
+    color: #ccc;
+}
+/*本日*/
+td.today {
+    background-color: #D65E72;
+    color: #fff;
+}
+/*free day*/
+td.today {
+    background-color: #5abcea;
+    color: #fff;
+}
+
+td.date-free-time {
+    background-color: #D65E72;
+}
+
+/*ボタン*/
+#next-prev-button {
+    position: relative;
+}
+#next-prev-button button{
+    cursor: pointer;
+    background: #B78D4A;
+    color: #fff;
+    border: 1px solid #B78D4A;
+    border-radius: 4px;
+    font-size: 1rem;
+    padding: 0.5rem 2rem;
+    margin: 1rem 0;
+}
+#next-prev-button button:hover{
+    background-color: #D4BB92;
+    border-color: #D4BB92;
+}
+#prev {
+    float: left;
+}
+#next {
+    float: right;
+}
+
+.calendar-label {
+    position: relative;
+    display: inline-block;
+    width: 200px;
+    height: 36px;
+    margin-right: 10%;
+    border: 2px solid var(--WOOD);
+    border-radius: 15px;
+    box-shadow: 4px 4px 5px rgba(0,0,0,.3);
+}
+.calendar-label::before {
+    position: absolute;
+    content: "";
+    top: -2px;
+    right: -46px;
+    width: 40px;
+    height: 40px;
+    background-color: rgb(195, 225, 255);
+    background-image: url("../../icon/icon-calendar.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    border-radius: 8px;
+    box-shadow: 3px 3px 5px rgba(0,0,0,.3);
+}
+.calendar-label-create-page {
+    position: relative;
+    display: inline-block;
+    width: 200px;
+    height: 36px;
+    border: 2px solid var(--WOOD);
+    border-radius: 15px;
+    box-shadow: 4px 4px 5px rgba(0,0,0,.3);
+}
+.calendar-label-create-page::before {
+    position: absolute;
+    content: "";
+    top: -2px;
+    right: -46px;
+    width: 40px;
+    height: 40px;
+    background-color: rgb(195, 225, 255);
+    background-image: url("../../icon/icon-calendar.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    border-radius: 8px;
+    box-shadow: 3px 3px 5px rgba(0,0,0,.3);
+}
+input[type="date"] {
+    padding: 0 10px;
+    width: 250px;
+    height: 36px;
+    border: 0;
+    background: transparent;
+    box-sizing: border-box;
+    font-size: 14px;
+    color: var(--BLACK);
+    position: relative;
+}
+input[type="date"]::-webkit-inner-spin-button{
+    -webkit-appearance: none;
+}
+input[type="date"]::-webkit-clear-button{
+    -webkit-appearance: none;
+}
+input[type="date"]::-webkit-calendar-picker-indicator{
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    padding: 0;
+    width: 244.5px;
+    height: 100%;
+    transform: scale(-1, 1);
+    color: transparent;
+    opacity: 0;
+    cursor: pointer;
+}

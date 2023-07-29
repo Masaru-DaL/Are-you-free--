@@ -1,0 +1,126 @@
+{{define "share-with-me"}}
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Are you free? _SHARE SOMEONE'S free-time WITH ME_</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/registration.css" />
+    <link rel="stylesheet" href="../css/header.css" />
+    <link rel="stylesheet" href="../css/main.css" />
+    <link rel="stylesheet" href="../css/calendar.css" />
+    <link rel="stylesheet" href="../css/sharing.css" />
+  </head>
+  <body>
+    <header class="header-wrapper bg-white">
+      <div class="header-wrapper-line bg-white">
+        <div class="header flex m-auto items-center bg-white">
+          <div class="header-link-wrapper">
+            <a href="/index">
+              <div class="header-link">
+                <p class="font-24 letter-005">TOP</p>
+              </div>
+            </a>
+          </div>
+          <div class="header-link-wrapper">
+            <a href="/free-time/{{.nearest_date_free_time_id}}">
+              <div class="header-link">
+                <p class="font-24 letter-005">NEAREST FREE-TIME</p>
+              </div>
+            </a>
+          </div>
+          <div class="header-link-wrapper">
+            <a href="/free-times">
+              <div class="header-link">
+                <p class="font-24 letter-005">FREE-TIMES</p>
+              </div>
+            </a>
+          </div>
+          <div class="header-link-wrapper">
+            <a href="/share/with_someone">
+              <div class="header-link">
+                <p class="font-24 letter-005">SHARE</p>
+              </div>
+            </a>
+          </div>
+          <div class="header-link-wrapper">
+            <a href="/account/">
+              <div class="header-link">
+                <p class="font-24 letter-005">ACCOUNT</p>
+              </div>
+            </a>
+          </div>
+          <div id="today-wrapper" class="text-center font-24">
+            <span id="today" class="blinking"></span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="main flex-col">
+      <div class="title-area-wrapper flex">
+        <div class="title-area bg-white">
+          <h1 class="text-center">SHARING PAGE</h1>
+        </div>
+        <a href="/share/with_someone" class="sharing-page-button-wrapper">
+          <div class="sharing-page-button bg-oldlace">
+            <p class="text-center font-20">
+              SHARE WITH SOMEONE
+            </p>
+          </div>
+        </a>
+        <a href="/share/with_me" class="sharing-page-button-wrapper">
+          <div class="sharing-page-button bg-oldlace">
+            <p class="text-center font-20">
+              SHARE WITH ME
+            </p>
+          </div>
+        </a>
+      </div>
+
+      <div class="content-wrapper flex">
+        <div class="content-left-area">
+          <p class="ml-80 font-16 text-wood">日付を選んで<br>free-timeを操作</p>
+          <form class="form-wrapper flex-col items-center">
+            <label for="today" class="calendar-label">
+              <input class="input-calendar" type="date" name="date" id="today-input" style="font-size:1.1em" />
+            </label>
+            <button class="content-left-button" formaction="/free-time/:date">SELECT</button>
+            <button class="content-left-button" formaction="/free-time/create">CREATE</button>
+            <button class="content-left-button"formaction="/free-time/update">UPDATE</button>
+          </form>
+        </div>
+
+        <!-- 相手のスケジュールを共有するフォーム -->
+        <div class="sharing-content-right-wrapper">
+          <!-- error message -->
+          <p class="error-message-in-share font-20 text-darkred">エラーメッセージ or 成功メッセージ</p>
+
+          <div class="share-form-wrapper">
+            <h2 class="text-center">SHARE WITH ME</h2>
+            <p class="text-dimgrey">相手の発行番号を入力してください。</p>
+            <p class="text-dimgrey">※有効期限（15分）以内に入力してください。</p>
+            <form class="flex-col">
+              <div class="input-area text-wood flex-col">
+                <label for="name">ISSUE NUMBER</label>
+                <input type="text" name="issue-number" maxlength="16" />
+              </div>
+              <div class="sharing-button-area">
+                <button class="form-button button-skyblue">REGISTER</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+
+  </body>
+  <script type="text/javascript" src="../js/now.js"></script>
+  <script src="../js/calendar.js"></script>
+
+</html>
+{{end}}

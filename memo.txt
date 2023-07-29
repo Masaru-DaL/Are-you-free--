@@ -1,0 +1,278 @@
+/* ------------------------------- */
+    create table
+/* ------------------------------- */
+CREATE TABLE users(
+        id VARCHAR(36) NOT NULL PRIMARY KEY,
+        name CHAR(10) NOT NULL,
+        password VARCHAR(255) NOT NULL,
+        email VARCHAR(191) NOT NULL UNIQUE CHECK(email LIKE '%_@__%.__%'),
+        is_admin tinyint(1) DEFAULT 0,
+        created_at TIMESTAMP DEFAULT (DATETIME('now','localtime')),
+        updated_at TIMESTAMP DEFAULT (DATETIME('now','localtime'))
+);
+
+CREATE TABLE date_free_times (
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  user_id VARCHAR(36) NOT NULL REFERENCES users(id),
+  year VARCHAR(4) NOT NULL,
+  month VARCHAR(2) NOT NULL,
+  day VARCHAR(2) NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE free_times (
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  date_free_time_id INTEGER NOT NULL REFERENCES date_free_times(id),
+  start_hour INTEGER NOT NULL,
+  start_minute INTEGER NOT NULL,
+  end_hour INTEGER NOT NULL,
+  end_minute INTEGER NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE shares (
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  user_id VARCHAR(36) NOT NULL REFERENCES users(id),
+  shared_user_id VARCHAR(36) NOT NULL REFERENCES users(id),
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+insert into date_free_times(user_id, year, month, day) values(
+  "eabf0fb9-191e-4f3b-9f91-3ed37804f3bd", "2023", "04", "01"
+),(
+  "f24a2fcc-8297-4533-9381-5fb2462bf9e1", "2023", "04", "01"
+),(
+  "62994986-9e04-4b62-97f8-a190e3b16502", "2023", "04", "01"
+);
+
+insert into free_times(date_free_time_id, start_hour, start_minute, end_hour, end_minute) values(
+  1, 6, 0, 10, 0
+),(
+  2, 6, 0, 12, 0
+),(
+  3, 6, 0, 12, 0
+);
+
+insert into shares(user_id, shared_user_id) values(
+  "eabf0fb9-191e-4f3b-9f91-3ed37804f3bd", "f24a2fcc-8297-4533-9381-5fb2462bf9e1"
+), (
+  "eabf0fb9-191e-4f3b-9f91-3ed37804f3bd",
+  "62994986-9e04-4b62-97f8-a190e3b16502"
+);
+
+import (
+    "github.com/labstack/echo"
+    "github.com/labstack/echo-contrib/session"
+    "github.com/labstack/echo-contrib/session/cookie"
+)
+
+func main() {
+    e := echo.New()
+
+    // Cookieセッションストアを作成する
+    store := cookie.NewStore([]byte("secret-key"))
+
+    // セッション設定を作成する
+    sessCfg := session.Config{
+        Store: store,
+        Name:  "session-id",
+    }
+
+    // セッションを有効にする
+    e.Use(session.Middleware(sessCfg))
+
+    // セッションに値を設定するハンドラー
+    e.GET("/set-session", func(c echo.Context) error {
+        sess, _ := session.Get("session", c)
+        sess.Values["foo"] = "bar"
+        sess.Save(c.Request(), c.Response())
+        return c.String(http.StatusOK, "Session set")
+    })
+
+    // セッションから値を取得するハンドラー
+    e.GET("/get-session", func(c echo.Context) error {
+        sess, _ := session.Get("session", c)
+        val := sess.Values["foo"]
+        return c.String(http.StatusOK, fmt.Sprintf("Value: %v", val))
+    })
+
+    e.Logger.Fatal(e.Start(":8080"))
+}
+上記のコードでは、Cookieセッションストアを作成し、セッション設定を作成して、それをechoのミドルウェアに登録しています。セッションに値を設定するハンドラーでは、セッションを取得し、セッションに値を設定しています。セッションから値を取得するハンドラーでは、セッションを取得し、セッションから値を取得しています。
+
+なお、この例ではCookieに保存する値としてsession-idを設定していますが、この値は自由に変更することができます。また、Cookieに保存する値には暗号化キーが必要となりますが、この例では"secret-key"を使用しています。実際には、より強固な暗号化キーを使用することが望ましいです。
+
+
+
+c.Session().Delete("session_key")は、セッションストアから特定のキーの値を削除するためのものであり、HTTPリクエストのメソッドには関係ありません。
+
+c.Session().Options = &sessions.Options{MaxAge: -1}とc.Session().Save()は、セッションストアからすべてのセッションを削除するためのものであり、HTTPリクエストのメソッドにも関係ありません。
+
+つまり、これらの操作を行うためには、HTTPリクエストのメソッドを問わず、セッションを操作するハンドラー内で実行することができます。GETメソッドで行う必要はありません。例えば、以下のようにPOSTメソッドを使用して実行できます。
+e.POST("/delete-session", func(c echo.Context) error {
+    // セッションから値を削除する
+    c.Session().Delete("session_key")
+
+    // セッションを完全に破棄する
+    c.Session().Options = &sessions.Options{MaxAge: -1}
+    c.Session().Save()
+
+    return c.String(http.StatusOK, "Session deleted")
+})
+
+
+Share Off
+Unshare This
+End Sharing
+Stop Sharing Now
+Disable Share
+Suspend Sharing
+Revoke Share
+Remove Sharing
+Terminate Share
+Discontinue SharingSHARERS
+
+
+上記の構成の場合、以下の手順に従ってGraphQLサーバを構築することができます。
+
+gqlgen.ymlファイルを作成する
+
+プロジェクトのルートディレクトリにgqlgen.ymlファイルを作成し、スキーマファイルとリゾルバーのパッケージ名を指定する
+schemaディレクトリにあるschema.graphqlsファイルをスキーマファイルとして指定する
+yaml
+Copy code
+# gqlgen.yml
+
+schema:
+  - schema/schema.graphqls
+resolver:
+  layout: follow-schema
+  dir: graph
+  package: graph
+モデルとリゾルバーを定義する
+
+graphディレクトリにあるschema.graphqlsファイルからモデルを生成するために、go run github.com/99designs/gqlgen generateコマンドを実行する
+graphディレクトリにリゾルバーファイルresolver.goを作成する
+bash
+Copy code
+go run github.com/99designs/gqlgen generate
+リゾルバーを実装する
+
+graphディレクトリにあるresolver.goファイルに、リゾルバーを実装する
+モデルからデータを取得するための関数を実装する
+go
+Copy code
+// graph/resolver.go
+
+package graph
+
+import (
+    "context"
+    "github.com/your-username/your-app/entity"
+)
+
+// THIS CODE IS A STARTING POINT ONLY. IT WILL NOT BE UPDATED WITH SCHEMA CHANGES.
+
+type Resolver struct{
+    DB *sqlx.DB
+}
+
+func (r *Resolver) Query() QueryResolver {
+    return &queryResolver{r}
+}
+
+type queryResolver struct{ *Resolver }
+
+func (r *queryResolver) Company(ctx context.Context, id string) (*entity.Company, error) {
+    company := &entity.Company{}
+    sqlStatement := "SELECT * FROM company WHERE id = ?"
+
+    err := r.DB.GetContext(ctx, company, sqlStatement, id)
+    if err != nil {
+        return nil, err
+    }
+
+    return company, nil
+}
+エントリーポイントを実装する
+
+サーバーのエントリーポイントであるserver.goを作成する
+graph.NewExecutableSchema()とgraph.Config{Resolvers: &Resolver{DB: db}}を使用して、スキーマとリゾルバーを組み合わせたExecutable Schemaを生成する
+go
+Copy code
+// server.go
+
+package main
+
+import (
+    "database/sql"
+    "fmt"
+    "log"
+    "net/http"
+
+    "github.com/your-username/your-app/graph"
+    "github.com/your-username/your-app/mysql"
+    "github.com/99designs/gqlgen/graphql/handler"
+
+
+
+
+
+ChatGPT Feb 13 Version. Free Research Preview. Our goal is to make AI systems more natural and safe to interact with. Your feedback will help us improve.
+
+
+type Company struct {
+	ID                    string `db:"id" gqlgen:"id"`
+	Name                  string `db:"name" gqlgen:"name"`
+	ImageURL              string `db:"image_url" gqlgen:"image_url"`
+	Abstract              string `db:"abstract" gqlgen:"abstract"`
+	BusinessSummary       string `db:"business_summary" gqlgen:"business_summary"`
+	WorkLocation          string `db:"work_location" gqlgen:"work_location"`
+	HPURL                 string `db:"hp_url" gqlgen:"hp_url"`
+	EmployeeNum           int    `db:"employee_num" gqlgen:"employee_num"`
+	Establishment         string `db:"establishment" gqlgen:"establishment"`
+	BusinessDetail        string `db:"business_detail" gqlgen:"business_detail"`
+	Occupation            string `db:"occupation" gqlgen:"occupation"`
+	OccupationDetail      string `db:"occupation_detail" gqlgen:"occupation_detail"`
+	SelectionFlow         string `db:"selection_flow" gqlgen:"selection_flow"`
+	Comment               string `db:"comment" gqlgen:"comment"`
+	EstimatedAnnualIncome int    `db:"estimated_annual_income" gqlgen:"estimated_annual_income"`
+	WantedEngineer        string `db:"wanted_engineer" gqlgen:"wanted_engineer"`
+	Age                   int    `db:"age" gqlgen:"age"`
+	Appeal                string `db:"appeal" gqlgen:"appeal"`
+	RequiredSkills        string `db:"required_skills" gqlgen:"required_skills"`
+	CareerPlan            string `db:"career_plan" gqlgen:"career_plan"`
+}
+
+
+`id` int unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT '1',
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+
+
+CREATE TABLE `users` (
+  `id` int unsigned NOT NULL AUTOINCREMENT,
+  `name` char(10) NOT NULL,
+  `password` char(20) NOT NULL,
+  `email` varchar(191) NOT NULL,
+  `is_admin` tinyint(1) NOT NULL DEFAULT '0',
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+);
+
+CREATE TABLE users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name char(10) NOT NULL,
+  password char(20) NOT NULL,
+  email varchar(191) NOT NULL,
+  is_admin BOOLEAN NOT NULL DEFAULT 0,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
